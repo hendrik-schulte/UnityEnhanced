@@ -8,53 +8,52 @@ using UnityEngine.Events;
 
 namespace Events
 {
-    [CreateAssetMenu(menuName = "Events/Event()")]
-    public class GameEvent : ScriptableObject
-    {    
+    public abstract class ParameterEvent<T> : ScriptableObject
+    {        
         [SerializeField] 
-        private bool debugLog;    
-        
-#if UNITY_EDITOR
+        private bool debugLog;
+
         [Multiline]
         public string DeveloperDescription = "";
-#endif
-      
-        [SerializeField]
-        private UnityEvent OnEventTriggered;
+
+        protected abstract UnityEvent<T> OnEventTriggered
+        {
+            get;
+        }
 
         /// <summary>
         /// The list of listeners that this event will notify if it is raised.
         /// </summary>
-        private readonly List<GameEventListener> eventListeners = 
-            new List<GameEventListener>();
+        private readonly List<ParameterEventListener<T>> eventListeners = 
+            new List<ParameterEventListener<T>>();
 
-        public void Raise()
+        public void Raise(T value)
         {
-            if(debugLog) Debug.Log("Game Event '" + name + "' was raised!");
+            if(debugLog) Debug.Log("Parameter Event '" + name + "' was raised with parameter: '" + value + "'!");
             
             for(var i = eventListeners.Count -1; i >= 0; i--)
-                eventListeners[i].OnEventRaised();
-            OnEventTriggered.Invoke();
+                eventListeners[i].OnEventRaised(value);
+            OnEventTriggered.Invoke(value);
         }
 
-        public void RegisterListener(GameEventListener listener)
+        public void RegisterListener(ParameterEventListener<T> listener)
         {
             if (!eventListeners.Contains(listener))
                 eventListeners.Add(listener);
         }
 
-        public void RegisterListener(UnityAction listener)
+        public void RegisterListener(UnityAction<T> listener)
         {
             OnEventTriggered.AddListener(listener);
         }
 
-        public void UnregisterListener(GameEventListener listener)
+        public void UnregisterListener(ParameterEventListener<T> listener)
         {
             if (eventListeners.Contains(listener))
                 eventListeners.Remove(listener);
         }
         
-        public void UnregisterListener(UnityAction listener)
+        public void UnregisterListener(UnityAction<T> listener)
         {
             OnEventTriggered.RemoveListener(listener);   
         }

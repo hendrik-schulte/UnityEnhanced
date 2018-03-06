@@ -1,10 +1,6 @@
 ﻿//This is taken from:
 //http://answers.unity3d.com/questions/486694/default-editor-enum-as-flags-.html
 
-
-//using UnityEditor;
-
-//using UnityEditor;
 using UnityEngine;
 
 namespace UnityFlags

@@ -7,39 +7,37 @@ using UnityEngine.Events;
 
 namespace Events
 {
-    public class GameEventListener : MonoBehaviour
+    public abstract class ParameterEventListener<T> : MonoBehaviour
     {
+        protected abstract ParameterEvent<T> GenericEvent { get; }
+        protected abstract UnityEvent<T> GenericResponse { get; }
+
         [Tooltip("When this is checked, the listener will still work when the game object is disabled.")]
         public bool persistent;
-        
-        [Tooltip("Event to register with.")] public GameEvent Event;
-
-        [Tooltip("Response to invoke when Event is raised.")]
-        public UnityEvent Response;
 
         private void OnEnable()
         {
-            if (!persistent) Event.RegisterListener(this);
+            if (!persistent) GenericEvent.RegisterListener(this);
         }
 
         private void OnDisable()
         {
-            if (!persistent) Event.UnregisterListener(this);
+            if (!persistent) GenericEvent.UnregisterListener(this);
         }
 
         private void Awake()
         {
-            if (persistent) Event.RegisterListener(this);
+            if (persistent) GenericEvent.RegisterListener(this);
         }
 
         private void OnDestroy()
         {
-            if (persistent) Event.UnregisterListener(this);
+            if (persistent) GenericEvent.UnregisterListener(this);
         }
 
-        public void OnEventRaised()
+        public void OnEventRaised(T value)
         {
-            Response.Invoke();
+            GenericResponse.Invoke(value);
         }
     }
 }

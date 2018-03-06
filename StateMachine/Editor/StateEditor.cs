@@ -10,19 +10,39 @@ namespace StateMachine
         {
             base.OnInspectorGUI();
 
+            var state = target as State;
+
+            InitialState(state);
+
             if (!Application.isPlaying) return;
 
-            var state = target as State;
 
             if (state.IsActive())
             {
-                GUILayout.Label("This is the current state.");
+                GUILayout.Label("This state is currently active.");
             }
             else
             {
                 if (GUILayout.Button("Enter"))
                     state.Enter();
             }
+        }
+
+        private void InitialState(State state)
+        {
+            if (state.IsInitialState())
+            {
+                GUILayout.Label("This is the initial state of this system.");
+                return;
+            }
+
+            if (GUILayout.Button("Set Initial State"))
+                state.SetAsInitialState();
+
+            var initialState = state.stateManager.InitialState;
+
+            if(initialState) GUILayout.Label("Initial State: " + initialState.name);
+            else GUILayout.Label("Initial State: None");
         }
     }
 }

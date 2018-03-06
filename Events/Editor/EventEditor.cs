@@ -8,7 +8,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace RoboRyanTron.Unite2017.Events
+namespace Events
 {
     [CustomEditor(typeof(GameEvent))]
     public class EventEditor : UnityEditor.Editor
