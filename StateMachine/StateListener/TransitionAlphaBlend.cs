@@ -36,13 +36,15 @@ namespace StateMachine
         protected override void Activated()
         {
             StopRunning();
+         
+            canvas.enabled = true;
+            if (disableGameObject) gameObject.SetActive(true);
+            
             fadeIn = StartCoroutine(FadeIn());
         }
 
         private IEnumerator FadeIn()
         {
-            canvas.enabled = true;
-            if (disableGameObject) gameObject.SetActive(true);
             var time = 0f;
 
             while (time < transitionDuration)

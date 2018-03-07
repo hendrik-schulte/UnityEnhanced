@@ -32,14 +32,6 @@ namespace StateMachine
         }
 
         /// <summary>
-        /// Sets this state as the initial state of this system.
-        /// </summary>
-        public void SetAsInitialState()
-        {
-            stateManager.InitialState = this;
-        }
-
-        /// <summary>
         /// This returns true, when the state is the initial state of this system.
         /// </summary>
         /// <returns></returns>

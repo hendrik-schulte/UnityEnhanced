@@ -6,6 +6,15 @@ namespace Variables
     public class FloatReference : Reference<float>
     {
         public FloatVariable Variable;
+
+        public FloatReference()
+        {
+            
+        }
+        
+        public FloatReference(float value) : base(value)
+        {
+        }
         
         public override Variable<float> GetVariable()
         {

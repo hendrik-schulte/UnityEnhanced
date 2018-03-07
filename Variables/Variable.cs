@@ -8,10 +8,10 @@ namespace Variables
 {
     public class Variable<T> : ScriptableObject
     {
-#if UNITY_EDITOR
+        //Removed compiler directive because of errors in build (Unexpected serialization layout). 
         [Multiline]
         public string DeveloperDescription = "";
-#endif
+
         public T Value;
 
         public void SetValue(T value)

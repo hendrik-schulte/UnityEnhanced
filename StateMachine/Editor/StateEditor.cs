@@ -37,7 +37,12 @@ namespace StateMachine
             }
 
             if (GUILayout.Button("Set Initial State"))
-                state.SetAsInitialState();
+            {
+
+                state.stateManager.InitialState = state;
+                EditorUtility.SetDirty(state.stateManager);
+            }
+//                state.SetAsInitialState();
 
             var initialState = state.stateManager.InitialState;
 

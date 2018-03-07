@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Common;
+using UnityEditor;
 using UnityEngine;
 
 namespace StateMachine
@@ -13,9 +14,12 @@ namespace StateMachine
             var stateManager = target as StateManager;
 
             if (stateManager.InitialState && GUILayout.Button("Set No Initial State"))
+            {
                 stateManager.InitialState = null;
+                EditorUtility.SetDirty(stateManager);
+            }
 
-//            if (!Application.isPlaying) return;
+            if (!Application.isPlaying) return;
 
             if (stateManager.State) GUILayout.Label("Current State: " + stateManager.State.name);
             else GUILayout.Label("Current State: None");
