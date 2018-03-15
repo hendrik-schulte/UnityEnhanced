@@ -12,6 +12,8 @@ namespace StateMachine
 
             var state = target as State;
 
+        	if (!state.stateManager) return;
+
             InitialState(state);
 
             if (!Application.isPlaying) return;
