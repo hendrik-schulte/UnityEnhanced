@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.Events;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     [Serializable]
     public class StateChangeEvent : UnityEvent<State>

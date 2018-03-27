@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace MathEx.Editor
+namespace UE.Math.Editor
 {
     [CustomPropertyDrawer(typeof(Matrix4x4))]
     public class Matrix4x4Drawer : PropertyDrawer

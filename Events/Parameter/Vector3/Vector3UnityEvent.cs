@@ -1,10 +1,11 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace UE.Events
 {
     [Serializable]
-    public class StringUnityEvent : UnityEvent<string>
+    public class Vector3UnityEvent : UnityEvent<Vector3>
     {
     }
 }

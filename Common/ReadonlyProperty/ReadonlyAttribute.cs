@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ReadonlyProperty
+namespace UE.Common
 {
     public class ReadonlyAttribute : PropertyAttribute
     {    

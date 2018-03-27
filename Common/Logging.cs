@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Common
+namespace UE.Common
 {
     public static class Logging
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Variables
+namespace UE.Variables
 {
     [CustomPropertyDrawer(typeof(BoolReference))]
     public class BoolReferenceDrawer : ReferenceDrawer

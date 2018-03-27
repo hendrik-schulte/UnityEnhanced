@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace UnityFlags
+namespace UE.UnityFlags
 {
     public class EnumFlagsAttribute : PropertyAttribute
     {

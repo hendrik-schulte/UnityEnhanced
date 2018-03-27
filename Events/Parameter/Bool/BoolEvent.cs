@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace Events
+namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event(string)")]
     public class BoolEvent : ParameterEvent<bool>

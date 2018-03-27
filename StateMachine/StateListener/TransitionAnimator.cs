@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using Common;
+using UE.Common;
 using UnityEngine;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     /// <summary>
     /// This class enables easy transitions between multiple windows of the new UI System. 

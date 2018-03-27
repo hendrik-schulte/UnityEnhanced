@@ -1,7 +1,7 @@
 ﻿//This is taken from:
 //http://stackoverflow.com/questions/3261451/using-a-bitmask-in-c-sharp
 
-namespace UnityFlags
+namespace UE.UnityFlags
 {
     /// <summary>
     /// The casts to object in the below code are an unfortunate necessity due to

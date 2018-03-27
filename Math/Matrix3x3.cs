@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ExtensionMethods;
 using UnityEngine;
 
-namespace MathEx
+namespace UE.Math
 {
     [Serializable]
     public struct Matrix3x3
@@ -74,7 +74,7 @@ namespace MathEx
         }
 
         /// <summary>
-        /// Creates a Matrix3x3´based on three column vector3.
+        /// Creates a Matrix3x3 based on three column vector3.
         /// </summary>
         /// <param name="column1"></param>
         /// <param name="column2"></param>
@@ -128,7 +128,7 @@ namespace MathEx
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public List<Vector2> MultiplyPoints(List<Vector2> points)
+        public List<Vector2> MultiplyPoints(IEnumerable<Vector2> points)
         {
             var list = new List<Vector2>();
 

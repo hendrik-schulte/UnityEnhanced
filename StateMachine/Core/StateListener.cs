@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Common;
+using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     /// <summary>
     /// This component sends events when the given states are activated. Can be inherited for special applications.

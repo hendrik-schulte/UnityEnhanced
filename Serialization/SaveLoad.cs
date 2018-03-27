@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Reflection;
 using Object = System.Object;
 
-namespace Serialization
+namespace UE.Serialization
 {
     /// <summary>
     /// This class offers different saving and loading options using BinaryFormater.

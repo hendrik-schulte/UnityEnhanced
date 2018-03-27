@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace Events
+namespace UE.Events
 {
     public class GameObjectEventListener : ParameterEventListener<GameObject>
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using Common;
+using UE.Common;
 using UnityEngine;
-using Variables;
+using UE.Variables;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     /// <summary>
     /// This component handles nice fade-in fade-out transitions for UI windows. Requires a canvas and

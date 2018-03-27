@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Events
+namespace UE.Events
 {
     public abstract class ParameterEvent<T> : ScriptableObject
     {        

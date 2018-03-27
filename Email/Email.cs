@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Umail
+namespace UE.Email
 {
     /// <summary>
     /// This class allows sending emails in the browser using an external javasript library.

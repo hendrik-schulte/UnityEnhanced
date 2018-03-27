@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace Variables
+namespace UE.Variables
 {
     public class Variable<T> : ScriptableObject
     {

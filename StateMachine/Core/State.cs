@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State")]
     public class State : ScriptableObject

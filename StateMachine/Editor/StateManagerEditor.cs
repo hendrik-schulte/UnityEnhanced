@@ -1,8 +1,7 @@
-﻿using Common;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     [CustomEditor(typeof(StateManager))]
     public class StateManagerEditor : UnityEditor.Editor

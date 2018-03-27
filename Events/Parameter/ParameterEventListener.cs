@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Events
+namespace UE.Events
 {
     public abstract class ParameterEventListener<T> : MonoBehaviour
     {

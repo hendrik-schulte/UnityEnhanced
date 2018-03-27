@@ -1,8 +1,7 @@
-﻿using ExtensionMethods;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace MathEx.Editor
+namespace UE.Math.Editor
 {
     [CustomPropertyDrawer(typeof(Matrix3x3))]
     public class Matrix3x3Drawer : PropertyDrawer

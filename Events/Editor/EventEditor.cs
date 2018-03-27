@@ -8,7 +8,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Events
+namespace UE.Events
 {
     [CustomEditor(typeof(GameEvent))]
     public class EventEditor : UnityEditor.Editor

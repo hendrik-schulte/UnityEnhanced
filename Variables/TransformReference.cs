@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Variables
+namespace UE.Variables
 {
     [Serializable]
     public class TransformReference : Reference<Transform>

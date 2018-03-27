@@ -1,4 +1,4 @@
-﻿namespace Umail
+﻿namespace UE.Email
 {
     /// <summary>
     /// This class offers some helper functions for HTML tags.

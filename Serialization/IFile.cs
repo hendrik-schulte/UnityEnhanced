@@ -1,4 +1,4 @@
-﻿namespace Serialization
+﻿namespace UE.Serialization
 {
     /// <summary>
     /// If an object implementing this interface is deserialized, its file name and path is passed

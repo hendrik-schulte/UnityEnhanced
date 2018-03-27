@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Variables
+namespace UE.Variables
 {
     [CustomPropertyDrawer(typeof(GameObjectReference))]
     public class GameObjectReferenceDrawer : ReferenceDrawer

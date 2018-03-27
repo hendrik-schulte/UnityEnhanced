@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Variables
+namespace UE.Variables
 {
     [Serializable]
     public class IntReference : Reference<int>

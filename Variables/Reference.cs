@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Variables
+namespace UE.Variables
 {
     [Serializable]
     public abstract class Reference<T>

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Variables
+namespace UE.Variables
 {
     [CreateAssetMenu(menuName = "Variables/String Variable")]
     public class StringVariable : Variable<string>

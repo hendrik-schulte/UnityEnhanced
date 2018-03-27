@@ -5,7 +5,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Variables
+namespace UE.Variables
 {
     public abstract class ReferenceDrawer : PropertyDrawer
     {

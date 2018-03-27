@@ -1,4 +1,4 @@
-﻿namespace StateMachine
+﻿namespace UE.StateMachine
 {
     /// <summary>
     /// This component activates this game object when one of the given states

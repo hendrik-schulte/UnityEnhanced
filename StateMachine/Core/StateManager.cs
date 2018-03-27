@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Common;
+using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
     public class StateManager : ScriptableObject

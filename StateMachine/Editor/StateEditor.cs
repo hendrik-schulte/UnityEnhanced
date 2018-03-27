@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace StateMachine
+namespace UE.StateMachine
 {
     [CustomEditor(typeof(State))]
     public class StateEditor : UnityEditor.Editor
