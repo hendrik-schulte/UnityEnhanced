@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ExtensionMethods;
+using UE.Common;
 using UnityEngine;
 
 namespace UE.Math
