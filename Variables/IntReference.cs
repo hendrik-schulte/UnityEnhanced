@@ -7,6 +7,14 @@ namespace UE.Variables
     {
         public IntVariable Variable;
         
+        public IntReference() : base()
+        {
+        }
+
+        public IntReference(int value) : base(value)
+        {
+        }
+
         public override Variable<int> GetVariable()
         {
             return Variable;

@@ -6,7 +6,15 @@ namespace UE.Variables
     public class BoolReference : Reference<bool>
     {
         public BoolVariable Variable;
-        
+
+        public BoolReference() : base()
+        {
+        }
+
+        public BoolReference(bool value) : base(value)
+        {
+        }
+
         public override Variable<bool> GetVariable()
         {
             return Variable;
