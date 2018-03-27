@@ -4,7 +4,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ExtensionMethods
+namespace UE.Common
 {
     /// <summary>
     /// This utility class offers some extention methods for miscellaneous purposes.
