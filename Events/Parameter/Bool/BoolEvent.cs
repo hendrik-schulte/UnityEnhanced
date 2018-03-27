@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(string)")]
+    [CreateAssetMenu(menuName = "Events/Event(bool)")]
     public class BoolEvent : ParameterEvent<bool>
     {
         [SerializeField]
