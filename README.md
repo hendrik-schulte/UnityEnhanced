@@ -9,10 +9,20 @@ It is recommended to install the package as a git submodule in your project.
 
 In Sourcetree:
 - Click Repository > Add Submodule ...
-- As Source Path / URL you specify: git@github.com:hendrik-schulte/UnityEnhanced.git 
-- Set Local Relative Path to *Assets/UnityEnhanced* 
+- As Source Path / URL you specify: 
+
+``` 
+git@github.com:hendrik-schulte/UnityEnhanced.git
+```
+
+- Set Local Relative Path to:
+
+``` 
+Assets/UnityEnhanced
+``` 
+
 - Pull submodule
 
 ### Manual Installation
 
-Copy content of this repository to a folder named UnityEnhanced inside of your asset folder.
+Copy content of this repository to a folder named *UnityEnhanced* inside of your asset folder.
