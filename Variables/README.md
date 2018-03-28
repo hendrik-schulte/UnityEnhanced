@@ -1,6 +1,6 @@
 # Variables
 
-This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. I intruduced generic types to extend the geniune work by other useful types.
+This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. It is based on [Scriptable Objects](https://docs.unity3d.com/Manual/class-ScriptableObject.html). Based on the genuine work of Ryan Hipple, I intruduced generic types to extend the system by other useful types.
 
 Includes the following types:
 - float
@@ -20,7 +20,7 @@ In your MonoBehaviour or ScriptableObject script, instead of writing:
 public bool myBool;
 ```
 
-You write
+you write:
 
 ``` cs
 public BoolReference myBool;
@@ -39,9 +39,9 @@ In the inspector you can choose between using a constant or a variable to back u
 
 ![](https://s18.postimg.org/ugfxc3sd5/image.png)
 
-Constants work like usual bools while a variable is defined as a ScriptableObject. You create Variables by right clicking in your Project Window > Create > Variables > Bool Variable.
+Constants work like normal bools while a variable is defined by a ScriptableObject saved in an asset file. You create Variables by right clicking in your Project Window > Create > Variables > Bool Variable.
 
-The Scriptable Object exists globally and can be referenced from within multiple scenes. This is useful for shared date between multiple scripts and scenes.
+The Scriptable Object exists globally and can be referenced from within multiple scenes. This is useful for shared data between multiple scripts and scenes.
 
 ## Acknowledgement
 
