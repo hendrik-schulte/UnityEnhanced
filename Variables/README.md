@@ -1,6 +1,6 @@
 # Variables
 
-This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. I intruduced generics to extend the geniune work by new types without rewriting the code.
+This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. I intruduced generic types to extend the geniune work by other useful types.
 
 Includes the following types:
 - float
