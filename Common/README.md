@@ -22,6 +22,10 @@ public string readonlyString = "Can't touch this";
 
 ### Help Attribute
 
+https://github.com/johnearnshaw/unity-inspector-help
+
+Copyright (c) 2017, John Earnshaw
+
 ``` cs
 [Help("The cake is a lie.", MessageType.Warning)]
 public float myField;
