@@ -1,6 +1,6 @@
 # Variables
 
-This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. I intruduced generics to extend the geniune work for new types without rewriting the code.
+This package allows abstraction of variables in MonoBehaviours so that you can link them to a shared asset file dynamically. I intruduced generics to extend the geniune work by new types without rewriting the code.
 
 Includes the following types:
 - float
@@ -48,4 +48,4 @@ The Scriptable Object exists globally and can be referenced from within multiple
 This is based on the genius work of Ryan Hipple:
 
 - [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
-- [Youtube - Unite Austin 2017 - Game Architecture with Scriptable Objects](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=3244s) Perfectly describes usage of this system.
+- [Youtube - Unite Austin 2017 - Game Architecture with Scriptable Objects](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=3244s) *Perfectly describes usage of this system.*
