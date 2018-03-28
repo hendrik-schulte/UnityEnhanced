@@ -5,9 +5,11 @@ This is a simple yet powerful state machine based on ScriptableObjects.
 ## Getting Started:
 - Create a StateManager asset for every universe of states you like.
 - Create a set of states and reference the StateManager asset.
+> You create these assets by right clicking in your Project Window > Create > State Machine > State (Manager)
 - Add one of the components described below to the GameObject you wish to be controlled by the state.
 - Add a reference to the states the component should be active in to the *Active States* list of the component.
 - *[Optional]*: Mark one of the states as initial state to define wich state the application starts in.
+> You do this by clicking a state asset and click the *Set Initial State* button.
 
 ## [*StateListener*](StateMachine/Core/StateListener.cs)
 
