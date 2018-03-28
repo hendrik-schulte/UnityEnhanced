@@ -3,11 +3,9 @@ A set of useful open-sourced tools for Unity3D I wrote or found during developme
 
 Open particular folders for specific description.
 
-### Installation
+### Installation as Git submodule
 
-#### Git Submodule
-
-It is recommended to use the package as a git submodule in you project.
+It is recommended to install the package as a git submodule in your project.
 
 In Sourcetree:
 - Click Repository > Add Submodule ...
@@ -15,6 +13,6 @@ In Sourcetree:
 - Set Local Relative Path to *Assets/UnityEnhanced* 
 - Pull submodule
 
-#### Manual
+### Manual Installation
 
 Copy content of this repository to a folder named UnityEnhanced inside of your asset folder.
