@@ -7,7 +7,7 @@ namespace UE.Variables
     {
         public IntVariable Variable;
         
-        public IntReference() : base()
+        public IntReference()
         {
         }
 

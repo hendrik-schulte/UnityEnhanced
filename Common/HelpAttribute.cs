@@ -1,4 +1,7 @@
-﻿namespace UE.Common
+﻿using System;
+using UnityEngine;
+
+namespace UE.Common
 {
     // --------------------------------------------------------------------------------------------------------------------
     /// <copyright file="HelpAttribute.cs">
@@ -25,8 +28,6 @@
     ///   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     /// </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-    using System;
-    using UnityEngine;
 #if UNITY_EDITOR
     using UnityEditor;
 

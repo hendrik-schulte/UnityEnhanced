@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 using Object = System.Object;
 
 namespace UE.Serialization

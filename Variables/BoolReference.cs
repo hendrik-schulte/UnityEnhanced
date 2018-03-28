@@ -7,7 +7,7 @@ namespace UE.Variables
     {
         public BoolVariable Variable;
 
-        public BoolReference() : base()
+        public BoolReference()
         {
         }
 

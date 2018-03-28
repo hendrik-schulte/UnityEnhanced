@@ -26,7 +26,7 @@ namespace UE.StateMachine
         /// </summary>
         public bool Active { get; private set; }
 
-        void Start()
+        private void Start()
         {
             if (!activeStates.Any())
             {
