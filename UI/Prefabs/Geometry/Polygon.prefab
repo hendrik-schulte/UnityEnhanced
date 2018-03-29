@@ -580,10 +580,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114338853070216824}
   from: {x: -2, y: -2}
   to: {x: 0, y: 0}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 0, g: 0.17241383, b: 1, a: 1}
   description: 
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114141624041904994
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -605,10 +605,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114770350837800936}
   from: {x: 1, y: 2}
   to: {x: 2, y: -1}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 0, g: 0.17241383, b: 1, a: 1}
   description: 
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114164670139596566
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -771,10 +771,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114243932954410618}
   from: {x: 0, y: 0}
   to: {x: -1, y: 1}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 0, g: 0.17241383, b: 1, a: 1}
   description: 
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114309427545559692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -943,10 +943,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114319211595637886}
   from: {x: -1, y: 1}
   to: {x: 1, y: 2}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 0, g: 0.17241383, b: 1, a: 1}
   description: 
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114381808856563454
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1028,10 +1028,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114399199731551942}
   from: {x: 2, y: -1}
   to: {x: -2, y: -2}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 0, g: 0.17241383, b: 1, a: 1}
   description: 
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114459720888586328
 MonoBehaviour:
   m_ObjectHideFlags: 1

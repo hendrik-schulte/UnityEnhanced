@@ -216,10 +216,10 @@ MonoBehaviour:
   descriptionRect: {fileID: 224673487811594130}
   descriptionText: {fileID: 114762256367698908}
   position: {x: 1, y: -3}
-  vector: {x: -1.99, y: 1}
-  vectorThickness: 0.066
   color: {r: 0, g: 0, b: 1, a: 1}
   description: V
+  vector: {x: -1.99, y: 1}
+  vectorThickness: 0.066
 --- !u!222 &222045528269134866
 CanvasRenderer:
   m_ObjectHideFlags: 1

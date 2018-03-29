@@ -220,10 +220,10 @@ MonoBehaviour:
   descriptionText: {fileID: 114927839992637176}
   from: {x: -3.07, y: 0}
   to: {x: 2.04, y: 3.27}
-  lineThickness: 0.066
-  endPointThickness: 1.89
   color: {r: 1, g: 0, b: 0, a: 1}
   description: S
+  lineThickness: 0.066
+  endPointThickness: 1.89
 --- !u!114 &114941299159057712
 MonoBehaviour:
   m_ObjectHideFlags: 1
