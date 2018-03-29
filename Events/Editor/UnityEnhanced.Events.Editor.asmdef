@@ -1,5 +1,5 @@
 {
-    "name": "UnityEnhanced.UI.Geometry.Editor",
+    "name": "UnityEnhanced.Events.Editor",
     "references": [
         "UnityEnhanced"
     ],

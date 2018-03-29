@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace UE.Common
@@ -36,3 +37,4 @@ namespace UE.Common
         }
     }
 }
+#endif

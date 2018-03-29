@@ -1,6 +1,7 @@
 ﻿using System.Collections;
+using Leap;
 using UnityEngine;
-using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 namespace UE.UI
 {
@@ -26,14 +27,23 @@ namespace UE.UI
         [SerializeField] private Color fullColor = Color.green;
 
 
-        private Image image;
         private readonly AnimationCurve smoothing = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-        private void Start()
-        {
-            image = GetComponent<Image>();
-        }
+        private Image image;
 
+        private Image Image
+        {
+            get
+            {
+                if (!image)
+                {
+                    image = GetComponent<Image>();
+                }
+
+                return image;
+            }
+        }
+        
         public void SetProgress(float progress)
         {
             StopAllCoroutines();
@@ -49,7 +59,7 @@ namespace UE.UI
 
         private IEnumerator SmoothValue(float target)
         {
-            var startVal = image.fillAmount;
+            var startVal = Image.fillAmount;
             var elapsedTime = 0f;
 
             if (Mathf.Abs(target - startVal) < 0.01) yield break;
@@ -67,9 +77,9 @@ namespace UE.UI
 
         private void SetFill(float value)
         {
-            image.fillAmount = value;
+            Image.fillAmount = value;
 
-            if (LerpColor) image.color = Color.Lerp(emptyColor, fullColor, value);
+            if (LerpColor) Image.color = Color.Lerp(emptyColor, fullColor, value);
         }
     }
 }
