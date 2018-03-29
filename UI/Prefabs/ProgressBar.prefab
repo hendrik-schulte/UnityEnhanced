@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 224429638574061266}
   - component: {fileID: 222778216318794490}
   - component: {fileID: 114681540851900560}
-  - component: {fileID: 114789549084073086}
   m_Layer: 0
   m_Name: ProgressBar
   m_TagString: Untagged
@@ -59,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4558823, g: 0.9039791, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -85,7 +84,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf700bc3116753f40a3c696a3af59739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationTime: 2.05
+  AnimationTime: 2
+  LerpColor: 1
+  emptyColor: {r: 1, g: 0.5735294, b: 0, a: 1}
+  fullColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &114681540851900560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -113,18 +115,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114789549084073086
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1847227139564624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf700bc3116753f40a3c696a3af59739, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AnimationTime: 0
 --- !u!222 &222667587339002292
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -143,18 +133,18 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1847227139564624}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_Children:
   - {fileID: 224567625773743194}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 286.3, y: -142.5}
-  m_SizeDelta: {x: -751.2, y: -497.6}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 3.4250488}
+  m_SizeDelta: {x: 0, y: 6.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224567625773743194
 RectTransform:
