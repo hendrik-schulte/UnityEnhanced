@@ -1,0 +1,8 @@
+{
+    "name": "UnityEnhanced.UI.Geometry.Editor",
+    "references": [
+        "UnityEnhanced"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
