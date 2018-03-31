@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Leap;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
 

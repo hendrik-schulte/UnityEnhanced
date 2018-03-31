@@ -23,7 +23,7 @@ namespace UE.Common
         {
             return "[" + sender.GetType().Name + "] ";
         }
-
+       
 //        public enum LoggingLevel
 //        {
 //            
