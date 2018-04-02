@@ -66,7 +66,7 @@ namespace UE.UI
             while (elapsedTime < AnimationTime)
             {
                 elapsedTime += Time.deltaTime;
-                SetFill(Mathf.Lerp(startVal, target, smoothing.Evaluate(elapsedTime)));
+                SetFill(Mathf.Lerp(startVal, target, smoothing.Evaluate(elapsedTime / AnimationTime)));
 
                 yield return null;
             }

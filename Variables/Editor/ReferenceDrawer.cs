@@ -32,9 +32,9 @@ namespace UE.Variables
             EditorGUI.BeginChangeCheck();
 
             // Get properties
-            SerializedProperty useConstant = property.FindPropertyRelative("UseConstant");
-            SerializedProperty constantValue = property.FindPropertyRelative("ConstantValue");
-            SerializedProperty variable = property.FindPropertyRelative("Variable");
+            var useConstant = property.FindPropertyRelative("UseConstant");
+            var constantValue = property.FindPropertyRelative("ConstantValue");
+            var variable = property.FindPropertyRelative("Variable");
 
             // Calculate rect for configuration button
             Rect buttonRect = new Rect(position);

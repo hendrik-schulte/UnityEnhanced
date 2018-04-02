@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace UE.UI.Geometry
 {
@@ -30,7 +33,7 @@ namespace UE.UI.Geometry
         /// </summary>
         /// <returns></returns>        
         public ReadOnlyCollection<Vector2> Points => points.AsReadOnly();
-        
+
         /// <summary>
         /// Sets the color of the polygon.
         /// </summary>
@@ -59,12 +62,13 @@ namespace UE.UI.Geometry
             for (var i = transform.childCount - 1; i >= 0; i--)
             {
                 var go = transform.GetChild(i).gameObject;
-                
+
                 if (!Application.isPlaying && Application.isEditor)
                     DestroyImmediate(go);
                 else
                     Destroy(go);
             }
+
             lines.Clear();
         }
 
@@ -101,4 +105,25 @@ namespace UE.UI.Geometry
             Build();
         }
     }
+
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(UIPolygon))]
+    public class UIPolygonEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            var polygon = target as UIPolygon;
+
+            if (GUILayout.Button("Build"))
+                polygon.Build();
+
+
+            if (GUILayout.Button("Clear"))
+                polygon.Clear();
+        }
+    }
+#endif
 }
