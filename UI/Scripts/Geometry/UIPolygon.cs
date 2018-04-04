@@ -109,6 +109,7 @@ namespace UE.UI.Geometry
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(UIPolygon))]
+    [CanEditMultipleObjects]
     public class UIPolygonEditor : Editor
     {
         public override void OnInspectorGUI()

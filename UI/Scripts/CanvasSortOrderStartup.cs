@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UE.Common
+namespace UE.UI
 {
     /// <summary>
     /// This component sets the sorting order of the attached canvas to the given value at awake.
