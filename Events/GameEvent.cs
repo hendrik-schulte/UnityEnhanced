@@ -3,70 +3,81 @@
 // ----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using UE.Common;
+using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event()")]
-    public class GameEvent : ScriptableObject
-    {    
-        [SerializeField] 
-        private bool debugLog;    
-        
+    public class GameEvent : InstanciableSO<GameEvent>
+    {
+        [SerializeField] private bool debugLog;
+
 #if UNITY_EDITOR
-        [Multiline]
-        public string DeveloperDescription = "";
+        [Multiline] public string DeveloperDescription = "";
 #endif
-      
-        [SerializeField]
-        private UnityEvent OnEventTriggered;
+
+        [SerializeField] private UnityEvent OnEventTriggered = new UnityEvent();
 
         /// <summary>
         /// The list of listeners that this event will notify if it is raised.
         /// </summary>
-        private readonly List<GameEventListener> eventListeners = 
+        private readonly List<GameEventListener> eventListeners =
             new List<GameEventListener>();
-
+        
+        /// <summary>
+        /// Raises the event. Does not work with instancing.
+        /// </summary>
         public void Raise()
         {
-            if(debugLog) Debug.Log("Game Event '" + name + "' was raised!");
+            Raise(null);
+        }
+
+        public void Raise(Object key)
+        {
+            if (debugLog) Debug.Log("Game Event '" + name + "' was raised!");
+
+//            Logging.Error(this, "OnEventTriggered is null", Instance(key).OnEventTriggered == null);
             
-            for(var i = eventListeners.Count -1; i >= 0; i--)
-                eventListeners[i].OnEventRaised();
-            OnEventTriggered.Invoke();
+            for (var i = Instance(key).eventListeners.Count - 1; i >= 0; i--)
+                Instance(key).eventListeners[i].OnEventRaised();
+            Instance(key).OnEventTriggered.Invoke();
         }
 
-        public void RegisterListener(GameEventListener listener)
+        public void RegisterListener(GameEventListener listener, Object key = null)
         {
-            if (!eventListeners.Contains(listener))
-                eventListeners.Add(listener);
+            if (!Instance(key).eventListeners.Contains(listener))
+                Instance(key).eventListeners.Add(listener);
         }
 
-        public void RegisterListener(UnityAction listener)
+        public void RegisterListener(UnityAction listener, Object key = null)
         {
-            OnEventTriggered.AddListener(listener);
+            Instance(key).OnEventTriggered.AddListener(listener);
         }
 
-        public void UnregisterListener(GameEventListener listener)
+        public void UnregisterListener(GameEventListener listener, Object key = null)
         {
-            if (eventListeners.Contains(listener))
-                eventListeners.Remove(listener);
+            if (Instance(key).eventListeners.Contains(listener))
+                Instance(key).eventListeners.Remove(listener);
         }
-        
-        public void UnregisterListener(UnityAction listener)
+
+        public void UnregisterListener(UnityAction listener, Object key = null)
         {
-            OnEventTriggered.RemoveListener(listener);   
+            Instance(key).OnEventTriggered.RemoveListener(listener);
         }
     }
-    
-    
+
+
 #if UNITY_EDITOR
-    [CustomEditor(typeof(GameEvent))]
-    public class EventEditor : Editor
+    [CustomEditor(typeof(GameEvent), true)]
+    [CanEditMultipleObjects]
+    public class EventEditor : InstanciableSOEditor
     {
         public override void OnInspectorGUI()
         {
@@ -74,9 +85,9 @@ namespace UE.Events
 
             GUI.enabled = Application.isPlaying;
 
-            GameEvent e = target as GameEvent;
+            var gameEvent = target as GameEvent;
             if (GUILayout.Button("Raise"))
-                e.Raise();
+                gameEvent.Raise();
         }
     }
 #endif

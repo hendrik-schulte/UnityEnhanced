@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
-    public class Vector3EventListener : ParameterEventListener<Vector3>
+    public class Vector3EventListener : ParameterEventListener<Vector3, Vector3Event>
     {
         [SerializeField]
         [Tooltip("Event to register with.")] 
@@ -13,7 +13,7 @@ namespace UE.Events
         [Tooltip("Response to invoke when Event is raised.")] 
         private Vector3UnityEvent OnTriggered;
 
-        protected override ParameterEvent<Vector3> GenericEvent => Event;
+        protected override ParameterEvent<Vector3, Vector3Event> GenericEvent => Event;
         protected override UnityEvent<Vector3> GenericResponse => OnTriggered;
     }
 }

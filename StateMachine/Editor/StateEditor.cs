@@ -4,6 +4,7 @@ using UnityEngine;
 namespace UE.StateMachine
 {
     [CustomEditor(typeof(State))]
+    [CanEditMultipleObjects]
     public class StateEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()

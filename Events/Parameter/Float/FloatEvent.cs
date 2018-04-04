@@ -6,10 +6,10 @@ using UnityEngine.UI;
 namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event(float)")]
-    public class FloatEvent : ParameterEvent<float>
+    public class FloatEvent : ParameterEvent<float, FloatEvent>
     {
         [SerializeField]
-        private FloatUnityEvent OnTriggered;
+        private FloatUnityEvent OnTriggered = new FloatUnityEvent();
 
         protected override UnityEvent<float> OnEventTriggered => OnTriggered;
 

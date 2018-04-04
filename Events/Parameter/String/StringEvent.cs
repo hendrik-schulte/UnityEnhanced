@@ -4,10 +4,10 @@ using UnityEngine.Events;
 namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event(string)")]
-    public class StringEvent : ParameterEvent<string>
+    public class StringEvent : ParameterEvent<string, StringEvent>
     {
         [SerializeField]
-        private StringUnityEvent OnTriggered;
+        private StringUnityEvent OnTriggered = new StringUnityEvent();
 
         protected override UnityEvent<string> OnEventTriggered => OnTriggered;
     }
