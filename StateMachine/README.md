@@ -11,18 +11,26 @@ This is a simple yet powerful state machine based on ScriptableObjects.
 - *[Optional]*: Mark one of the states as initial state to define wich state the application starts in.
 > You do this by clicking a state asset and click the *Set Initial State* button.
 
-### [*StateListener*](Core/StateListener.cs)
+### [StateListener](Core/StateListener.cs)
 
 Base component providing state-based events. Can be inherited for custom behaviour or wired in the inspector.
 
-### [*ActiveInState*](StateListener/ActiveInState.cs)
+### [ActiveInState](StateListener/ActiveInState.cs)
 
 This component simple activates or deactivates the parenting GameObject when entering or leaving a state.
 
-### [*TransitionAlphaBlend*](StateListener/TransitionAlphaBlend.cs)
+### [TransitionAlphaBlend](StateListener/TransitionAlphaBlend.cs)
 
 This component enables easy transitions between UI canvases by scripted fade-in and fade-out animations. Requires a canvas and a canvas group.
 
-### [*TransitionAnimator*](StateListener/TransitionAnimator.cs)
+### [TransitionAnimator](StateListener/TransitionAnimator.cs)
 
 This component enables easy transitions between UI canvases using animations. Needs an Animator component with Animations named *Open* and *Closed*. A sampe animation can be found in [*/Animation/*](StateMachine/StateListener/Animation/). For performance reasons it is recommended to use TransitionAlphaBlend whenever possible. This may even work with non-UI objects.
+
+## Going deeper: Instanced State Machines
+
+By checking the *Instanced* field on a StateManager asset, you enable Instancing for that state machine. 
+This allows you to use the state machine as a template and use it for example in a prefab. 
+Every StateListener referencing a state of this state machine will now have an instance key field. 
+This is used to access an instance of your state machine. You can assign any *UnityEngine.Object* as a key. 
+For prefabs you can use the root GameObject as a key. Using *null* as key accesses the main state manager.

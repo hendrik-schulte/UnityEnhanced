@@ -51,8 +51,6 @@ namespace UE.Instancing
 
             DrawPropertiesExcluding(serializedObject, "m_Script");
             serializedObject.ApplyModifiedProperties();
-
-//            base.OnInspectorGUI();
         }
     }
 #endif

@@ -5,13 +5,32 @@ namespace UE.StateMachine
 {
     [CustomEditor(typeof(State))]
     [CanEditMultipleObjects]
-    public class StateEditor : UnityEditor.Editor
+    public class StateEditor : Editor
     {
+        private SerializedProperty m_Script;
+        
+        private void OnEnable()
+        {
+            m_Script = serializedObject.FindProperty("m_Script");
+        }
+        
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
-
             var state = target as State;
+
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField(m_Script);
+            GUI.enabled = true;
+            
+            if (state.stateManager)
+            {            
+                GUI.enabled = false;
+                EditorGUILayout.Toggle("Instanced", state.stateManager.Instanced);
+                GUI.enabled = true;
+            }
+
+            DrawPropertiesExcluding(serializedObject, "m_Script");
+
 
         	if (!state.stateManager) return;
 
@@ -45,8 +64,7 @@ namespace UE.StateMachine
                 state.stateManager.InitialState = state;
                 EditorUtility.SetDirty(state.stateManager);
             }
-//                state.SetAsInitialState();
-
+            
             var initialState = state.stateManager.InitialState;
 
             if(initialState) GUILayout.Label("Initial State: " + initialState.name);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UE.Common;
+using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,12 +10,12 @@ namespace UE.StateMachine
     /// <summary>
     /// This component sends events when the given states are activated. Can be inherited for special applications.
     /// </summary>
-    public class StateListener : MonoBehaviour
+    public class StateListener : InstanceObserver
     {
         [SerializeField] 
         protected bool debugLog;
         [SerializeField] 
-        private List<State> activeStates;
+        private List<State> activeStates = new List<State>();
 
         [SerializeField]
         protected UnityEvent OnActivated;
@@ -37,11 +38,12 @@ namespace UE.StateMachine
 
             var stateManager = activeStates[0].stateManager;
 
-            stateManager.Start();
+            stateManager.Init(key);
             
-            stateManager.OnStateEnter.AddListener(OnStateEnter);
+//            stateManager.OnStateEnter.AddListener(OnStateEnter);
+            stateManager.AddStateEnterListener(OnStateEnter, key);
 
-            if (IsActiveState(stateManager.State))
+            if (IsActiveState(stateManager.GetState(key)))
             {
                 if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Activated");
                 Active = true;
@@ -112,7 +114,17 @@ namespace UE.StateMachine
         {
             if (!activeStates.Any()) return;
 
-            activeStates[0].stateManager.OnStateEnter.RemoveListener(OnStateEnter);
+//            activeStates[0].stateManager.OnStateEnter.RemoveListener(OnStateEnter);
+            activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
+        }
+
+        public override IInstanciable GetTarget()
+        {
+            if (!activeStates.Any()) return null;
+            
+            if (activeStates[0] == null) return null;
+            
+            return activeStates[0].stateManager;
         }
     }
 }

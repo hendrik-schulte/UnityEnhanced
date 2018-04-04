@@ -60,6 +60,14 @@ Resources.Load<GameEvent>("Events/OnMyEvent");
 
 You can even click the event asset and fire the Event manually (only works for parameterless events).
 
+## Going deeper: Instanced Events
+
+By checking the *Instanced* field on an Event asset, you enable Instancing. 
+This allows you to use the event as a template and reuse it for example in instances of a prefab. 
+Every Listener referencing an instanced event will have an *instance key* field. 
+This is used to access an instance of your event via a *key* defined by a *UnityEngine.Object*. 
+Using *null* as key accesses the main event.
+
 ## Acknowledgement
 
 This is based on the genius work of Ryan Hipple:

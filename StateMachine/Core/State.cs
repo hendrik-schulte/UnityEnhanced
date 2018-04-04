@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using UE.Instancing;
+using UnityEngine;
 
 namespace UE.StateMachine
 {
+    /// <summary>
+    /// A state within this state machine.
+    /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State")]
     public class State : ScriptableObject
     {
@@ -17,7 +21,16 @@ namespace UE.StateMachine
         /// </summary>
         public void Enter()
         {
-            stateManager.State = this;
+            stateManager.SetState(this);
+        }
+
+        /// <summary>
+        /// This state is activated using an instance key.
+        /// </summary>
+        /// <param name="key">key to an instance of state manager</param>
+        public void Enter(Object key)
+        {
+            stateManager.SetState(this, key);            
         }
 
         /// <summary>
@@ -26,9 +39,19 @@ namespace UE.StateMachine
         /// <returns></returns>
         public bool IsActive()
         {
+            return IsActive(null);
+        }
+
+        /// <summary>
+        /// Returns true if this state is currently activated in the state managers instance.
+        /// </summary>
+        /// <param name="key">key to an instance of state manager</param>
+        /// <returns></returns>
+        public bool IsActive(Object key)
+        {
             if (!stateManager) return false;
 
-            return stateManager.State == this;
+            return stateManager.GetState() == this;
         }
 
         /// <summary>

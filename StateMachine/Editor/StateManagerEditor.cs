@@ -1,10 +1,11 @@
-﻿using UnityEditor;
+﻿using UE.Instancing;
+using UnityEditor;
 using UnityEngine;
 
 namespace UE.StateMachine
 {
     [CustomEditor(typeof(StateManager))]
-    public class StateManagerEditor : UnityEditor.Editor
+    public class StateManagerEditor : InstanciableSOEditor
     {
         public override void OnInspectorGUI()
         {
@@ -20,7 +21,7 @@ namespace UE.StateMachine
 
             if (!Application.isPlaying) return;
 
-            if (stateManager.State) GUILayout.Label("Current State: " + stateManager.State.name);
+            if (stateManager.GetState()) GUILayout.Label("Current State: " + stateManager.GetState().name);
             else GUILayout.Label("Current State: None");
         }
     }

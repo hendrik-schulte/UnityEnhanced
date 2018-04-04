@@ -1,16 +1,19 @@
 ﻿using System;
 using UE.Common;
+using UE.Instancing;
 using UnityEngine;
+using UnityEngine.Events;
+using Object = UnityEngine.Object;
 
 namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
-    public class StateManager : ScriptableObject
+    public class StateManager : InstanciableSO<StateManager>
     {
         [SerializeField] private bool debugLog;
 
-        public StateChangeEvent OnStateEnter = new StateChangeEvent();
-        public StateChangeEvent OnStateLeave = new StateChangeEvent();
+        private StateChangeEvent OnStateEnter = new StateChangeEvent();
+        private StateChangeEvent OnStateLeave = new StateChangeEvent();
 
 #if UNITY_EDITOR
         [Multiline] public string DeveloperDescription = "";
@@ -21,48 +24,100 @@ namespace UE.StateMachine
 
         [NonSerialized] private State _state;
 
-        /// <summary>
-        /// The current state of this system.
-        /// </summary>
-        public State State
+//        /// <summary>
+//        /// The current state of this system.
+//        /// </summary>
+//        private State State
+//        {
+//            set
+//            {
+//                if (_state == value) return;
+//
+//                if (value == null)
+//                {
+//                    Debug.LogError("You are trying to set the state to null which is not supported!");
+//                    return;
+//                }
+//
+//                if (value.stateManager != this)
+//                {
+//                    Debug.LogError("The state " + value.name +
+//                                   " you want to enter is not controlled by this state manager!");
+//                    return;
+//                }
+//
+//                if (debugLog) Logging.Log(this, "Change State to: " + value);
+//                OnStateLeave.Invoke(_state);
+//                _state = value;
+//
+//                OnStateEnter.Invoke(value);
+//            }
+//        }
+
+        public void SetState(State state, Object key = null)
         {
-            set
+            var instance = Instance(key);
+            
+            
+            if (instance._state == state) return;
+
+            if (state == null)
             {
-                if (_state == value) return;
-
-                if (value == null)
-                {
-                    Debug.LogError("You are trying to set the state to null which is not supported!");
-                    return;
-                }
-
-                if (value.stateManager != this)
-                {
-                    Debug.LogError("The state " + value.name +
-                                   " you want to enter is not controlled by this state manager!");
-                    return;
-                }
-
-                if (debugLog) Logging.Log(this, "Change State to: " + value);
-                OnStateLeave.Invoke(_state);
-                _state = value;
-
-                OnStateEnter.Invoke(value);
+                Logging.Error(this, "You are trying to set the state to null which is not supported!");
+                return;
             }
-            get { return _state; }
+
+            if (state.stateManager != this)
+            {
+                Logging.Error(this, "The state " + state.name + " you want to enter " +
+                                    "is not controlled by this state manager!");
+                return;
+            }
+
+            if (debugLog) Logging.Log(this, "Change State to: " + state);
+            
+            instance.OnStateLeave.Invoke(_state);
+            instance._state = state;
+
+            instance.OnStateEnter.Invoke(state);
+        }
+        
+        public State GetState(Object key = null)
+        {
+            return Instance(key)._state;
+        }
+
+        public void AddStateEnterListener(UnityAction<State> action, Object key = null)
+        {
+            Instance(key).OnStateEnter.AddListener(action);
+        }
+
+        public void RemoveStateEnterListener(UnityAction<State> action, Object key = null)
+        {
+            Instance(key).OnStateEnter.RemoveListener(action);            
+        }
+        
+        public void AddStateLeaveListener(UnityAction<State> action, Object key = null)
+        {
+            Instance(key).OnStateEnter.AddListener(action);
+        }
+
+        public void RemoveStateLeaveListener(UnityAction<State> action, Object key = null)
+        {
+            Instance(key).OnStateEnter.RemoveListener(action);            
         }
 
         /// <summary>
         /// This is called when a StateListener starts.
         /// </summary>
-        internal void Start()
+        internal void Init(Object key = null)
         {
-            if (State) return;
+            if (GetState(key)) return;
 
             if (InitialState) Logging.Log(this, "Initializing with " + InitialState.name, debugLog);
             else Logging.Log(this, "Initializing with null", debugLog);
 
-            State = InitialState;
+            SetState(InitialState, key);
         }
 
         /// <summary>

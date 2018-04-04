@@ -14,37 +14,28 @@ namespace UE.Instancing
         int InstanceCount { get; }
     }
 
+    /// <summary>
+    /// This class enables Instancing for ScriptableObjects.  This needs to be inherited.
+    /// After that, all instanced properties must be accesses via Instance(key). The key
+    /// is used for a lookup in a disctionary. It is defined in an InstanceObserver to keep
+    /// track of the different instaces of this SO. 
+    /// </summary>
+    /// <typeparam name="T">Derived type</typeparam>
     public abstract class InstanciableSO<T> : ScriptableObject, IInstanciable where T : InstanciableSO<T>
     {
-        [SerializeField, HideInInspector] protected bool instanced;
+        [SerializeField, HideInInspector] private bool instanced;
 
         private Dictionary<Object, T> instances;
 
-        public bool Instanced => instanced;
+        public virtual bool Instanced => instanced;
         public int InstanceCount => instances?.Count ?? 1;
-
-//        protected virtual void Awake()
-//        {
-////            Logging.Log(this, "Awake");
-//
-////            Clear();
-//        }
-
-//        protected virtual void OnValidate()
-//        {
-//            if (!Application.isPlaying) Clear();
-//        }
 
         /// <summary>
         /// Removes references to all instances of this ScriptableObject.
         /// </summary>
         public void Clear()
         {
-            if (instanced)
-
-                instances = new Dictionary<Object, T> {{this, (T) this}};
-            else
-                instances = null;
+            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
         }
 
         /// <summary>
@@ -96,6 +87,7 @@ namespace UE.Instancing
             EditorGUILayout.ObjectField(m_Script);
             GUI.enabled = true;
 
+
             const string tooltipInstancing =
                 "When this is checked, this Object is automatically instaced at runtime. It then acts as a " +
                 "template that can be reused. Scripts that utilize instancing need to inherit from " +
@@ -108,15 +100,14 @@ namespace UE.Instancing
 
             if (instancedSO.Instanced)
             {
-                EditorGUILayout.LabelField(new GUIContent("# Instances", tooltipNo),
+                EditorGUILayout.LabelField(new GUIContent("No. Instances", tooltipNo),
                     new GUIContent(instancedSO.InstanceCount.ToString()));
             }
 
+
             DrawPropertiesExcluding(serializedObject, "m_Script");
 
-            serializedObject.ApplyModifiedProperties();
-
-//            base.OnInspectorGUI();            
+            serializedObject.ApplyModifiedProperties();       
         }
     }
 #endif
