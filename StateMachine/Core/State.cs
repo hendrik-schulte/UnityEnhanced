@@ -56,7 +56,7 @@ namespace UE.StateMachine
         }
 
         /// <summary>
-        /// Returns true if state machines are currently in this state.
+        /// Returns true if all state machine instances are currently in this state.
         /// </summary>
         /// <returns></returns>
         public bool AllInstancesActive(bool includeMain = false)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -27,7 +28,7 @@ namespace UE.Instancing
         /// </summary>
         private Dictionary<Object, T> instances;
 
-        
+
         public virtual bool Instanced => instanced;
         public int InstanceCount => instances?.Count ?? 0;
 
@@ -42,7 +43,7 @@ namespace UE.Instancing
         public void Clear()
         {
 //            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
-            instances = instanced ? new Dictionary<Object, T> {} : null;
+            instances = instanced ? new Dictionary<Object, T> { } : null;
             OnInstancesChanged.Invoke();
         }
 
@@ -50,6 +51,8 @@ namespace UE.Instancing
         {
             return new ReadOnlyCollection<T>(instances.Values.ToArray());
         }
+
+        public Object[] Keys => instances?.Keys.ToArray();
 
         /// <summary>
         /// Returns an instance of this scriptable object based on the given key object.
@@ -61,7 +64,12 @@ namespace UE.Instancing
         public T Instance(Object key)
         {
             if (!instanced) return (T) this;
-            if (key == null) return (T) this;
+            if (key == null)
+            {
+                Logging.Warning(this, "Accessing the main object of an instanced system. This is " +
+                                      "probably not intended. Did you forget to assign an instance key?");
+                return (T) this;
+            }
 
             if (instances == null) instances = new Dictionary<Object, T>();
 
@@ -86,13 +94,18 @@ namespace UE.Instancing
         /// Is instancing enabled for this object?
         /// </summary>
         bool Instanced { get; }
-        
+
         /// <summary>
         /// How many instances are there?
         /// </summary>
         int InstanceCount { get; }
+
+        /// <summary>
+        /// Returns a collection of instance keys.
+        /// </summary>
+        Object[] Keys { get; }
     }
-    
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(InstanciableSO<>), true)]
     [CanEditMultipleObjects]
@@ -130,14 +143,45 @@ namespace UE.Instancing
 
             if (instancedSO.Instanced)
             {
-                EditorGUILayout.LabelField(new GUIContent("No. Instances", tooltipNo),
-                    new GUIContent(instancedSO.InstanceCount.ToString()));
+                EditorGUI.indentLevel++;
+
+//                EditorGUILayout.LabelField(new GUIContent("No. Instances", tooltipNo),
+//                    new GUIContent(instancedSO.InstanceCount.ToString()));
+
+                var keys = instancedSO.Keys;
+
+                if (keys != null)
+                {
+                    EditorGUILayout.Space();
+                    DrawInstanceListHeader();
+                    
+                    foreach (var key in keys)
+                    {
+                        DrawInstance(key);
+                    }
+                    
+                    EditorGUILayout.Space();
+                }
+
+
+                EditorGUI.indentLevel--;
             }
 
 
             DrawPropertiesExcluding(serializedObject, "m_Script");
 
-            serializedObject.ApplyModifiedProperties();       
+            serializedObject.ApplyModifiedProperties();
+        }
+        
+        
+        protected virtual void DrawInstanceListHeader()
+        {
+            EditorGUILayout.LabelField("Key", EditorStyles.boldLabel);
+        }
+
+        protected virtual void DrawInstance(Object key)
+        {
+            EditorGUILayout.LabelField(key.name);
         }
     }
 #endif

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UE.Common;
 using UE.Instancing;
 using UnityEngine;
@@ -88,6 +90,27 @@ namespace UE.StateMachine
             else Logging.Log(this, "Initializing with null", debugLog);
 
             SetState(InitialState, key);
+        }
+        
+        /// <summary>
+        /// Returns true if all state machine instances are currently in this state.
+        /// </summary>
+        /// <returns></returns>
+        public bool AllInstancesInEitherState(params State[] states)
+        {
+            if (!states.Any()) return true;
+            
+            if (states.Any(state => state.stateManager != this))
+            {
+                Logging.Warning(this, "The states checked do not belong to this state machine.");
+                return false;
+            }
+            
+            if (!Instanced)
+                return states.Any(state => state.IsActive());
+            
+
+            return states.Any(state => GetInstances().All(v => v.GetState() == state));
         }
 
         /// <summary>

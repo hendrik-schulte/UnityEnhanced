@@ -49,8 +49,7 @@ namespace UE.StateMachine
 
             InitialState(state);
 
-            if (!Application.isPlaying) return;
-
+            if (!Application.isPlaying || state.stateManager.Instanced) return;
 
             if (state.IsActive())
             {
