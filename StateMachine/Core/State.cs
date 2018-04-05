@@ -1,4 +1,5 @@
-﻿using UE.Instancing;
+﻿using System.Linq;
+using UE.Instancing;
 using UnityEngine;
 
 namespace UE.StateMachine
@@ -30,7 +31,7 @@ namespace UE.StateMachine
         /// <param name="key">key to an instance of state manager</param>
         public void Enter(Object key)
         {
-            stateManager.SetState(this, key);            
+            stateManager.SetState(this, key);
         }
 
         /// <summary>
@@ -53,6 +54,24 @@ namespace UE.StateMachine
 
             return stateManager.GetState() == this;
         }
+
+        /// <summary>
+        /// Returns true if state machines are currently in this state.
+        /// </summary>
+        /// <returns></returns>
+        public bool AllInstancesActive(bool includeMain = false)
+        {
+            if (!stateManager) return false;
+
+            if (!stateManager.Instanced) return IsActive();
+
+            var instance = stateManager.GetInstances();
+
+            if (includeMain) if (!IsActive()) return false;
+
+            return instance.All(v => v.GetState() == this);
+        }
+
 
         /// <summary>
         /// This returns true, when the state is the initial state of this system.

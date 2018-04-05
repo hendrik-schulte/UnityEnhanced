@@ -24,41 +24,11 @@ namespace UE.StateMachine
 
         [NonSerialized] private State _state;
 
-//        /// <summary>
-//        /// The current state of this system.
-//        /// </summary>
-//        private State State
-//        {
-//            set
-//            {
-//                if (_state == value) return;
-//
-//                if (value == null)
-//                {
-//                    Debug.LogError("You are trying to set the state to null which is not supported!");
-//                    return;
-//                }
-//
-//                if (value.stateManager != this)
-//                {
-//                    Debug.LogError("The state " + value.name +
-//                                   " you want to enter is not controlled by this state manager!");
-//                    return;
-//                }
-//
-//                if (debugLog) Logging.Log(this, "Change State to: " + value);
-//                OnStateLeave.Invoke(_state);
-//                _state = value;
-//
-//                OnStateEnter.Invoke(value);
-//            }
-//        }
-
         public void SetState(State state, Object key = null)
         {
             var instance = Instance(key);
-            
-            
+
+
             if (instance._state == state) return;
 
             if (state == null)
@@ -75,13 +45,13 @@ namespace UE.StateMachine
             }
 
             if (debugLog) Logging.Log(this, "Change State to: " + state);
-            
+
             instance.OnStateLeave.Invoke(_state);
             instance._state = state;
 
             instance.OnStateEnter.Invoke(state);
         }
-        
+
         public State GetState(Object key = null)
         {
             return Instance(key)._state;
@@ -94,9 +64,9 @@ namespace UE.StateMachine
 
         public void RemoveStateEnterListener(UnityAction<State> action, Object key = null)
         {
-            Instance(key).OnStateEnter.RemoveListener(action);            
+            Instance(key).OnStateEnter.RemoveListener(action);
         }
-        
+
         public void AddStateLeaveListener(UnityAction<State> action, Object key = null)
         {
             Instance(key).OnStateEnter.AddListener(action);
@@ -104,7 +74,7 @@ namespace UE.StateMachine
 
         public void RemoveStateLeaveListener(UnityAction<State> action, Object key = null)
         {
-            Instance(key).OnStateEnter.RemoveListener(action);            
+            Instance(key).OnStateEnter.RemoveListener(action);
         }
 
         /// <summary>

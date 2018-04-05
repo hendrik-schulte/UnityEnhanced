@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -8,12 +10,7 @@ using UnityEditor;
 
 namespace UE.Instancing
 {
-    public interface IInstanciable
-    {
-        bool Instanced { get; }
-        int InstanceCount { get; }
-    }
-
+    /// <inheritdoc />
     /// <summary>
     /// This class enables Instancing for ScriptableObjects.  This needs to be inherited.
     /// After that, all instanced properties must be accesses via Instance(key). The key
@@ -25,17 +22,33 @@ namespace UE.Instancing
     {
         [SerializeField, HideInInspector] private bool instanced;
 
+        /// <summary>
+        /// In this dictionary the instances of the SO are stored.
+        /// </summary>
         private Dictionary<Object, T> instances;
 
+        
         public virtual bool Instanced => instanced;
-        public int InstanceCount => instances?.Count ?? 1;
+        public int InstanceCount => instances?.Count ?? 0;
+
+        /// <summary>
+        /// This event is triggered whenever instances are added or removed.
+        /// </summary>
+        public readonly UnityEvent OnInstancesChanged = new UnityEvent();
 
         /// <summary>
         /// Removes references to all instances of this ScriptableObject.
         /// </summary>
         public void Clear()
         {
-            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
+//            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
+            instances = instanced ? new Dictionary<Object, T> {} : null;
+            OnInstancesChanged.Invoke();
+        }
+
+        public ReadOnlyCollection<T> GetInstances()
+        {
+            return new ReadOnlyCollection<T>(instances.Values.ToArray());
         }
 
         /// <summary>
@@ -57,12 +70,29 @@ namespace UE.Instancing
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
                 instances.Add(key, instance);
+                OnInstancesChanged.Invoke();
             }
 
             return instances[key];
         }
     }
 
+    /// <summary>
+    /// This interface is implemented by InstanciatedSO and simplifies casting when generic parameter is unknown.
+    /// </summary>
+    public interface IInstanciable
+    {
+        /// <summary>
+        /// Is instancing enabled for this object?
+        /// </summary>
+        bool Instanced { get; }
+        
+        /// <summary>
+        /// How many instances are there?
+        /// </summary>
+        int InstanceCount { get; }
+    }
+    
 #if UNITY_EDITOR
     [CustomEditor(typeof(InstanciableSO<>), true)]
     [CanEditMultipleObjects]
