@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UE.Instancing;
+using UE.UI;
 using UnityEngine;
 
 namespace UE.StateMachine
@@ -52,7 +53,7 @@ namespace UE.StateMachine
         {
             if (!stateManager) return false;
 
-            return stateManager.GetState() == this;
+            return stateManager.GetState(key) == this;
         }
 
         /// <summary>
@@ -72,7 +73,6 @@ namespace UE.StateMachine
             return instance.All(v => v.GetState() == this);
         }
 
-
         /// <summary>
         /// This returns true, when the state is the initial state of this system.
         /// </summary>
@@ -82,6 +82,15 @@ namespace UE.StateMachine
             if (!stateManager) return false;
 
             return stateManager.InitialState == this;
+        }
+
+        /// <summary>
+        /// This draws a state gizmo at the given world space position.
+        /// </summary>
+        /// <param name="position"></param>
+        public void DrawWorldSpaceGizmo(Vector3 position)
+        {
+            Gizmo.DrawWorldSpaceString("Current: " + name, position);
         }
     }
 }

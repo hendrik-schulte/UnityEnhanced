@@ -28,14 +28,15 @@ namespace UE.StateMachine
 
         protected override void DrawInstanceListHeader()
         {
-            EditorGUILayout.LabelField("Key", "Current State", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Name, Key", "Current State");
         }
 
         protected override void DrawInstance(Object key)
         {
             var stateManager = target as StateManager;
 
-            EditorGUILayout.LabelField(key.name, stateManager.Instance(key).GetState()?.name);
-        }
+            EditorGUILayout.LabelField(key.name+ ", " + key.GetHashCode(), stateManager.Instance(key).GetState()?.name);
+        }         
+
     }
 }

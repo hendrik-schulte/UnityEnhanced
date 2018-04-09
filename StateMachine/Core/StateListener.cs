@@ -13,7 +13,7 @@ namespace UE.StateMachine
     public class StateListener : InstanceObserver
     {
         [SerializeField] 
-        protected bool debugLog;
+        protected bool debug;
         [SerializeField] 
         private List<State> activeStates = new List<State>();
 
@@ -29,7 +29,8 @@ namespace UE.StateMachine
 
         private void Start()
         {
-            if (!activeStates.Any())
+            //check if there are any states defined
+            if (!HasStates())
             {
                 enabled = false;
                 Logging.Warning(this, "'" + gameObject.name + "': There are no active states defined!");
@@ -38,21 +39,30 @@ namespace UE.StateMachine
 
             var stateManager = activeStates[0].stateManager;
 
+            //check if all states are in the same state system
+            foreach (var state in activeStates)
+            {
+                if(state.stateManager == stateManager) continue;
+
+                enabled = false;
+                Logging.Warning(this, "'" + gameObject.name + "': Not all states belong to the same state machine!");
+                return;
+            }
+            
             stateManager.Init(key);
             
-//            stateManager.OnStateEnter.AddListener(OnStateEnter);
             stateManager.AddStateEnterListener(OnStateEnter, key);
 
             if (IsActiveState(stateManager.GetState(key)))
             {
-                if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Activated");
+                Logging.Log(this, "'" + gameObject.name + "' Activated", debug);
                 Active = true;
                 Activated();
                 OnActivated.Invoke();
             }
             else
             {
-                if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Deactivated");
+                Logging.Log(this, "'" + gameObject.name + "' Deactivated", debug);
                 OnDeactivated.Invoke();
                 Deactivated(true);
             }
@@ -79,13 +89,13 @@ namespace UE.StateMachine
 
             if (!previouslyActive && Active)
             {
-                if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Activated");
+                Logging.Log(this, "'" + gameObject.name + "' Activated", debug);
                 Activated();
                 OnActivated.Invoke();
             }
             if (previouslyActive && !Active)
             {
-                if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Deactivated");
+                Logging.Log(this, "'" + gameObject.name + "' Deactivated", debug);
                 OnDeactivated.Invoke();
                 Deactivated();
             }
@@ -112,8 +122,10 @@ namespace UE.StateMachine
         
         private void OnDestroy()
         {
-            if (!activeStates.Any()) return;
+            if (!HasStates()) return;
 
+            Logging.Log(this, "'" + gameObject.name + "' Removing Listener", debug);
+            
 //            activeStates[0].stateManager.OnStateEnter.RemoveListener(OnStateEnter);
             activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
         }
@@ -125,6 +137,23 @@ namespace UE.StateMachine
             if (activeStates[0] == null) return null;
             
             return activeStates[0].stateManager;
+        }
+
+        /// <summary>
+        /// Returns true if there are states defined and the first state is not null.
+        /// </summary>
+        /// <returns></returns>
+        private bool HasStates()
+        {
+            return activeStates.Any() && activeStates[0] != null;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(!debug) return;
+            if (!HasStates()) return;
+
+            activeStates[0].stateManager?.DrawWorldSpaceGizmo(transform.position, key);
         }
     }
 }

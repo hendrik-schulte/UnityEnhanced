@@ -15,7 +15,7 @@ namespace UE.Instancing
     /// <summary>
     /// This class enables Instancing for ScriptableObjects.  This needs to be inherited.
     /// After that, all instanced properties must be accesses via Instance(key). The key
-    /// is used for a lookup in a disctionary. It is defined in an InstanceObserver to keep
+    /// is used for a lookup in a dictionary. It is defined in an InstanceObserver to keep
     /// track of the different instaces of this SO. 
     /// </summary>
     /// <typeparam name="T">Derived type</typeparam>
@@ -32,10 +32,14 @@ namespace UE.Instancing
         public virtual bool Instanced => instanced;
         public int InstanceCount => instances?.Count ?? 0;
 
+        public class InstanciableEvent : UnityEvent<T>
+        {
+        }
+        
         /// <summary>
         /// This event is triggered whenever instances are added or removed.
         /// </summary>
-        public readonly UnityEvent OnInstancesChanged = new UnityEvent();
+        public readonly InstanciableEvent OnInstancesChanged = new InstanciableEvent();
 
         /// <summary>
         /// Removes references to all instances of this ScriptableObject.
@@ -44,11 +48,16 @@ namespace UE.Instancing
         {
 //            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
             instances = instanced ? new Dictionary<Object, T> { } : null;
-            OnInstancesChanged.Invoke();
+            OnInstancesChanged.Invoke(this as T);
         }
 
         public ReadOnlyCollection<T> GetInstances()
         {
+            if (instances == null)
+            {
+                return new ReadOnlyCollection<T>(new List<T>());
+            }
+            
             return new ReadOnlyCollection<T>(instances.Values.ToArray());
         }
 
@@ -78,11 +87,17 @@ namespace UE.Instancing
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
                 instances.Add(key, instance);
-                OnInstancesChanged.Invoke();
+                OnInstancesChanged.Invoke(this as T);
             }
 
             return instances[key];
         }
+
+        
+//        public T Instance(int hashInstanceId)
+//        {
+//            
+//        }
     }
 
     /// <summary>
@@ -176,12 +191,13 @@ namespace UE.Instancing
         
         protected virtual void DrawInstanceListHeader()
         {
-            EditorGUILayout.LabelField("Key", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Name", "Key");
         }
 
         protected virtual void DrawInstance(Object key)
         {
-            EditorGUILayout.LabelField(key.name);
+//            EditorGUILayout.LabelField(key.name);
+            EditorGUILayout.LabelField(key.name, key.GetHashCode().ToString());
         }
     }
 #endif

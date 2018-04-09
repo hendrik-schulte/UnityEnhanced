@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using Leap;
 using UE.Common;
 using UE.Instancing;
+using UE.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
@@ -21,11 +23,16 @@ namespace UE.StateMachine
         [Multiline] public string DeveloperDescription = "";
 #endif
 
-        [Tooltip("The initial state of this system when the application is started")]
+        [Tooltip("The initial state of this system when the application is started.")]
         public State InitialState;
 
         [NonSerialized] private State _state;
 
+        /// <summary>
+        /// Enters the given state.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         public void SetState(State state, Object key = null)
         {
             var instance = Instance(key);
@@ -91,7 +98,7 @@ namespace UE.StateMachine
 
             SetState(InitialState, key);
         }
-        
+
         /// <summary>
         /// Returns true if all state machine instances are currently in this state.
         /// </summary>
@@ -99,18 +106,17 @@ namespace UE.StateMachine
         public bool AllInstancesInEitherState(params State[] states)
         {
             if (!states.Any()) return true;
-            
+
             if (states.Any(state => state.stateManager != this))
             {
                 Logging.Warning(this, "The states checked do not belong to this state machine.");
                 return false;
             }
-            
+
             if (!Instanced)
                 return states.Any(state => state.IsActive());
-            
 
-            return states.Any(state => GetInstances().All(v => v.GetState() == state));
+            return GetInstances().All(v => states.Contains(v.GetState()));
         }
 
         /// <summary>
@@ -120,6 +126,28 @@ namespace UE.StateMachine
         public bool HasInitialState()
         {
             return InitialState != null;
+        }
+
+        /// <summary>
+        /// This draws a state gizmo at the given world space position.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="key"></param>
+        public void DrawWorldSpaceGizmo(Vector3 position, Object key = null)
+        {
+            var state = GetState(key);
+
+            if (!Application.isPlaying)
+            {
+                if (HasInitialState())
+                    InitialState.DrawWorldSpaceGizmo(position);
+                else
+                    Gizmo.DrawWorldSpaceString("Starting with: Null", position);
+                return;
+            }
+
+            if (!state) Gizmo.DrawWorldSpaceString("Current: Null", position);
+            else state.DrawWorldSpaceGizmo(position);
         }
     }
 }

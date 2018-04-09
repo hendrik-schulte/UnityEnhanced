@@ -65,7 +65,7 @@ namespace UE.StateMachine
             if (moveToFront) transform.SetAsLastSibling();
             animator.SetBool(m_OpenParameterId, true);
             
-            if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Opened");
+            if (debug) Logging.Log(this, "'" + gameObject.name + "' Opened");
         }
 
         /// <inheritdoc />
@@ -106,7 +106,7 @@ namespace UE.StateMachine
 
             if (!shouldBeClosed) yield break;
             
-            if (debugLog) Logging.Log(this, "'" + gameObject.name + "' Closed");
+            if (debug) Logging.Log(this, "'" + gameObject.name + "' Closed");
 
             gameObject.SetActive(false);
             animator.enabled = false;
