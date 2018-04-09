@@ -19,6 +19,11 @@ namespace UE.Events
     {
         [SerializeField] private bool debugLog;
 
+#if UE_Photon
+        [SerializeField]
+        private bool PhotonSync;
+#endif
+        
 #if UNITY_EDITOR
         [Multiline] public string DeveloperDescription = "";
 #endif
@@ -27,7 +32,7 @@ namespace UE.Events
 
         /// <summary>
         /// The list of listeners that this event will notify if it is raised.
-        /// </summary>
+        /// </summary>i
         private readonly List<GameEventListener> eventListeners =
             new List<GameEventListener>();
         
@@ -42,8 +47,6 @@ namespace UE.Events
         public void Raise(Object key)
         {
             if (debugLog) Debug.Log("Game Event '" + name + "' was raised!");
-
-//            Logging.Error(this, "OnEventTriggered is null", Instance(key).OnEventTriggered == null);
             
             for (var i = Instance(key).eventListeners.Count - 1; i >= 0; i--)
                 Instance(key).eventListeners[i].OnEventRaised();
@@ -83,9 +86,10 @@ namespace UE.Events
         {
             base.OnInspectorGUI();
 
-            GUI.enabled = Application.isPlaying;
-
             var gameEvent = target as GameEvent;
+            
+            GUI.enabled = Application.isPlaying && !gameEvent.Instanced;
+
             if (GUILayout.Button("Raise"))
                 gameEvent.Raise();
         }

@@ -8,6 +8,7 @@ namespace UE.StateMachine
         [SerializeField] private StateManager stateManager;
 
         [SerializeField] private bool onlyWhenSelected;
+        [SerializeField] private bool onlyInPlayMode;
 
         public override IInstanciable GetTarget()
         {
@@ -18,20 +19,18 @@ namespace UE.StateMachine
 
         private void OnDrawGizmos()
         {
-            if (!stateManager || !enabled) return;
-
             if (!onlyWhenSelected) Draw();
         }
 
         private void OnDrawGizmosSelected()
         {
-            if (!stateManager|| !enabled) return;
-
             if (onlyWhenSelected) Draw();
         }
 
         private void Draw()
         {
+            if (!stateManager || !enabled || (onlyInPlayMode && !Application.isPlaying)) return;
+
             stateManager.DrawWorldSpaceGizmo(transform.position, key);
         }
     }
