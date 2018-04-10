@@ -77,19 +77,6 @@ namespace UE.PUNNetworking
             }
         }
 
-//        private void RemoteEvent(string eventName)
-//        {
-//            Logging.Log(this, eventName + " GameEvent received!", debugLog);
-//
-//            bool success;
-//            var gameEvent = Load(eventCache, eventName, out success);
-//            if (!success) return;
-//
-//            gameEvent.MuteNetworkBroadcasting = true;
-//            gameEvent.Raise();
-//            gameEvent.MuteNetworkBroadcasting = false;
-//        }
-
         private void RemoteEvent(string eventName, int key)
         {
             Logging.Log(this, eventName + " instanced GameEvent received!", debugLog);
@@ -103,19 +90,6 @@ namespace UE.PUNNetworking
             else gameEvent.Raise(gameEvent.GetByKeyId(key));
             gameEvent.MuteNetworkBroadcasting = false;
         }
-
-//        private void RemoteEnterState(string stateName)
-//        {
-//            Logging.Log(this, stateName + " Enter event received!", debugLog);
-//
-//            bool success;
-//            var state = Load(stateCache, stateName, out success);
-//            if (!success) return;
-//
-//            state.stateManager.MuteNetworkBroadcasting = true;
-//            state.Enter();
-//            state.stateManager.MuteNetworkBroadcasting = false;
-//        }
 
         private void RemoteEnterState(string stateName, int key)
         {

@@ -19,7 +19,10 @@ using UE.PUNNetworking;
 namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event()")]
-    public class GameEvent : InstanciableSO<GameEvent>, ISynchable
+    public class GameEvent : InstanciableSO<GameEvent>
+#if UE_Photon
+        , ISynchable
+#endif
     {
 #if UE_Photon
         [SerializeField, HideInInspector] 
@@ -68,24 +71,7 @@ namespace UE.Events
             Instance(key).OnEventTriggered.Invoke();
 
 #if UE_Photon
-            
             PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, Instance(key).KeyID);
-//            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
-//            {
-//                var raiseEventOptions = new RaiseEventOptions()
-//                {
-//                    CachingOption = CachingOptions,
-//                    Receivers = ReceiverGroup.Others
-//                };
-//
-//                var content = new object[]
-//                {
-//                    name,
-//                    key?.GetHashCode(),
-//                };
-//
-//                PhotonNetwork.RaiseEvent(PhotonSync.EventRaiseUEGameEvent, content, true, raiseEventOptions);
-//            }
 #endif
         }
 

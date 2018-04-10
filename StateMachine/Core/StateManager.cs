@@ -13,7 +13,10 @@ using UE.PUNNetworking;
 namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
-    public class StateManager : InstanciableSO<StateManager>, ISynchable
+    public class StateManager : InstanciableSO<StateManager>
+#if UE_Photon
+        , ISynchable
+#endif
     {
 #if UE_Photon
         [SerializeField, HideInInspector] 
@@ -84,25 +87,7 @@ namespace UE.StateMachine
             instance.OnStateEnter.Invoke(state);
             
 #if UE_Photon
-            
             PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, Instance(key).KeyID);
-
-//            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
-//            {
-//                var raiseEventOptions = new RaiseEventOptions()
-//                {
-//                    CachingOption = CachingOptions,
-//                    Receivers = ReceiverGroup.Others
-//                };
-//
-//                var content = new object[]
-//                {
-//                    state.name,
-//                    key?.GetHashCode(),
-//                };
-//
-//                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, content, true, raiseEventOptions);
-//            }
 #endif
         }
 

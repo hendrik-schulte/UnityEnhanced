@@ -8,14 +8,14 @@ namespace UE.StateMachine
     public class StateEditor : Editor
     {
         private SerializedProperty m_Script;
-        private SerializedProperty m_StateManager;
-        private SerializedProperty m_Description;
+//        private SerializedProperty m_StateManager;
+//        private SerializedProperty m_Description;
 
         private void OnEnable()
         {
             m_Script = serializedObject.FindProperty("m_Script");
-            m_StateManager = serializedObject.FindProperty("stateManager");
-            m_Description = serializedObject.FindProperty("DeveloperDescription");
+//            m_StateManager = serializedObject.FindProperty("stateManager");
+//            m_Description = serializedObject.FindProperty("DeveloperDescription");
         }
 
         public override void OnInspectorGUI()
