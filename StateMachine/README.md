@@ -33,4 +33,8 @@ By checking the *Instanced* field on a StateManager asset, you enable Instancing
 This allows you to use the state machine as a template and use it for example in a prefab. 
 Every StateListener referencing a state of this state machine will now have an instance key field. 
 This is used to access an instance of your state machine. You can assign any *UnityEngine.Object* as a key. 
-For prefabs you can use the root GameObject as a key. Using *null* as key accesses the main state manager.
+For prefabs you can use the root GameObject as a key.
+
+## Going deeper: Networked State Machines
+
+By checking the *PUN Sync* check box you can sync the state machine within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. State changes are propagated towards other players automatically. Works with *Instanced State Machines* as well. 
