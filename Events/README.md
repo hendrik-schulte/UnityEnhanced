@@ -68,6 +68,10 @@ Every Listener referencing an instanced event will have an *instance key* field.
 This is used to access an instance of your event via a *key* defined by a *UnityEngine.Object*. 
 Using *null* as key accesses the main event.
 
+## Going deeper: Networked State Machines
+
+By checking the *PUN Sync* check box you can distribute your event automatically within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. You use the system as usual but any networked event will be raised for all players. Works with *Instanced Events* as well. 
+
 ## Acknowledgement
 
 This is based on the genius work of Ryan Hipple:
