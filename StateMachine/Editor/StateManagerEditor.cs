@@ -21,7 +21,7 @@ namespace UE.StateMachine
             
 #if UE_Photon
             PUNSync = serializedObject.FindProperty("PUNSync");
-            CachingOptions = serializedObject.FindProperty("CachingOptions");
+            CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
         }
         
@@ -29,7 +29,7 @@ namespace UE.StateMachine
         {
 #if UE_Photon
             serializedObject.Update();
-            ScriptableObjectEditorUtility.PhotonControl(PUNSync, CachingOptions);
+            ScriptableObjectUtility.PhotonControl(PUNSync, CachingOptions);
             serializedObject.ApplyModifiedProperties();
 #endif
         }
@@ -62,7 +62,10 @@ namespace UE.StateMachine
         {
             var stateManager = target as StateManager;
 
-            EditorGUILayout.LabelField(key.name+ ", " + key.GetHashCode(), stateManager.Instance(key).GetState()?.name);
+            EditorGUILayout.LabelField(key.name+ ", " + 
+                                       key.GetHashCode(), 
+                stateManager.Instance(key)
+                    .GetState()?.name);
         }         
 
     }

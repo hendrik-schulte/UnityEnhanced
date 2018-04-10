@@ -6,12 +6,14 @@ using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
+#endif
+#if UE_Photon
+using UE.PUNNetworking;
 
 #endif
 
 namespace UE.Instancing
 {
-    /// <inheritdoc />
     /// <summary>
     /// This class enables Instancing for ScriptableObjects.  This needs to be inherited.
     /// After that, all instanced properties must be accesses via Instance(key). The key
@@ -28,6 +30,19 @@ namespace UE.Instancing
         /// </summary>
         private Dictionary<Object, T> instances;
 
+        /// <summary>
+        /// A dictionary containing all keys to the instances dictionary. Uses keyID as key.
+        /// </summary>
+        private Dictionary<int, Object> keys;
+
+        private int keyID = -1;
+
+        /// <summary>
+        /// This is the key used 
+        /// This is only used by instances of this object. 
+        /// </summary>
+        protected int KeyID => keyID;
+
 
         public virtual bool Instanced => instanced;
         public int InstanceCount => instances?.Count ?? 0;
@@ -35,7 +50,7 @@ namespace UE.Instancing
         public class InstanciableEvent : UnityEvent<T>
         {
         }
-        
+
         /// <summary>
         /// This event is triggered whenever instances are added or removed.
         /// </summary>
@@ -57,7 +72,7 @@ namespace UE.Instancing
             {
                 return new ReadOnlyCollection<T>(new List<T>());
             }
-            
+
             return new ReadOnlyCollection<T>(instances.Values.ToArray());
         }
 
@@ -80,24 +95,79 @@ namespace UE.Instancing
                 return (T) this;
             }
 
-            if (instances == null) instances = new Dictionary<Object, T>();
+            if (instances == null)
+            {
+                instances = new Dictionary<Object, T>();
+                keys = new Dictionary<int, Object>();
+            }
 
             if (!instances.ContainsKey(key))
             {
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
                 instances.Add(key, instance);
+                AddKey(key, instance);
                 OnInstancesChanged.Invoke(this as T);
             }
 
             return instances[key];
         }
 
-        
-//        public T Instance(int hashInstanceId)
-//        {
-//            
-//        }
+        /// <summary>
+        /// Returns the object key from the keyID of the instanced object.
+        /// For PhotonView, it uses the viewID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Object GetByKeyId(int id)
+        {
+            return keys[id];
+        }
+
+        /// <summary>
+        /// Adds the given key Object to a separate dictionary to access it
+        /// via its InstanceID. Uses the viewID for PhotonViews.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="instance"></param>
+        private void AddKey(Object key, T instance)
+        {
+            instance.keyID = key.GetInstanceID();
+                
+#if UE_Photon
+            if (this is ISynchable && (this as ISynchable).PUNSyncEnabled)
+            {
+                var photonView = KeyToPhotonView(key);
+                if (photonView)
+                {
+                    instance.keyID = photonView.viewID;
+//                    keys.ContainsKey(instance.keyID)
+//                    {
+//                        photonView.
+//                    }
+                }
+            }
+#endif
+            keys.Add(instance.keyID, key);
+        }
+
+#if UE_Photon
+        private PhotonView KeyToPhotonView(Object key)
+        {
+            if (key is PhotonView)
+                return key as PhotonView;
+
+            if (key is GameObject)
+            {
+                var view = (key as GameObject).GetComponent<PhotonView>();
+                if (view) return view;
+            }
+
+            Logging.Error(this, "Syncable intanced objects need to have a PhotonView " +
+                                "or a parenting GameObject as key object!");
+            return null;
+        }
+#endif
     }
 
     /// <summary>
@@ -154,14 +224,9 @@ namespace UE.Instancing
             instanced.boolValue = EditorGUILayout.Toggle(
                 new GUIContent("Instanced", tooltipInstancing), instanced.boolValue);
 
-            const string tooltipNo = "The number of instances currently referenced.";
-
             if (instancedSO.Instanced)
             {
                 EditorGUI.indentLevel++;
-
-//                EditorGUILayout.LabelField(new GUIContent("No. Instances", tooltipNo),
-//                    new GUIContent(instancedSO.InstanceCount.ToString()));
 
                 var keys = instancedSO.Keys;
 
@@ -169,19 +234,19 @@ namespace UE.Instancing
                 {
                     EditorGUILayout.Space();
                     DrawInstanceListHeader();
-                    
+
                     foreach (var key in keys)
                     {
-                        DrawInstance(key);
+                        if(key != null) DrawInstance(key);
                     }
-                    
+
                     EditorGUILayout.Space();
                 }
 
 
                 EditorGUI.indentLevel--;
             }
-            
+
             serializedObject.ApplyModifiedProperties();
 
             OnInspectorGUITop();
@@ -191,18 +256,27 @@ namespace UE.Instancing
             serializedObject.ApplyModifiedProperties();
         }
 
+        /// <summary>
+        /// Override this to draw editor controls underneath the instancing part and above the default inspector.
+        /// </summary>
         protected virtual void OnInspectorGUITop()
         {
         }
-        
+
+        /// <summary>
+        /// This draws the instance list header.
+        /// </summary>
         protected virtual void DrawInstanceListHeader()
         {
             EditorGUILayout.LabelField("Name", "Key");
         }
 
+        /// <summary>
+        /// This is called for every instance and draws the list entry.
+        /// </summary>
+        /// <param name="key"></param>
         protected virtual void DrawInstance(Object key)
         {
-//            EditorGUILayout.LabelField(key.name);
             EditorGUILayout.LabelField(key.name, key.GetHashCode().ToString());
         }
     }

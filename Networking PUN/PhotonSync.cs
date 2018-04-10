@@ -22,38 +22,39 @@ namespace UE.PUNNetworking
         private readonly Dictionary<string, State> stateCache = new Dictionary<string, State>();
 
         public const byte EventStateChange = 103;
-        public const byte EventRaiseUEEvent = 102;
-
+        public const byte EventRaiseUEGameEvent = 102;
 
         void OnEnable()
         {
             PhotonNetwork.OnEventCall += OnEvent;
-
-//        foreach (var stateMachine in syncStateMachines)
-//        {
-//            if (stateMachine.Instanced)
-//            {
-//                stateMachine.OnInstancesChanged.AddListener(OnStateMachineChanged);
-//                OnStateMachineChanged(stateMachine);
-//            }
-//            else
-//                stateMachine.AddStateEnterListener(OnStateEnter);
-//        }
         }
 
         void OnDisable()
         {
             PhotonNetwork.OnEventCall -= OnEvent;
-
-//        foreach (var stateMachine in syncStateMachines)
-//        {
-//            if (stateMachine.Instanced)
-//                stateMachine.OnInstancesChanged.RemoveListener(OnStateMachineChanged);
-//            else
-//                stateMachine.RemoveStateEnterListener(OnStateEnter);
-//        }
         }
 
+        public static void SendEvent(ISynchable syncable, byte eventCode, string name, int keyID)
+        {
+            if (syncable.PUNSyncEnabled && PhotonNetwork.inRoom && !syncable.MuteNetworkBroadcasting )
+            {
+                var raiseEventOptions = new RaiseEventOptions()
+                {
+                    CachingOption = syncable.CachingOptions,
+                    Receivers = ReceiverGroup.Others
+                };
+
+                var content = new object[]
+                {
+                    name,
+                    keyID,
+                };
+
+                PhotonNetwork.RaiseEvent(eventCode, content, true, raiseEventOptions);
+            }
+        }
+
+        #region Receiving
 
         void OnEvent(byte eventcode, object content, int senderid)
         {
@@ -61,90 +62,74 @@ namespace UE.PUNNetworking
             {
                 case EventStateChange:
 
-                    RemoteEnterState(content as string);
+                    var contentAr = content as object[];
+
+                    if (contentAr[1] == null) RemoteEnterState(contentAr[0] as string, -1);
+                    else RemoteEnterState(contentAr[0] as string, (int) contentAr[1]);
                     break;
 
-                case EventRaiseUEEvent:
+                case EventRaiseUEGameEvent:
 
-                    RemoteEvent(content as string);
+                    contentAr = content as object[];
+                    if (contentAr[1] == null) RemoteEvent(contentAr[0] as string, -1);
+                    else RemoteEvent(contentAr[0] as string, (int) contentAr[1]);
                     break;
             }
         }
 
-//    private void OnGameEventInstanceChanged(GameEvent gameEvent)
-//    {
-//        foreach (var instance in gameEvent.GetInstances())
+//        private void RemoteEvent(string eventName)
 //        {
-////            instance.RemoveStateEnterListener(OnInstancedStateEnter);
-////            instance.AddStateEnterListener(OnInstancedStateEnter);
+//            Logging.Log(this, eventName + " GameEvent received!", debugLog);
+//
+//            bool success;
+//            var gameEvent = Load(eventCache, eventName, out success);
+//            if (!success) return;
+//
+//            gameEvent.MuteNetworkBroadcasting = true;
+//            gameEvent.Raise();
+//            gameEvent.MuteNetworkBroadcasting = false;
 //        }
-//    }
 
-        private void RemoteEvent(string eventName)
+        private void RemoteEvent(string eventName, int key)
         {
-            Logging.Log(this, eventName + " GameEvent received!", debugLog);
+            Logging.Log(this, eventName + " instanced GameEvent received!", debugLog);
 
             bool success;
             var gameEvent = Load(eventCache, eventName, out success);
-
             if (!success) return;
-
-            gameEvent.Raise();
+            
+            gameEvent.MuteNetworkBroadcasting = true;
+            if(key == -1) gameEvent.Raise();
+            else gameEvent.Raise(gameEvent.GetByKeyId(key));
+            gameEvent.MuteNetworkBroadcasting = false;
         }
 
-
-//    private void OnGameEventRaised(GameEvent gameEvent)
-//    {
-//        if(gameEvent == disabledEvent) return;
-//        
-//        var raiseEventOptions = new RaiseEventOptions()
+//        private void RemoteEnterState(string stateName)
 //        {
-//            CachingOption = EventCaching.DoNotCache,
-//            Receivers = ReceiverGroup.Others
-//        };
+//            Logging.Log(this, stateName + " Enter event received!", debugLog);
 //
-//        PhotonNetwork.RaiseEvent(EventStateChange, gameEvent.name, true, raiseEventOptions);
-//    }
-
-        #region State Machine
-
-//    private void OnStateEnter(State state)
-//    {
-//        var raiseEventOptions = new RaiseEventOptions()
-//        {
-//            CachingOption = EventCaching.DoNotCache,
-//            Receivers = ReceiverGroup.Others
-//        };
+//            bool success;
+//            var state = Load(stateCache, stateName, out success);
+//            if (!success) return;
 //
-//        PhotonNetwork.RaiseEvent(EventStateChange, state.name, true, raiseEventOptions);
-//    }
+//            state.stateManager.MuteNetworkBroadcasting = true;
+//            state.Enter();
+//            state.stateManager.MuteNetworkBroadcasting = false;
+//        }
 
-//    private void OnInstancedStateEnter(State state)
-//    {
-//    }
-
-        private void RemoteEnterState(string stateName)
+        private void RemoteEnterState(string stateName, int key)
         {
-            Logging.Log(this, "State Enter Event received!", debugLog);
+            Logging.Log(this, stateName + " instanced Enter event received!", debugLog);
 
             bool success;
             var state = Load(stateCache, stateName, out success);
-
             if (!success) return;
 
             state.stateManager.MuteNetworkBroadcasting = true;
-            state.Enter();
+            if(key == -1) state.Enter();
+            else state.Enter(state.stateManager.GetByKeyId(key));
             state.stateManager.MuteNetworkBroadcasting = false;
         }
-
-//    private void OnStateMachineChanged(StateManager stateManager)
-//    {
-//        foreach (var instance in stateManager.GetInstances())
-//        {
-//            instance.RemoveStateEnterListener(OnInstancedStateEnter);
-//            instance.AddStateEnterListener(OnInstancedStateEnter);
-//        }
-//    }
 
         #endregion
 
@@ -163,19 +148,19 @@ namespace UE.PUNNetworking
 
             if (cache.ContainsKey(key))
             {
-//            Logging.Log(this, "Loading asset from dictionary.", debugLog);
+//            Logging.Log("Photon Sync", "Loading asset from dictionary.");
                 asset = cache[key];
             }
             else
             {
-//            Logging.Log(this, "Can't find the asset in the cache. Calling Resources.Load ...", debugLog);
+//            Logging.Log("Photon Sync", "Can't find the asset in the cache. Calling Resources.Load ...");
                 asset = Resources.Load<T>(key);
                 cache.Add(key, asset);
             }
 
             if (!asset)
             {
-//            Logging.Error(this, "The desired asset does not exist.");
+                Logging.Error("Photon Sync", "The desired asset named '" + key + "' does not exist.");
                 success = false;
                 return null;
             }

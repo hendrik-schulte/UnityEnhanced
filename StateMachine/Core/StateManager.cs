@@ -13,7 +13,7 @@ using UE.PUNNetworking;
 namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
-    public class StateManager : InstanciableSO<StateManager>
+    public class StateManager : InstanciableSO<StateManager>, ISynchable
     {
 #if UE_Photon
         [SerializeField, HideInInspector] 
@@ -22,14 +22,19 @@ namespace UE.StateMachine
                  "state assets needs to be located at the root of a resources folder" +
                  "with a unique name.")]
         private bool PUNSync;
-        
-        [SerializeField, HideInInspector] private EventCaching CachingOptions;
+
+
+        [SerializeField, HideInInspector] private EventCaching cachingOptions;
         
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.
         /// </summary>
-        [NonSerialized]
-        public bool MuteNetworkBroadcasting;
+        private bool muteNetworkBroadcasting;
+        
+        //Implementing ISynchable
+        public bool PUNSyncEnabled => PUNSync;
+        public EventCaching CachingOptions => cachingOptions;
+        public bool MuteNetworkBroadcasting { get; set; }
 #endif
         
         [SerializeField] private bool debugLog;
@@ -79,16 +84,25 @@ namespace UE.StateMachine
             instance.OnStateEnter.Invoke(state);
             
 #if UE_Photon
-            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
-            {
-                var raiseEventOptions = new RaiseEventOptions()
-                {
-                    CachingOption = CachingOptions,
-                    Receivers = ReceiverGroup.Others
-                };
+            
+            PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, Instance(key).KeyID);
 
-                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, name, true, raiseEventOptions);
-            }
+//            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
+//            {
+//                var raiseEventOptions = new RaiseEventOptions()
+//                {
+//                    CachingOption = CachingOptions,
+//                    Receivers = ReceiverGroup.Others
+//                };
+//
+//                var content = new object[]
+//                {
+//                    state.name,
+//                    key?.GetHashCode(),
+//                };
+//
+//                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, content, true, raiseEventOptions);
+//            }
 #endif
         }
 

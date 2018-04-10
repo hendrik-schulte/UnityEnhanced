@@ -1,10 +1,14 @@
-﻿#if UNITY_EDITOR && UE_Photon
+﻿#if UE_Photon
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace UE.PUNNetworking
 {
-    public static class ScriptableObjectEditorUtility
+    public static class ScriptableObjectUtility
     {
+        #if UNITY_EDITOR
         public static void PhotonControl(SerializedProperty PUNSync, SerializedProperty CachingOptions)
         {
             EditorGUILayout.PropertyField(PUNSync);
@@ -17,6 +21,7 @@ namespace UE.PUNNetworking
                 
             EditorGUI.indentLevel--;
         }
+        #endif
     }
 }
 #endif

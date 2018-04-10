@@ -2,6 +2,7 @@
 // Based on Work from Ryan Hipple, Unite 2017 - Game Architecture with Scriptable Objects
 // ----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using UE.Common;
 using UE.Instancing;
@@ -18,17 +19,22 @@ using UE.PUNNetworking;
 namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event()")]
-    public class GameEvent : InstanciableSO<GameEvent>
+    public class GameEvent : InstanciableSO<GameEvent>, ISynchable
     {
 #if UE_Photon
         [SerializeField, HideInInspector] 
-        [Tooltip("Enables automatic sync of this event in a Photon network.\n" +
+        [Tooltip("Enables automatic sync of this event in a Photon network. " +
                  "You need to have a PhotonSync Component in your Scene and the " +
-                 "event asset needs to be located at the root of a resources folder" +
+                 "event asset needs to be located at the root of a resources folder " +
                  "with a unique name.")]
         private bool PUNSync;
         
-        [SerializeField, HideInInspector] private EventCaching CachingOptions;
+        [SerializeField, HideInInspector] private EventCaching cachingOptions;
+
+        //Implementing ISynchable
+        public bool PUNSyncEnabled => PUNSync;
+        public EventCaching CachingOptions => cachingOptions;
+        public bool MuteNetworkBroadcasting { get; set; }
 #endif
 
         [SerializeField] private bool debugLog;
@@ -62,17 +68,24 @@ namespace UE.Events
             Instance(key).OnEventTriggered.Invoke();
 
 #if UE_Photon
-
-            if (PUNSync && PhotonNetwork.inRoom)
-            {
-                var raiseEventOptions = new RaiseEventOptions()
-                {
-                    CachingOption = CachingOptions,
-                    Receivers = ReceiverGroup.Others
-                };
-
-                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, name, true, raiseEventOptions);
-            }
+            
+            PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, Instance(key).KeyID);
+//            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
+//            {
+//                var raiseEventOptions = new RaiseEventOptions()
+//                {
+//                    CachingOption = CachingOptions,
+//                    Receivers = ReceiverGroup.Others
+//                };
+//
+//                var content = new object[]
+//                {
+//                    name,
+//                    key?.GetHashCode(),
+//                };
+//
+//                PhotonNetwork.RaiseEvent(PhotonSync.EventRaiseUEGameEvent, content, true, raiseEventOptions);
+//            }
 #endif
         }
 
@@ -117,7 +130,7 @@ namespace UE.Events
 
 #if UE_Photon
             PUNSync = serializedObject.FindProperty("PUNSync");
-            CachingOptions = serializedObject.FindProperty("CachingOptions");
+            CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
         }
 
@@ -138,7 +151,7 @@ namespace UE.Events
         {
 #if UE_Photon
             serializedObject.Update();
-            ScriptableObjectEditorUtility.PhotonControl(PUNSync, CachingOptions);
+            ScriptableObjectUtility.PhotonControl(PUNSync, CachingOptions);
             serializedObject.ApplyModifiedProperties();
 #endif
         }
