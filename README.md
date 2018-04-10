@@ -26,3 +26,7 @@ Assets/UnityEnhanced
 ### Manual Installation
 
 Copy content of this repository to a folder named *UnityEnhanced* inside of your asset folder.
+
+### Assembly Definition
+
+The package includes [Assembly Definition Files](https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html). Since the Photon Networking package is optional, you may need to add or remove Photon as reference in the assembly definition. Or you can simply delete all *.asmdef* files.
