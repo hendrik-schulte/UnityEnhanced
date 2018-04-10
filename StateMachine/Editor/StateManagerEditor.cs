@@ -1,12 +1,39 @@
 ﻿using UE.Instancing;
 using UnityEditor;
 using UnityEngine;
+#if UE_Photon
+using UE.PUNNetworking;
+#endif
 
 namespace UE.StateMachine
 {
     [CustomEditor(typeof(StateManager))]
     public class StateManagerEditor : InstanciableSOEditor
     {
+#if UE_Photon
+        private SerializedProperty PUNSync;
+        private SerializedProperty CachingOptions;
+#endif
+        
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+#if UE_Photon
+            PUNSync = serializedObject.FindProperty("PUNSync");
+            CachingOptions = serializedObject.FindProperty("CachingOptions");
+#endif
+        }
+        
+        protected override void OnInspectorGUITop()
+        {
+#if UE_Photon
+            serializedObject.Update();
+            ScriptableObjectEditorUtility.PhotonControl(PUNSync, CachingOptions);
+            serializedObject.ApplyModifiedProperties();
+#endif
+        }
+        
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();

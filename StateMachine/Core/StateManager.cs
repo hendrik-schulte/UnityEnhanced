@@ -1,19 +1,37 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using Leap;
 using UE.Common;
 using UE.Instancing;
 using UE.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
+#if UE_Photon
+using UE.PUNNetworking;
+#endif
 
 namespace UE.StateMachine
 {
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
     public class StateManager : InstanciableSO<StateManager>
     {
+#if UE_Photon
+        [SerializeField, HideInInspector] 
+        [Tooltip("Enables automatic sync of this state machine in a Photon network.\n" +
+                 "You need to have a PhotonSync Component in your Scene and the " +
+                 "state assets needs to be located at the root of a resources folder" +
+                 "with a unique name.")]
+        private bool PUNSync;
+        
+        [SerializeField, HideInInspector] private EventCaching CachingOptions;
+        
+        /// <summary>
+        /// When this is true, events are not broadcasted. Used to avoid echoing effects.
+        /// </summary>
+        [NonSerialized]
+        public bool MuteNetworkBroadcasting;
+#endif
+        
         [SerializeField] private bool debugLog;
 
         private StateChangeEvent OnStateEnter = new StateChangeEvent();
@@ -59,6 +77,19 @@ namespace UE.StateMachine
             instance._state = state;
 
             instance.OnStateEnter.Invoke(state);
+            
+#if UE_Photon
+            if (PUNSync && PhotonNetwork.inRoom && !MuteNetworkBroadcasting )
+            {
+                var raiseEventOptions = new RaiseEventOptions()
+                {
+                    CachingOption = CachingOptions,
+                    Receivers = ReceiverGroup.Others
+                };
+
+                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, name, true, raiseEventOptions);
+            }
+#endif
         }
 
         public State GetState(Object key = null)

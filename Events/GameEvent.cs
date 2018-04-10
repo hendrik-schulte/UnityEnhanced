@@ -7,9 +7,12 @@ using UE.Common;
 using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
-
+#endif
+#if UE_Photon
+using UE.PUNNetworking;
 #endif
 
 namespace UE.Events
@@ -17,13 +20,19 @@ namespace UE.Events
     [CreateAssetMenu(menuName = "Events/Event()")]
     public class GameEvent : InstanciableSO<GameEvent>
     {
+#if UE_Photon
+        [SerializeField, HideInInspector] 
+        [Tooltip("Enables automatic sync of this event in a Photon network.\n" +
+                 "You need to have a PhotonSync Component in your Scene and the " +
+                 "event asset needs to be located at the root of a resources folder" +
+                 "with a unique name.")]
+        private bool PUNSync;
+        
+        [SerializeField, HideInInspector] private EventCaching CachingOptions;
+#endif
+
         [SerializeField] private bool debugLog;
 
-#if UE_Photon
-        [SerializeField]
-        private bool PhotonSync;
-#endif
-        
 #if UNITY_EDITOR
         [Multiline] public string DeveloperDescription = "";
 #endif
@@ -35,7 +44,7 @@ namespace UE.Events
         /// </summary>i
         private readonly List<GameEventListener> eventListeners =
             new List<GameEventListener>();
-        
+
         /// <summary>
         /// Raises the event. Does not work with instancing.
         /// </summary>
@@ -46,11 +55,25 @@ namespace UE.Events
 
         public void Raise(Object key)
         {
-            if (debugLog) Debug.Log("Game Event '" + name + "' was raised!");
-            
+            Logging.Log(this, name + " was raised!", debugLog);
+
             for (var i = Instance(key).eventListeners.Count - 1; i >= 0; i--)
                 Instance(key).eventListeners[i].OnEventRaised();
             Instance(key).OnEventTriggered.Invoke();
+
+#if UE_Photon
+
+            if (PUNSync && PhotonNetwork.inRoom)
+            {
+                var raiseEventOptions = new RaiseEventOptions()
+                {
+                    CachingOption = CachingOptions,
+                    Receivers = ReceiverGroup.Others
+                };
+
+                PhotonNetwork.RaiseEvent(PhotonSync.EventStateChange, name, true, raiseEventOptions);
+            }
+#endif
         }
 
         public void RegisterListener(GameEventListener listener, Object key = null)
@@ -82,16 +105,42 @@ namespace UE.Events
     [CanEditMultipleObjects]
     public class EventEditor : InstanciableSOEditor
     {
+#if UE_Photon
+        private SerializedProperty PUNSync;
+        private SerializedProperty CachingOptions;
+#endif
+        
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+
+#if UE_Photon
+            PUNSync = serializedObject.FindProperty("PUNSync");
+            CachingOptions = serializedObject.FindProperty("CachingOptions");
+#endif
+        }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
             var gameEvent = target as GameEvent;
-            
+
             GUI.enabled = Application.isPlaying && !gameEvent.Instanced;
 
             if (GUILayout.Button("Raise"))
                 gameEvent.Raise();
+        }
+
+
+        protected override void OnInspectorGUITop()
+        {
+#if UE_Photon
+            serializedObject.Update();
+            ScriptableObjectEditorUtility.PhotonControl(PUNSync, CachingOptions);
+            serializedObject.ApplyModifiedProperties();
+#endif
         }
     }
 #endif

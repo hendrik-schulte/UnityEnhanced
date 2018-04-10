@@ -1,3 +1,8 @@
-﻿{
-	"name": "UnityEnhanced"
+{
+    "name": "UnityEnhanced",
+    "references": [
+        "Photon"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
 }

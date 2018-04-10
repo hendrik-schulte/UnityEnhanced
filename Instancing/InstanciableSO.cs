@@ -129,7 +129,7 @@ namespace UE.Instancing
         private SerializedProperty m_Script;
         private SerializedProperty instanced;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             m_Script = serializedObject.FindProperty("m_Script");
             instanced = serializedObject.FindProperty("instanced");
@@ -181,13 +181,19 @@ namespace UE.Instancing
 
                 EditorGUI.indentLevel--;
             }
+            
+            serializedObject.ApplyModifiedProperties();
 
+            OnInspectorGUITop();
 
+            serializedObject.Update();
             DrawPropertiesExcluding(serializedObject, "m_Script");
-
             serializedObject.ApplyModifiedProperties();
         }
-        
+
+        protected virtual void OnInspectorGUITop()
+        {
+        }
         
         protected virtual void DrawInstanceListHeader()
         {

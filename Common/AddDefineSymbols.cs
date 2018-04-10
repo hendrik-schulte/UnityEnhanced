@@ -1,7 +1,6 @@
 ﻿//This is adapted from https://github.com/UnityCommunity/UnityLibrary/blob/master/Assets/Scripts/Editor/AddDefineSymbols.cs
 
 #if UNITY_EDITOR
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -32,10 +31,10 @@ namespace UE.Common
         /// </summary>
         static AddDefineSymbols ()
         {
-            Debug.Log("[Unity Enhanced]: Adding Define Symbols.");
+//            Logging.Log("AddDefineSymbols", "[Unity Enhanced] Adding Define Symbols.");
             
-            string definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup ( EditorUserBuildSettings.selectedBuildTargetGroup );
-            List<string> allDefines = definesString.Split ( ';' ).ToList ();
+            var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup ( EditorUserBuildSettings.selectedBuildTargetGroup );
+            var allDefines = definesString.Split ( ';' ).ToList ();
 
             if (allDefines.Contains(Photon))
             {
@@ -53,7 +52,7 @@ namespace UE.Common
         }
 
         private static bool IsPhotonAvailable() {
-            string path = Application.dataPath + "/Plugins/Photon3Unity3D.dll";
+            var path = Application.dataPath + "/Plugins/Photon3Unity3D.dll";
             return File.Exists(path);
         }
     }
