@@ -1,7 +1,27 @@
 # UnityEnhanced
-A set of useful open-sourced tools for Unity3D I wrote or found during development.
+A set of useful open-sourced tools for Unity3D I wrote or found over the time. They aim for easy and powerful architecture of your project without writing much code.
 
-Open particular folders for specific description.
+Most notably:
+- A [State Machine](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/StateMachine)
+  + Utilize the power of ScriptableObjects
+  + Very flexible
+  + Works with prefabs
+  + Includes handy Listener components
+  + Custom Editors for fool-proof usage
+  + Photon Networking Support
+- An [Event System](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/Events)
+  + Embrace the power of ScriptableObjects
+  + Keep your systems perfectly separated
+  + Wire things up in the editor
+  + Write less code
+  + Photon Networking Support
+- A [Variables System](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/Variables)
+  + Rise with the power of ScriptableObjects
+  + Save your data in a file
+  + Dynamically reference your data from scripts
+  + Share data of multiple objects
+
+Open particular folders for detailed description.
 
 ## Setup
 
