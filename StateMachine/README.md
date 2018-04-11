@@ -4,8 +4,9 @@ This is a simple yet powerful state machine based on ScriptableObjects.
 
 ## Getting Started:
 - Create a StateManager asset for every universe of states you like.
+> You create these assets by right clicking in your Project Window > Create > State Machine > State Manager
 - Create a set of states and reference the StateManager asset.
-> You create these assets by right clicking in your Project Window > Create > State Machine > State (Manager)
+> Right click in your Project Window > Create > State Machine > State
 - Add one of the components described below to the GameObject you wish to be controlled by the state.
 - Add a reference to the states the component should be active in to the *Active States* list of the component.
 - *[Optional]*: Mark one of the states as initial state to define wich state the application starts in.
@@ -25,7 +26,7 @@ This component enables easy transitions between UI canvases by scripted fade-in 
 
 ### [TransitionAnimator](StateListener/TransitionAnimator.cs)
 
-This component enables easy transitions between UI canvases using animations. Needs an Animator component with Animations named *Open* and *Closed*. A sampe animation can be found in [*/Animation/*](StateMachine/StateListener/Animation/). For performance reasons it is recommended to use TransitionAlphaBlend whenever possible. This may even work with non-UI objects.
+This component enables easy transitions using animations. Needs an Animator component with Animations named *Open* and *Closed*. A sampe animation can be found in [*/Animation/*](StateMachine/StateListener/Animation/). For performance reasons it is recommended to use TransitionAlphaBlend for Canvases whenever possible.
 
 ## Going deeper: Instanced State Machines
 
