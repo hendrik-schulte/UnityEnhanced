@@ -10,5 +10,9 @@ namespace UE.Events
         private StringUnityEvent OnTriggered = new StringUnityEvent();
 
         protected override UnityEvent<string> OnEventTriggered => OnTriggered;
+        
+#if UE_Photon
+        public override bool IsNetworkingType => true;
+#endif
     }
 }

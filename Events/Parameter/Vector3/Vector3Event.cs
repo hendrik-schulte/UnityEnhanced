@@ -10,5 +10,9 @@ namespace UE.Events
         private Vector3UnityEvent OnTriggered = new Vector3UnityEvent();
 
         protected override UnityEvent<Vector3> OnEventTriggered => OnTriggered;
+        
+#if UE_Photon
+        public override bool IsNetworkingType => true;
+#endif
     }
 }

@@ -64,8 +64,7 @@ namespace UE.StateMachine
 
             EditorGUILayout.LabelField(key.name+ ", " + 
                                        key.GetHashCode(), 
-                stateManager.Instance(key)
-                    .GetState()?.name);
+                stateManager.GetState(key)?.name);
         }         
 
     }

@@ -85,7 +85,7 @@ namespace UE.Instancing
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public T Instance(Object key)
+        protected T Instance(Object key)
         {
             if (!instanced) return (T) this;
             if (key == null)
@@ -135,16 +135,13 @@ namespace UE.Instancing
             instance.keyID = key.GetInstanceID();
                 
 #if UE_Photon
-            if (this is ISynchable && (this as ISynchable).PUNSyncEnabled)
+            //When we use photon sync, use a photon viewID as key to guarantee matching network instances.
+            if (this is ISyncable && (this as ISyncable).PUNSyncEnabled)
             {
                 var photonView = KeyToPhotonView(key);
                 if (photonView)
                 {
                     instance.keyID = photonView.viewID;
-//                    keys.ContainsKey(instance.keyID)
-//                    {
-//                        photonView.
-//                    }
                 }
             }
 #endif
@@ -152,6 +149,11 @@ namespace UE.Instancing
         }
 
 #if UE_Photon
+        /// <summary>
+        /// Tries to parse the photon view directly or find it in the components of the key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private PhotonView KeyToPhotonView(Object key)
         {
             if (key is PhotonView)

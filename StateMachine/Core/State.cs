@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UE.StateMachine
 {
     /// <summary>
-    /// A state within this state machine.
+    /// A state within the state machine.
     /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State")]
     public class State : ScriptableObject

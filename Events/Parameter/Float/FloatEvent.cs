@@ -17,5 +17,9 @@ namespace UE.Events
         {
             Raise(inputField.text.StringToFloat());
         }
+        
+#if UE_Photon
+        public override bool IsNetworkingType => true;
+#endif
     }
 }

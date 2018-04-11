@@ -8,14 +8,10 @@ namespace UE.StateMachine
     public class StateEditor : Editor
     {
         private SerializedProperty m_Script;
-//        private SerializedProperty m_StateManager;
-//        private SerializedProperty m_Description;
 
         private void OnEnable()
         {
             m_Script = serializedObject.FindProperty("m_Script");
-//            m_StateManager = serializedObject.FindProperty("stateManager");
-//            m_Description = serializedObject.FindProperty("DeveloperDescription");
         }
 
         public override void OnInspectorGUI()
@@ -38,10 +34,6 @@ namespace UE.StateMachine
             }
 
             serializedObject.Update();
-
-//            EditorGUILayout.ObjectField(m_StateManager, typeof(StateManager));
-
-//            m_Description.stringValue = EditorGUILayout.TextArea(m_Description.stringValue);
 
             DrawPropertiesExcluding(serializedObject, "m_Script");
 

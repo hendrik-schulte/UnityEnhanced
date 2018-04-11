@@ -2,7 +2,10 @@
 
 namespace UE.PUNNetworking
 {
-    public interface ISynchable
+    /// <summary>
+    /// This interface is implemented by ScriptableObjects that are synchronized by PhotonSync.
+    /// </summary>
+    public interface ISyncable
     {
         bool PUNSyncEnabled { get; }
         

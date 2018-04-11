@@ -13,10 +13,10 @@ namespace UE.Events
         [Tooltip("When this is checked, the listener will still work when the game object is disabled.")]
         [SerializeField]
         private bool persistent;
-
+        
         [Tooltip("Event to register with.")] [SerializeField]
         internal GameEvent Event;
-
+        
         [Tooltip("Response to invoke when Event is raised.")]
         public UnityEvent Response;
 

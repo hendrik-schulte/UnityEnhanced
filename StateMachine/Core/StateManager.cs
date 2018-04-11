@@ -8,38 +8,42 @@ using UnityEngine.Events;
 using Object = UnityEngine.Object;
 #if UE_Photon
 using UE.PUNNetworking;
+
 #endif
 
 namespace UE.StateMachine
 {
+    /// <summary>
+    /// The StateManager is the core of every state machine. It manages the current state
+    /// of the system and offers listeners to state enter and leave events.
+    /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
     public class StateManager : InstanciableSO<StateManager>
 #if UE_Photon
-        , ISynchable
+        , ISyncable
 #endif
     {
 #if UE_Photon
-        [SerializeField, HideInInspector] 
+        [SerializeField, HideInInspector]
         [Tooltip("Enables automatic sync of this state machine in a Photon network.\n" +
                  "You need to have a PhotonSync Component in your Scene and the " +
                  "state assets needs to be located at the root of a resources folder" +
                  "with a unique name.")]
         private bool PUNSync;
 
-
         [SerializeField, HideInInspector] private EventCaching cachingOptions;
-        
+
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.
         /// </summary>
         private bool muteNetworkBroadcasting;
-        
+
         //Implementing ISynchable
         public bool PUNSyncEnabled => PUNSync;
         public EventCaching CachingOptions => cachingOptions;
         public bool MuteNetworkBroadcasting { get; set; }
 #endif
-        
+
         [SerializeField] private bool debugLog;
 
         private StateChangeEvent OnStateEnter = new StateChangeEvent();
@@ -52,6 +56,9 @@ namespace UE.StateMachine
         [Tooltip("The initial state of this system when the application is started.")]
         public State InitialState;
 
+        /// <summary>
+        /// The current state of this state machine.
+        /// </summary>
         [NonSerialized] private State _state;
 
         /// <summary>
@@ -61,9 +68,17 @@ namespace UE.StateMachine
         /// <param name="key">Key for instanced StateMachine.</param>
         public void SetState(State state, Object key = null)
         {
-            var instance = Instance(key);
+            SetStateInstance(Instance(key), state, key);
+        }
 
-
+        /// <summary>
+        /// Enters the given state in the given StateManager instance.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="state"></param>
+        /// <param name="key"></param>
+        private void SetStateInstance(StateManager instance, State state, Object key = null)
+        {
             if (instance._state == state) return;
 
             if (state == null)
@@ -81,14 +96,29 @@ namespace UE.StateMachine
 
             if (debugLog) Logging.Log(this, "Change State to: " + state);
 
-            instance.OnStateLeave.Invoke(_state);
+            instance.OnStateLeave.Invoke(instance._state);
             instance._state = state;
-
             instance.OnStateEnter.Invoke(state);
-            
+
 #if UE_Photon
-            PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, Instance(key).KeyID);
+            PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, instance.KeyID);
 #endif
+        }
+
+        /// <summary>
+        /// Sets the given state for all instances.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetStateAllInstances(State state)
+        {
+            SetStateInstance(this, state);
+            
+            if(!Instanced) return;
+            
+            foreach (var instance in GetInstances())
+            {
+                SetStateInstance(instance, state);
+            }
         }
 
         public State GetState(Object key = null)
@@ -117,7 +147,7 @@ namespace UE.StateMachine
         }
 
         /// <summary>
-        /// This is called when a StateListener starts.
+        /// This is called when a StateListener starts. Used for initialization of this state machine.
         /// </summary>
         internal void Init(Object key = null)
         {

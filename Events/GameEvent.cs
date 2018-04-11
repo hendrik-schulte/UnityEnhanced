@@ -2,7 +2,6 @@
 // Based on Work from Ryan Hipple, Unite 2017 - Game Architecture with Scriptable Objects
 // ----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using UE.Common;
 using UE.Instancing;
@@ -14,6 +13,7 @@ using UnityEditor;
 #endif
 #if UE_Photon
 using UE.PUNNetworking;
+
 #endif
 
 namespace UE.Events
@@ -21,20 +21,21 @@ namespace UE.Events
     [CreateAssetMenu(menuName = "Events/Event()")]
     public class GameEvent : InstanciableSO<GameEvent>
 #if UE_Photon
-        , ISynchable
+        , ISyncable
 #endif
     {
 #if UE_Photon
-        [SerializeField, HideInInspector] 
+        [SerializeField, HideInInspector]
         [Tooltip("Enables automatic sync of this event in a Photon network. " +
                  "You need to have a PhotonSync Component in your Scene and the " +
-                 "event asset needs to be located at the root of a resources folder " +
+                 "event asset needs to be located at the root of a Resources folder " +
                  "with a unique name.")]
         private bool PUNSync;
-        
-        [SerializeField, HideInInspector] private EventCaching cachingOptions;
 
-        //Implementing ISynchable
+        [SerializeField, HideInInspector] [Tooltip("How should the event be cached by Photon?")]
+        private EventCaching cachingOptions;
+
+        //Implementing ISyncable
         public bool PUNSyncEnabled => PUNSync;
         public EventCaching CachingOptions => cachingOptions;
         public bool MuteNetworkBroadcasting { get; set; }
@@ -55,24 +56,54 @@ namespace UE.Events
             new List<GameEventListener>();
 
         /// <summary>
-        /// Raises the event. Does not work with instancing.
+        /// Raises the event. Does only work for non-instanced events.
         /// </summary>
         public void Raise()
         {
             Raise(null);
         }
 
+        /// <summary>
+        /// Fires an instanced event (or the main event if key == null) by the given instance key.
+        /// </summary>
+        /// <param name="key"></param>
         public void Raise(Object key)
         {
             Logging.Log(this, name + " was raised!", debugLog);
 
-            for (var i = Instance(key).eventListeners.Count - 1; i >= 0; i--)
-                Instance(key).eventListeners[i].OnEventRaised();
-            Instance(key).OnEventTriggered.Invoke();
+            RaiseInstance(Instance(key));
+        }
+
+        /// <summary>
+        /// Fires the given event instance.
+        /// </summary>
+        /// <param name="instance"></param>
+        private void RaiseInstance(GameEvent instance)
+        {
+            for (var i = instance.eventListeners.Count - 1; i >= 0; i--)
+                instance.eventListeners[i].OnEventRaised();
+            instance.OnEventTriggered.Invoke();
 
 #if UE_Photon
-            PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, Instance(key).KeyID);
+            PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, instance.KeyID);
 #endif
+        }
+
+        /// <summary>
+        /// This raises the event for all instances.
+        /// </summary>
+        public void RaiseAllInstances()
+        {
+            Logging.Log(this, name + " was raised for all instances!", debugLog);
+
+            RaiseInstance(this);
+
+            if (!Instanced) return;
+
+            foreach (var instance in GetInstances())
+            {
+                RaiseInstance(instance);
+            }
         }
 
         public void RegisterListener(GameEventListener listener, Object key = null)
@@ -98,21 +129,19 @@ namespace UE.Events
         }
     }
 
-
 #if UNITY_EDITOR
     [CustomEditor(typeof(GameEvent), true)]
     [CanEditMultipleObjects]
-    public class EventEditor : InstanciableSOEditor
+    public class GameEventEditor : InstanciableSOEditor
     {
 #if UE_Photon
         private SerializedProperty PUNSync;
         private SerializedProperty CachingOptions;
 #endif
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
-            
 
 #if UE_Photon
             PUNSync = serializedObject.FindProperty("PUNSync");
@@ -126,12 +155,19 @@ namespace UE.Events
 
             var gameEvent = target as GameEvent;
 
-            GUI.enabled = Application.isPlaying && !gameEvent.Instanced;
+            GUI.enabled = Application.isPlaying;
 
-            if (GUILayout.Button("Raise"))
-                gameEvent.Raise();
+            if (gameEvent.Instanced)
+            {
+                if (GUILayout.Button("Raise for all Instances"))
+                    gameEvent.RaiseAllInstances();
+            }
+            else
+            {
+                if (GUILayout.Button("Raise"))
+                    gameEvent.Raise();
+            }
         }
-
 
         protected override void OnInspectorGUITop()
         {

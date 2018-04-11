@@ -15,8 +15,15 @@ namespace UE.Instancing
     {
         [SerializeField, HideInInspector] private Object _key;
 
+        /// <summary>
+        /// The instance key defined in the inspector.
+        /// </summary>
         protected Object key => _key;
 
+        /// <summary>
+        /// Returns the instanciated object.
+        /// </summary>
+        /// <returns></returns>
         public abstract IInstanciable GetTarget();
     }
 
@@ -27,7 +34,7 @@ namespace UE.Instancing
     {
         private SerializedProperty key;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             key = serializedObject.FindProperty("_key");
         }
@@ -43,8 +50,8 @@ namespace UE.Instancing
                 {
                     EditorGUILayout.ObjectField(
                         key, new GUIContent("Instance Key",
-                            "This is the key to the ScriptableObject instance. Allows to reference " +
-                            "a specific instance of the Object by hasing. This may be the root of a " +
+                            "This is the key to an instance of the ScriptableObject below. Allows to reference " +
+                            "a specific instance of the Object by hashing the key. This may be the root of a " +
                             "prefab to create an instance for every instance of the prefab."));
                 }
             }
