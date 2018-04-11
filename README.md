@@ -1,7 +1,7 @@
 # UnityEnhanced
 A set of useful open-sourced tools for Unity3D I wrote or found over the time. They aim for easy and powerful architecture of your project without writing much code.
 
-Most notably:
+### Most notably
 - A [State Machine](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/StateMachine)
   + Utilize the power of ScriptableObjects
   + Very flexible
@@ -17,9 +17,10 @@ Most notably:
   + Photon Networking Support
 - A [Variables System](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/Variables)
   + Rise with the power of ScriptableObjects
-  + Save your data in a file
+  + Save your data in an asset file
   + Dynamically reference your data from scripts
   + Share data of multiple objects
+  + Override data when needed
 
 Open particular folders for detailed description.
 
@@ -53,7 +54,7 @@ Copy content of this repository to a folder named *UnityEnhanced* inside of your
 
 The package includes [Assembly Definition Files](https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html). Since the Photon Networking package is optional, you may need to add or remove Photon as reference in the assembly definition. Or you can simply delete all *.asmdef* files.
 
-## To be included soon
+## More to come soon
 
 - Networked prameter events
 - Demo Scenes
