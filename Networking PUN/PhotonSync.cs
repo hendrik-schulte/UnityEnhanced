@@ -1,13 +1,11 @@
 ﻿#if UE_Photon
 
 using System;
-using System.Collections.Generic;
 using Photon;
 using UE.Common;
 using UE.Events;
 using UE.StateMachine;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace UE.PUNNetworking
 {
@@ -18,11 +16,6 @@ namespace UE.PUNNetworking
     public class PhotonSync : PunBehaviour
     {
         [SerializeField] private bool debugLog;
-
-        /// <summary>
-        /// This is the Resources cache.
-        /// </summary>
-        private readonly Dictionary<string, Object> cache = new Dictionary<string, Object>();
 
         public const byte EventStateChange = 103;
         public const byte EventRaiseUEGameEvent = 102;
@@ -218,7 +211,7 @@ namespace UE.PUNNetworking
             Logging.Log(this, eventName + " GameEvent received! key: " + key, debugLog);
 
             bool success;
-            var gameEvent = Load<GameEvent>(cache, eventName, out success);
+            var gameEvent = CachedResources.Load<GameEvent>(eventName, out success);
             if (!success) return;
 
             gameEvent.MuteNetworkBroadcasting = true;
@@ -237,7 +230,7 @@ namespace UE.PUNNetworking
             Logging.Log(this, eventName + " " + typeof(TS) + " received! key: " + key, debugLog);
 
             bool success;
-            var paramEvent = Load<TS>(cache, eventName, out success);
+            var paramEvent = CachedResources.Load<TS>(eventName, out success);
             if (!success) return;
 
             paramEvent.MuteNetworkBroadcasting = true;
@@ -256,7 +249,7 @@ namespace UE.PUNNetworking
             Logging.Log(this, stateName + " instanced Enter event received!", debugLog);
 
             bool success;
-            var state = Load<State>(cache, stateName, out success);
+            var state = CachedResources.Load<State>(stateName, out success);
             if (!success) return;
 
             state.stateManager.MuteNetworkBroadcasting = true;
@@ -266,45 +259,6 @@ namespace UE.PUNNetworking
         }
 
         #endregion
-
-        /// <summary>
-        /// Attempts to find the asset in the cache. When not found,
-        /// it tries to load it from a Resources folder and caches it.
-        /// </summary>
-        /// <param name="cache"></param>
-        /// <param name="key"></param>
-        /// <param name="success"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T Load<T>(IDictionary<string, Object> cache, string key, out bool success) where T : Object
-        {
-            T asset;
-
-            if (cache.ContainsKey(key))
-            {
-//            Logging.Log("Photon Sync", "Loading asset from dictionary.");
-                asset = (T) cache[key];
-            }
-            else
-            {
-//            Logging.Log("Photon Sync", "Can't find the asset in the cache. Calling Resources.Load ...");
-                asset = Resources.Load<T>(key);
-                cache.Add(key, asset);
-            }
-
-            if (!asset)
-            {
-                Logging.Error("Photon Sync", "The desired asset named '" + key + "' does not exist.");
-                success = false;
-                return null;
-            }
-            else
-            {
-                success = true;
-                return asset;
-            }
-        }
     }
 }
-
 #endif
