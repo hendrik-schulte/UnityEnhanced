@@ -56,5 +56,6 @@ The package includes [Assembly Definition Files](https://docs.unity3d.com/Manual
 
 ## More to come soon
 
-- Networked prameter events
 - Demo Scenes
+
+Copyright (c) 2018, Hendrik Schulte
