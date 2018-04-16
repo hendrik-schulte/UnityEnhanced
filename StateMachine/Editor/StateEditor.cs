@@ -44,16 +44,31 @@ namespace UE.StateMachine
 
             InitialState(state);
 
-            if (!Application.isPlaying || state.stateManager.Instanced) return;
+            if (!Application.isPlaying) return;
 
-            if (state.IsActive())
+            if (state.stateManager.Instanced)
             {
-                EditorGUILayout.LabelField("This state is currently active.");
+                if (state.stateManager.AllInstancesInEitherState(state))
+                {
+                    EditorGUILayout.LabelField("All instances are currently in this state.");
+                }
+                else
+                {
+                    if (GUILayout.Button("Enter for all Instances"))
+                        state.EnterAllInstances();
+                }
             }
             else
             {
-                if (GUILayout.Button("Enter"))
-                    state.Enter();
+                if (state.IsActive())
+                {
+                    EditorGUILayout.LabelField("This state is currently active.");
+                }
+                else
+                {
+                    if (GUILayout.Button("Enter"))
+                        state.Enter();
+                }
             }
         }
 

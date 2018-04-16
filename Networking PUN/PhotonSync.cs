@@ -125,67 +125,61 @@ namespace UE.PUNNetworking
         #region Receiving
 
         /// <summary>
-        /// Receiving a photon event.
+        /// Receives a photon event and calls the corresponding remote function.
         /// </summary>
         /// <param name="eventcode"></param>
         /// <param name="content"></param>
         /// <param name="senderid"></param>
         void OnEvent(byte eventcode, object content, int senderid)
         {
+            var contentAr = content as object[];
+            
             switch (eventcode)
             {
                 case EventStateChange:
 
-                    var contentAr = content as object[];
                     RemoteEnterState(contentAr[0] as string, ParseID(contentAr));
                     break;
 
                 case EventRaiseUEGameEvent:
 
-                    contentAr = content as object[];
                     RemoteGameEvent(contentAr[0] as string, ParseID(contentAr));
                     break;
 
                 case EventRaiseUEFloatEvent:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<float, FloatEvent>(contentAr[0] as string, ParseID(contentAr),
-                        (float) contentAr[2]);
+                    RemoteParameterEvent<float, FloatEvent>(
+                        contentAr[0] as string, ParseID(contentAr), (float) contentAr[2]);
                     break;
-
 
                 case EventRaiseUEStringEvent:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<string, StringEvent>(contentAr[0] as string, ParseID(contentAr),
-                        (string) contentAr[2]);
+                    RemoteParameterEvent<string, StringEvent>(
+                        contentAr[0] as string, ParseID(contentAr), (string) contentAr[2]);
                     break;
 
                 case EventRaiseUEBoolEvent:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<bool, BoolEvent>(contentAr[0] as string, ParseID(contentAr),
-                        (bool) contentAr[2]);
+                    RemoteParameterEvent<bool, BoolEvent>(
+                        contentAr[0] as string, ParseID(contentAr), (bool) contentAr[2]);
                     break;
 
                 case EventRaiseUEIntEvent:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<int, IntEvent>(contentAr[0] as string, ParseID(contentAr), (int) contentAr[2]);
+                    RemoteParameterEvent<int, IntEvent>(
+                        contentAr[0] as string, ParseID(contentAr), (int) contentAr[2]);
                     break;
 
                 case EventRaiseUEVector2Event:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<Vector3, Vector3Event>(contentAr[0] as string, ParseID(contentAr),
-                        (Vector2) contentAr[2]);
+                    RemoteParameterEvent<Vector3, Vector3Event>(
+                        contentAr[0] as string, ParseID(contentAr), (Vector2) contentAr[2]);
                     break;
 
                 case EventRaiseUEVector3Event:
 
-                    contentAr = content as object[];
-                    RemoteParameterEvent<Vector3, Vector3Event>(contentAr[0] as string, ParseID(contentAr),
-                        (Vector3) contentAr[2]);
+                    RemoteParameterEvent<Vector3, Vector3Event>(
+                        contentAr[0] as string, ParseID(contentAr), (Vector3) contentAr[2]);
                     break;
             }
         }
@@ -215,8 +209,8 @@ namespace UE.PUNNetworking
             if (!success) return;
 
             gameEvent.MuteNetworkBroadcasting = true;
-            if (key == -1) gameEvent.Raise();
-            else gameEvent.Raise(gameEvent.GetByKeyId(key));
+            if (key == -1) gameEvent.Raise(); //non-instanced
+            else gameEvent.Raise(gameEvent.GetByKeyId(key)); //instanced. Getting the right key by network key
             gameEvent.MuteNetworkBroadcasting = false;
         }
 
@@ -234,8 +228,8 @@ namespace UE.PUNNetworking
             if (!success) return;
 
             paramEvent.MuteNetworkBroadcasting = true;
-            if (key == -1) paramEvent.Raise(value);
-            else paramEvent.Raise(value, paramEvent.GetByKeyId(key));
+            if (key == -1) paramEvent.Raise(value); //non-instanced
+            else paramEvent.Raise(value, paramEvent.GetByKeyId(key)); //instanced. Getting the right key by network key
             paramEvent.MuteNetworkBroadcasting = false;
         }
 
@@ -253,8 +247,8 @@ namespace UE.PUNNetworking
             if (!success) return;
 
             state.stateManager.MuteNetworkBroadcasting = true;
-            if (key == -1) state.Enter();
-            else state.Enter(state.stateManager.GetByKeyId(key));
+            if (key == -1) state.Enter(); //non-instanced
+            else state.Enter(state.stateManager.GetByKeyId(key)); //instanced. Getting the right key by network key
             state.stateManager.MuteNetworkBroadcasting = false;
         }
 

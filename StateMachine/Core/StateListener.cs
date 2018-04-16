@@ -15,7 +15,7 @@ namespace UE.StateMachine
         [SerializeField] 
         protected bool debug;
         [SerializeField] 
-        private List<State> activeStates = new List<State>();
+        private List<State> activeStates = new List<State>(){null};
 
         [SerializeField]
         protected UnityEvent OnActivated;

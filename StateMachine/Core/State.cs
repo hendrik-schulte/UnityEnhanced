@@ -34,6 +34,15 @@ namespace UE.StateMachine
         {
             stateManager.SetState(this, key);
         }
+        
+        
+        /// <summary>
+        /// Enters this state for all instances of this state machine.
+        /// </summary>
+        public void EnterAllInstances()
+        {
+            stateManager.SetStateAllInstances(this);
+        }
 
         /// <summary>
         /// Returns true if this state is currently activated.
