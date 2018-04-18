@@ -180,6 +180,32 @@ namespace UE.StateMachine
         }
 
         /// <summary>
+        /// Returns true if there if any state machine instance is in a state not given.
+        /// </summary>
+        /// <param name="states"></param>
+        /// <returns></returns>
+        public bool AnyInstanceNotInEitherState(params State[] states)
+        {
+            if (!states.Any()) return true;
+                
+            if (states.Any(state => state.stateManager != this))
+            {
+                Logging.Warning(this, "The states checked do not belong to this state machine.");
+                return false;
+            }
+            
+            if (!Instanced)
+                return !states.Contains(_state);
+
+            foreach (var instance in GetInstances())
+            {
+                if (!states.Contains(instance._state)) return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
         /// Returns true if this system has an initial state defined.
         /// </summary>
         /// <returns></returns>
