@@ -40,23 +40,23 @@ namespace UE.Common
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
         /// <param name="messageLevel">LogLevel of this message.</param>
-        /// <param name="logLevel">LogLevel of this script</param>
-        public static void Log(object sender, string msg, LogLevel messageLevel, LogLevel logLevel)
+        /// <param name="levelSetting">LogLevel of this script</param>
+        public static void Log(object sender, string msg, Level messageLevel, Level levelSetting)
         {
-            if (messageLevel < logLevel) return;
+            if (messageLevel < levelSetting) return;
 
             var message = Identifier(sender) + msg;
 
             switch (messageLevel)
             {
-                case LogLevel.Verbose:
-                case LogLevel.Info:
+                case Level.Verbose:
+                case Level.Info:
                     Debug.Log(message);
                     break;
-                case LogLevel.Warning:
+                case Level.Warning:
                     Debug.LogWarning(message);
                     break;
-                case LogLevel.Error:
+                case Level.Error:
                     Debug.LogWarning(message);
                     break;
             }
@@ -72,7 +72,7 @@ namespace UE.Common
             return "[" + value + "] ";
         }
 
-        public enum LogLevel
+        public enum Level
         {
             Verbose = 0,
             Info = 1,
