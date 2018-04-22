@@ -40,7 +40,10 @@ namespace UE.Events
             if (persistent) Event.UnregisterListener(this, key);
         }
 
-        public void OnEventRaised()
+        /// <summary>
+        /// This is called when the listened event gets raised.
+        /// </summary>
+        public virtual void OnEventRaised()
         {
             Response.Invoke();
         }

@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: eb5ef69cb745ee142b6c96988f7f27c5
-timeCreated: 1517403796
-licenseType: Free
+guid: a60bd550a06dbb74c8bcf3af41c68f28
+timeCreated: 1524230858
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
   externalObjects: {}
@@ -36,11 +36,11 @@ TextureImporter:
     mipBias: -1
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 0
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0

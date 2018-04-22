@@ -13,6 +13,10 @@ namespace UE.Events
 
         protected override UnityEvent<float> OnEventTriggered => OnTriggered;
 
+        /// <summary>
+        /// Raises this event with the input fields text parsed to float as parameter.
+        /// </summary>
+        /// <param name="inputField"></param>
         public void Raise(InputField inputField)
         {
             Raise(inputField.text.StringToFloat());

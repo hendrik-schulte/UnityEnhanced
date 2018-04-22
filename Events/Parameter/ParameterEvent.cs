@@ -16,6 +16,12 @@ using UE.PUNNetworking;
 
 namespace UE.Events
 {
+    /// <summary>
+    /// An event that has sends parameter T with it. Needs to be inherited by a concrete ParameterEvent TS.
+    /// Example: class BoolEvent : ParameterEvent<bool, BoolEvent>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TS"></typeparam>
     public abstract class ParameterEvent<T, TS> : InstanciableSO<TS>
 #if UE_Photon
         , ISyncable
@@ -152,26 +158,6 @@ namespace UE.Events
             PUNSync = serializedObject.FindProperty("PUNSync");
             CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
-        }
-
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-
-//            var paramEvent = target as ParameterEvent<T,TS>;
-//
-//            GUI.enabled = Application.isPlaying;
-//
-//            if (paramEvent.Instanced)
-//            {
-//                if (GUILayout.Button("Raise for all Instances"))
-//                    paramEvent.RaiseAllInstances();
-//            }
-//            else
-//            {
-//                if (GUILayout.Button("Raise"))
-//                    paramEvent.Raise();
-//            }
         }
 
         protected override void OnInspectorGUITop()

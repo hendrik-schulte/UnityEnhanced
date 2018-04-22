@@ -22,6 +22,9 @@ namespace UE.Variables
             ConstantValue = value;
         }
 
+        /// <summary>
+        /// Returns the value of this reference (either constant or reference).
+        /// </summary>
         public T Value
         {
             get { return UseConstant ? ConstantValue : GetVariable().Value; }

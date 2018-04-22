@@ -36,7 +36,10 @@ namespace UE.Events
             if (persistent) GenericEvent.UnregisterListener(this, key);
         }
 
-        public void OnEventRaised(T value)
+        /// <summary>
+        /// This is called when the listened event gets raised.
+        /// </summary>
+        public virtual void OnEventRaised(T value)
         {
             GenericResponse.Invoke(value);
         }
