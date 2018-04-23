@@ -16,22 +16,22 @@ namespace UE.Events
         [Tooltip("When this is checked, the listener will still work when the game object is disabled.")]
         public bool persistent;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             if (!persistent) GenericEvent.RegisterListener(this, key);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (!persistent) GenericEvent.UnregisterListener(this, key);
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (persistent) GenericEvent.RegisterListener(this, key);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (persistent) GenericEvent.UnregisterListener(this, key);
         }

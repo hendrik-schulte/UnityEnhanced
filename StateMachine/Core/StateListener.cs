@@ -27,7 +27,7 @@ namespace UE.StateMachine
         /// </summary>
         public bool Active { get; private set; }
 
-        private void Start()
+        protected virtual void Start()
         {
             //check if there are any states defined
             if (!HasStates())
@@ -120,7 +120,7 @@ namespace UE.StateMachine
         {
         }
         
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (!HasStates()) return;
 
@@ -143,12 +143,12 @@ namespace UE.StateMachine
         /// Returns true if there are states defined and the first state is not null.
         /// </summary>
         /// <returns></returns>
-        private bool HasStates()
+        protected bool HasStates()
         {
             return activeStates.Any() && activeStates[0] != null;
         }
 
-        private void OnDrawGizmos()
+        protected virtual void OnDrawGizmos()
         {
             if(!debug) return;
             if (!HasStates()) return;
