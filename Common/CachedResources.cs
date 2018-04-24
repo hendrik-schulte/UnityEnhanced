@@ -21,6 +21,19 @@ namespace UE.Common
         {
             cache.Clear();
         }
+
+        /// <summary>
+        /// Attempts to find the asset in the cache. When not found,
+        /// it tries to load it from a Resources folder and caches it.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Load<T>(string path) where T : Object
+        {
+            var success = false;
+            return Load<T>(path, out success);
+        }
         
         /// <summary>
         /// Attempts to find the asset in the cache. When not found,
