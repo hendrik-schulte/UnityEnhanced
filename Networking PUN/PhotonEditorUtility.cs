@@ -1,12 +1,11 @@
 ﻿#if UE_Photon
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace UE.PUNNetworking
 {
-    public static class ScriptableObjectUtility
+    public static class PhotonEditorUtility
     {
         #if UNITY_EDITOR
         public static void PhotonControl(SerializedProperty PUNSync, SerializedProperty CachingOptions)

@@ -18,7 +18,6 @@ namespace UE.StateMachine
         {
             var state = target as State;
 
-
             GUI.enabled = false;
             EditorGUILayout.ObjectField(m_Script);
             GUI.enabled = true;

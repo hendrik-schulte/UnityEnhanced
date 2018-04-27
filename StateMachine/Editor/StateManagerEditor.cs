@@ -1,4 +1,5 @@
-﻿using UE.Instancing;
+﻿using UE.Common;
+using UE.Instancing;
 using UnityEditor;
 using UnityEngine;
 #if UE_Photon
@@ -14,6 +15,8 @@ namespace UE.StateMachine
         private SerializedProperty PUNSync;
         private SerializedProperty CachingOptions;
 #endif
+        private SerializedProperty LogToFile;
+        private SerializedProperty FileName;
         
         protected override void OnEnable()
         {
@@ -23,15 +26,20 @@ namespace UE.StateMachine
             PUNSync = serializedObject.FindProperty("PUNSync");
             CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
+            LogToFile = serializedObject.FindProperty("LogToFile");
+            FileName = serializedObject.FindProperty("FileName");
         }
         
         protected override void OnInspectorGUITop()
         {
 #if UE_Photon
             serializedObject.Update();
-            ScriptableObjectUtility.PhotonControl(PUNSync, CachingOptions);
+            PhotonEditorUtility.PhotonControl(PUNSync, CachingOptions);
             serializedObject.ApplyModifiedProperties();
 #endif
+            serializedObject.Update();
+            FileLogger.LoggerControl(LogToFile, FileName);
+            serializedObject.ApplyModifiedProperties();
         }
         
         public override void OnInspectorGUI()

@@ -38,15 +38,23 @@ namespace UE.Instancing
         private int keyID = -1;
 
         /// <summary>
-        /// This is the key used 
-        /// This is only used by instances of this object. 
+        /// This is to access this instance in the instances dictionary (of the main instance). 
         /// </summary>
         protected int KeyID => keyID;
 
-
+        /// <summary>
+        /// Returns true if instancing is enabled.
+        /// </summary>
         public virtual bool Instanced => instanced;
+        
+        /// <summary>
+        /// Returns the amount of instances registered to this object or 0 is instancing .
+        /// </summary>
         public int InstanceCount => instances?.Count ?? 0;
 
+        /// <summary>
+        /// This event type has the derived type as parameter.
+        /// </summary>
         public class InstanciableEvent : UnityEvent<T>
         {
         }
@@ -66,6 +74,10 @@ namespace UE.Instancing
             OnInstancesChanged.Invoke(this as T);
         }
 
+        /// <summary>
+        /// Returns a readonly Collection of all instances of this Object.
+        /// </summary>
+        /// <returns></returns>
         public ReadOnlyCollection<T> GetInstances()
         {
             if (instances == null)
@@ -76,6 +88,9 @@ namespace UE.Instancing
             return new ReadOnlyCollection<T>(instances.Values.ToArray());
         }
 
+        /// <summary>
+        /// Returns a collection of all dictionary keys.
+        /// </summary>
         public Object[] Keys => instances?.Keys.ToArray();
 
         /// <summary>
@@ -135,7 +150,7 @@ namespace UE.Instancing
             instance.keyID = key.GetInstanceID();
                 
 #if UE_Photon
-            //When we use photon sync, use a photon viewID as key to guarantee matching network instances.
+            //When using photon sync, use a photon viewID as key to guarantee matching network instances.
             if (this is ISyncable && (this as ISyncable).PUNSyncEnabled)
             {
                 var photonView = KeyToPhotonView(key);

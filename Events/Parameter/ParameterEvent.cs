@@ -12,6 +12,7 @@ using UnityEditor;
 #endif
 #if UE_Photon
 using UE.PUNNetworking;
+
 #endif
 
 namespace UE.Events
@@ -43,13 +44,19 @@ namespace UE.Events
         public bool PUNSyncEnabled => PUNSync;
         public EventCaching CachingOptions => cachingOptions;
         public bool MuteNetworkBroadcasting { get; set; }
-        
+
         /// <summary>
         /// This is true if the parameter type is serializable for photon.
         /// </summary>
         /// <returns></returns>
         public virtual bool IsNetworkingType => false;
 #endif
+
+        [SerializeField, HideInInspector] [Tooltip("Enables automatic logging of this event to a file.")]
+        private bool LogToFile;
+
+        [SerializeField, HideInInspector] [Tooltip("Name of the log file.")]
+        private string FileName = "main.log";
 
         [SerializeField] private bool debugLog;
 
@@ -93,22 +100,26 @@ namespace UE.Events
                 instance.eventListeners[i].OnEventRaised(value);
             instance.OnEventTriggered.Invoke(value);
 
+            if (LogToFile)
+                FileLogger.Write(FileName,
+                    name + " (" + instance.KeyID + ") was raised with parameter " + value + " !");
+
 #if UE_Photon
             PhotonSync.SendEventParam(this, name, instance.KeyID, value);
 #endif
         }
-        
+
         /// <summary>
         /// This raises the event for all instances.
         /// </summary>
         public void RaiseAllInstances(T value)
         {
             Logging.Log(this, name + " was raised for all instances with value: " + value, debugLog);
-            
+
             RaiseInstance(this, value);
-            
-            if(!Instanced) return;
-            
+
+            if (!Instanced) return;
+
             foreach (var instance in GetInstances())
             {
                 RaiseInstance(instance, value);
@@ -141,7 +152,7 @@ namespace UE.Events
             Instance(key).OnEventTriggered.RemoveListener(listener);
         }
     }
-    
+
 #if UNITY_EDITOR
     public class ParameterEventEditor<T, TS> : InstanciableSOEditor where TS : ParameterEvent<T, TS>
     {
@@ -149,6 +160,8 @@ namespace UE.Events
         private SerializedProperty PUNSync;
         private SerializedProperty CachingOptions;
 #endif
+        private SerializedProperty LogToFile;
+        private SerializedProperty FileName;
 
         protected override void OnEnable()
         {
@@ -158,6 +171,8 @@ namespace UE.Events
             PUNSync = serializedObject.FindProperty("PUNSync");
             CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
+            LogToFile = serializedObject.FindProperty("LogToFile");
+            FileName = serializedObject.FindProperty("FileName");
         }
 
         protected override void OnInspectorGUITop()
@@ -165,12 +180,16 @@ namespace UE.Events
 #if UE_Photon
             var paramEvent = target as ParameterEvent<T, TS>;
 
-            if (!paramEvent.IsNetworkingType) return;
-            
-            serializedObject.Update();
-            ScriptableObjectUtility.PhotonControl(PUNSync, CachingOptions);
-            serializedObject.ApplyModifiedProperties();
+            if (paramEvent.IsNetworkingType)
+            {
+                serializedObject.Update();
+                PhotonEditorUtility.PhotonControl(PUNSync, CachingOptions);
+                serializedObject.ApplyModifiedProperties();
+            }
 #endif
+            serializedObject.Update();
+            FileLogger.LoggerControl(LogToFile, FileName);
+            serializedObject.ApplyModifiedProperties();
         }
     }
 #endif

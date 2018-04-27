@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UE.Common;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -25,6 +26,19 @@ namespace UE.Instancing
         /// </summary>
         /// <returns></returns>
         public abstract IInstanciable GetTarget();
+
+        /// <summary>
+        /// Sets the instance key.
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        public virtual void SetKey(Object instanceKey)
+        {
+            if(Application.isPlaying) 
+                Logging.Warning(this, "Setting instance key at runtime. This is not recommended " +
+                                      "and might cause undefined behaviour.");
+            
+            _key = instanceKey;
+        }
     }
 
 #if UNITY_EDITOR

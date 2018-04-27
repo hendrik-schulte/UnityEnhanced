@@ -40,7 +40,14 @@ namespace UE.Events
         public EventCaching CachingOptions => cachingOptions;
         public bool MuteNetworkBroadcasting { get; set; }
 #endif
-
+        
+        [SerializeField, HideInInspector]
+        [Tooltip("Enables automatic logging of this event to a file.")]
+        private bool LogToFile;
+        [SerializeField, HideInInspector]
+        [Tooltip("Name of the log file.")]
+        private string FileName = "main.log";
+        
         [SerializeField] private bool debugLog;
 
 #if UNITY_EDITOR
@@ -83,6 +90,8 @@ namespace UE.Events
             for (var i = instance.eventListeners.Count - 1; i >= 0; i--)
                 instance.eventListeners[i].OnEventRaised();
             instance.OnEventTriggered.Invoke();
+            
+            if(LogToFile) FileLogger.Write(FileName, name + " (" + instance.KeyID + ") was raised!");
 
 #if UE_Photon
             PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, instance.KeyID);
@@ -138,6 +147,9 @@ namespace UE.Events
         private SerializedProperty PUNSync;
         private SerializedProperty CachingOptions;
 #endif
+        private SerializedProperty LogToFile;
+        private SerializedProperty FileName;
+        
 
         protected override void OnEnable()
         {
@@ -147,6 +159,8 @@ namespace UE.Events
             PUNSync = serializedObject.FindProperty("PUNSync");
             CachingOptions = serializedObject.FindProperty("cachingOptions");
 #endif
+            LogToFile = serializedObject.FindProperty("LogToFile");
+            FileName = serializedObject.FindProperty("FileName");
         }
 
         public override void OnInspectorGUI()
@@ -173,9 +187,12 @@ namespace UE.Events
         {
 #if UE_Photon
             serializedObject.Update();
-            ScriptableObjectUtility.PhotonControl(PUNSync, CachingOptions);
+            PhotonEditorUtility.PhotonControl(PUNSync, CachingOptions);
             serializedObject.ApplyModifiedProperties();
 #endif
+            serializedObject.Update();
+            FileLogger.LoggerControl(LogToFile, FileName);
+            serializedObject.ApplyModifiedProperties();
         }
     }
 #endif

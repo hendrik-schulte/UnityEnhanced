@@ -43,6 +43,12 @@ namespace UE.StateMachine
         public EventCaching CachingOptions => cachingOptions;
         public bool MuteNetworkBroadcasting { get; set; }
 #endif
+        
+        [SerializeField, HideInInspector] [Tooltip("Enables automatic logging of this state machine to a file.")]
+        private bool LogToFile;
+
+        [SerializeField, HideInInspector] [Tooltip("Name of the log file.")]
+        private string FileName = "main.log";
 
         [SerializeField] private bool debugLog;
 
@@ -99,6 +105,8 @@ namespace UE.StateMachine
             instance.OnStateLeave.Invoke(instance._state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
+            
+            if(LogToFile) FileLogger.Write(FileName, state.name + " (" + instance.KeyID + ") was entered.");
 
 #if UE_Photon
             PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, instance.KeyID);
@@ -160,7 +168,7 @@ namespace UE.StateMachine
         }
 
         /// <summary>
-        /// Returns true if all state machine instances are currently in this state.
+        /// Returns true if all state machine instances are currently in either of the given states.
         /// </summary>
         /// <returns></returns>
         public bool AllInstancesInEitherState(params State[] states)
