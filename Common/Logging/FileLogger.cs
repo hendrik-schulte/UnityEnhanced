@@ -4,10 +4,15 @@ using System.IO;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace UE.Common
 {
+    /// <summary>
+    /// This class enables easy logging to a file on disk. Automatically creates a StreamWriter
+    /// object for every log file path.
+    /// </summary>
     public static class FileLogger
     {
         /// <summary>
@@ -24,26 +29,26 @@ namespace UE.Common
         {
             if (streams.ContainsKey(fileName))
             {
-                //Loading stream from dictionary
+                //Loading stream from cache
                 return streams[fileName];
             }
 
             //Can't find the StreamWriter in the cache. Creating new one ...
+
             //Making sure the containing directory exists
             var directory = Path.GetDirectoryName(fileName);
-            if(directory.Any()) Directory.CreateDirectory(directory);
-            
+            if (directory.Any()) Directory.CreateDirectory(directory);
+
             var stream = new StreamWriter(fileName, true);
             streams.Add(fileName, stream);
-//            Write(fileName, "Started Logging on " + $"[{DateTime.Now:D}]");
             stream.WriteLine("#### Started Logging on " + $"{DateTime.Now:F}" + " ####");
             return stream;
         }
-        
+
         /// <summary>
         /// Closes the streams and clears the stream cache.
         /// </summary>
-        public static void Flush()
+        public static void Close()
         {
             foreach (var stream in streams)
             {
@@ -67,18 +72,54 @@ namespace UE.Common
             stream.WriteLine(message);
             stream.Flush();
         }
-        
+
+        public static void Write(LogToFile settings, string message)
+        {
+            if(!settings.logToFile) return;
+            
+            Write(settings.FileName, message);
+        }
+
 #if UNITY_EDITOR
-        public static void LoggerControl(SerializedProperty enabledField, SerializedProperty fileName)
+        /// <summary>
+        /// Draws an Editor Gui for enabling the logger and defining the log file name.
+        /// </summary>
+        /// <param name="enabledField">Bool property defining if logging is enabled.</param>
+        /// <param name="fileName">String property defining the path to the log file.</param>
+        public static void LoggerControl(
+            SerializedProperty enabledField, 
+            SerializedProperty fileName)
         {
             EditorGUILayout.PropertyField(enabledField);
 
+            DrawLoggingSettings(enabledField, fileName, null, false);
+        }
+
+        public static void LoggerControl(
+            SerializedProperty enabledField,
+            SerializedProperty fileName,
+            SerializedProperty separateLogsForInstance,
+            bool instanced)
+        {
+            EditorGUILayout.PropertyField(enabledField);
+
+            DrawLoggingSettings(enabledField, fileName, separateLogsForInstance, instanced);
+        }
+
+        private static void DrawLoggingSettings(
+            SerializedProperty enabledField, 
+            SerializedProperty fileName,
+            SerializedProperty separateLogsForInstance, 
+            bool instanced)
+        {
             if (!enabledField.boolValue) return;
-            
+
             EditorGUI.indentLevel++;
 
             EditorGUILayout.PropertyField(fileName);
-                
+            if(instanced && separateLogsForInstance != null) 
+                EditorGUILayout.PropertyField(separateLogsForInstance);
+
             EditorGUI.indentLevel--;
         }
 #endif

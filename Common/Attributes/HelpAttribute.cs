@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UE.Common
+namespace UE.Attributes
 {
     // --------------------------------------------------------------------------------------------------------------------
     /// <copyright file="HelpAttribute.cs">

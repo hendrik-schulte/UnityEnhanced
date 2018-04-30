@@ -18,22 +18,22 @@ namespace UE.Events
 
         protected virtual void OnEnable()
         {
-            if (!persistent) GenericEvent.RegisterListener(this, key);
+            if (!persistent) GenericEvent.AddListener(this, key);
         }
 
         protected virtual void OnDisable()
         {
-            if (!persistent) GenericEvent.UnregisterListener(this, key);
+            if (!persistent) GenericEvent.RemoveListener(this, key);
         }
 
         protected virtual void Awake()
         {
-            if (persistent) GenericEvent.RegisterListener(this, key);
+            if (persistent) GenericEvent.AddListener(this, key);
         }
 
         protected virtual void OnDestroy()
         {
-            if (persistent) GenericEvent.UnregisterListener(this, key);
+            if (persistent) GenericEvent.RemoveListener(this, key);
         }
 
         /// <summary>

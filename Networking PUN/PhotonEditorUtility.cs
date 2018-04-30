@@ -1,10 +1,12 @@
 ﻿#if UE_Photon
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 #endif
 
 namespace UE.PUNNetworking
 {
+    [Obsolete]
     public static class PhotonEditorUtility
     {
         #if UNITY_EDITOR

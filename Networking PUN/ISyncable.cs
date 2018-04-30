@@ -1,10 +1,13 @@
-﻿#if UE_Photon
+﻿using System;
+
+#if UE_Photon
 
 namespace UE.PUNNetworking
 {
     /// <summary>
-    /// This interface is implemented by ScriptableObjects that are synchronized by PhotonSync.
+    /// This interface is implemented by ScriptableObjects that are synchronized by PhotonSyncManager.
     /// </summary>
+    [Obsolete]
     public interface ISyncable
     {
         bool PUNSyncEnabled { get; }

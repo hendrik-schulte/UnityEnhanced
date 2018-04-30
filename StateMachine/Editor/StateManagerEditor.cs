@@ -1,45 +1,15 @@
-﻿using UE.Common;
+﻿#if UNITY_EDITOR
 using UE.Instancing;
 using UnityEditor;
 using UnityEngine;
-#if UE_Photon
-using UE.PUNNetworking;
-#endif
 
 namespace UE.StateMachine
 {
     [CustomEditor(typeof(StateManager))]
     public class StateManagerEditor : InstanciableSOEditor
     {
-#if UE_Photon
-        private SerializedProperty PUNSync;
-        private SerializedProperty CachingOptions;
-#endif
-        private SerializedProperty LogToFile;
-        private SerializedProperty FileName;
-        
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            
-#if UE_Photon
-            PUNSync = serializedObject.FindProperty("PUNSync");
-            CachingOptions = serializedObject.FindProperty("cachingOptions");
-#endif
-            LogToFile = serializedObject.FindProperty("LogToFile");
-            FileName = serializedObject.FindProperty("FileName");
-        }
-        
         protected override void OnInspectorGUITop()
         {
-#if UE_Photon
-            serializedObject.Update();
-            PhotonEditorUtility.PhotonControl(PUNSync, CachingOptions);
-            serializedObject.ApplyModifiedProperties();
-#endif
-            serializedObject.Update();
-            FileLogger.LoggerControl(LogToFile, FileName);
-            serializedObject.ApplyModifiedProperties();
         }
         
         public override void OnInspectorGUI()
@@ -73,7 +43,7 @@ namespace UE.StateMachine
             EditorGUILayout.LabelField(key.name+ ", " + 
                                        key.GetHashCode(), 
                 stateManager.GetState(key)?.name);
-        }         
-
+        }    
     }
 }
+#endif

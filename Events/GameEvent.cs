@@ -20,34 +20,25 @@ namespace UE.Events
 {
     [CreateAssetMenu(menuName = "Events/Event()")]
     public class GameEvent : InstanciableSO<GameEvent>
-#if UE_Photon
-        , ISyncable
-#endif
     {
 #if UE_Photon
-        [SerializeField, HideInInspector]
-        [Tooltip("Enables automatic sync of this event in a Photon network. " +
-                 "You need to have a PhotonSync Component in your Scene and the " +
-                 "event asset needs to be located at the root of a Resources folder " +
-                 "with a unique name.")]
-        private bool PUNSync;
+        [SerializeField]
+        private PhotonSync PhotonSync;
 
-        [SerializeField, HideInInspector] [Tooltip("How should the event be cached by Photon?")]
-        private EventCaching cachingOptions;
-
-        //Implementing ISyncable
-        public bool PUNSyncEnabled => PUNSync;
-        public EventCaching CachingOptions => cachingOptions;
-        public bool MuteNetworkBroadcasting { get; set; }
+        protected override PhotonSync PhotonSyncSettings => PhotonSync;
+        
+        /// <summary>
+        /// When this is true, events are not broadcasted. Used to avoid echoing effects.
+        /// </summary>Broadcasting
+        public bool MuteNetworkBroadcasting
+        {
+            get { return PhotonSync.MuteNetworkBroadcasting; }
+            set { PhotonSync.MuteNetworkBroadcasting = value; }
+        }
 #endif
         
-        [SerializeField, HideInInspector]
-        [Tooltip("Enables automatic logging of this event to a file.")]
-        private bool LogToFile;
-        [SerializeField, HideInInspector]
-        [Tooltip("Name of the log file.")]
-        private string FileName = "main.log";
-        
+        [SerializeField] private LogToFile logging = new LogToFile();
+
         [SerializeField] private bool debugLog;
 
 #if UNITY_EDITOR
@@ -91,10 +82,10 @@ namespace UE.Events
                 instance.eventListeners[i].OnEventRaised();
             instance.OnEventTriggered.Invoke();
             
-            if(LogToFile) FileLogger.Write(FileName, name + " (" + instance.KeyID + ") was raised!");
+            FileLogger.Write(logging, name + " (" + instance.KeyID + ") was raised!");
 
 #if UE_Photon
-            PhotonSync.SendEvent(this, PhotonSync.EventRaiseUEGameEvent, name, instance.KeyID);
+            PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventRaiseUEGameEvent, name, instance.KeyID);
 #endif
         }
 
@@ -115,24 +106,24 @@ namespace UE.Events
             }
         }
 
-        public void RegisterListener(GameEventListener listener, Object key = null)
+        public void AddListener(GameEventListener listener, Object key = null)
         {
             if (!Instance(key).eventListeners.Contains(listener))
                 Instance(key).eventListeners.Add(listener);
         }
 
-        public void RegisterListener(UnityAction listener, Object key = null)
+        public void AddListener(UnityAction listener, Object key = null)
         {
             Instance(key).OnEventTriggered.AddListener(listener);
         }
 
-        public void UnregisterListener(GameEventListener listener, Object key = null)
+        public void RemoveListener(GameEventListener listener, Object key = null)
         {
             if (Instance(key).eventListeners.Contains(listener))
                 Instance(key).eventListeners.Remove(listener);
         }
 
-        public void UnregisterListener(UnityAction listener, Object key = null)
+        public void RemoveListener(UnityAction listener, Object key = null)
         {
             Instance(key).OnEventTriggered.RemoveListener(listener);
         }
@@ -143,26 +134,6 @@ namespace UE.Events
     [CanEditMultipleObjects]
     public class GameEventEditor : InstanciableSOEditor
     {
-#if UE_Photon
-        private SerializedProperty PUNSync;
-        private SerializedProperty CachingOptions;
-#endif
-        private SerializedProperty LogToFile;
-        private SerializedProperty FileName;
-        
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-#if UE_Photon
-            PUNSync = serializedObject.FindProperty("PUNSync");
-            CachingOptions = serializedObject.FindProperty("cachingOptions");
-#endif
-            LogToFile = serializedObject.FindProperty("LogToFile");
-            FileName = serializedObject.FindProperty("FileName");
-        }
-
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -181,18 +152,6 @@ namespace UE.Events
                 if (GUILayout.Button("Raise"))
                     gameEvent.Raise();
             }
-        }
-
-        protected override void OnInspectorGUITop()
-        {
-#if UE_Photon
-            serializedObject.Update();
-            PhotonEditorUtility.PhotonControl(PUNSync, CachingOptions);
-            serializedObject.ApplyModifiedProperties();
-#endif
-            serializedObject.Update();
-            FileLogger.LoggerControl(LogToFile, FileName);
-            serializedObject.ApplyModifiedProperties();
         }
     }
 #endif

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ProBuilder2.Common;
 using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,6 +52,13 @@ namespace UE.Instancing
         /// Returns the amount of instances registered to this object or 0 is instancing .
         /// </summary>
         public int InstanceCount => instances?.Count ?? 0;
+        
+#if UE_Photon
+        /// <summary>
+        /// Returns the Photon Sync settings or null if this object is not syncable.
+        /// </summary>
+        protected abstract PhotonSync PhotonSyncSettings { get; }
+#endif
 
         /// <summary>
         /// This event type has the derived type as parameter.
@@ -151,7 +159,7 @@ namespace UE.Instancing
                 
 #if UE_Photon
             //When using photon sync, use a photon viewID as key to guarantee matching network instances.
-            if (this is ISyncable && (this as ISyncable).PUNSyncEnabled)
+            if (PhotonSyncSettings.PUNSync)
             {
                 var photonView = KeyToPhotonView(key);
                 if (photonView)
@@ -269,8 +277,17 @@ namespace UE.Instancing
             OnInspectorGUITop();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, "m_Script");
+            DrawPropertiesExcluding(serializedObject, new string[]{"m_Script"}.Concat(ExcludeProperties()));
             serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// This can be overridden to exclude the given properties from being displayed in the inspector.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string[] ExcludeProperties()
+        {
+            return new string[0];
         }
 
         /// <summary>

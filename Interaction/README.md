@@ -1,0 +1,3 @@
+# Interaction
+
+These scripts you can trigger Events based on collisions and spatial position of Objects in your scene without writing code. You can simply trigger UnityEvents and wire events in the inspector wich is great for prototyping. There are also adapters for the StateMachine and Event System. It is also meant to be used as a template for your own StateMachine and Event adapters. Have a look at the Demo scenes for usage.

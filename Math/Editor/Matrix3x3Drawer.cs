@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace UE.Math.Editor
@@ -52,3 +53,4 @@ namespace UE.Math.Editor
         }
     }
 }
+#endif

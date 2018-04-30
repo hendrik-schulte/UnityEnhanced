@@ -19,37 +19,27 @@ namespace UE.StateMachine
     /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
     public class StateManager : InstanciableSO<StateManager>
-#if UE_Photon
-        , ISyncable
-#endif
     {
 #if UE_Photon
-        [SerializeField, HideInInspector]
-        [Tooltip("Enables automatic sync of this state machine in a Photon network.\n" +
-                 "You need to have a PhotonSync Component in your Scene and the " +
-                 "state assets needs to be located at the root of a resources folder" +
-                 "with a unique name.")]
-        private bool PUNSync;
+        [SerializeField]
+        private PhotonSync PhotonSync;
 
-        [SerializeField, HideInInspector] private EventCaching cachingOptions;
+        protected override PhotonSync PhotonSyncSettings => PhotonSync;
 
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.
-        /// </summary>
-        private bool muteNetworkBroadcasting;
+        /// </summary>Broadcasting
+        public bool MuteNetworkBroadcasting
+        {
+            get { return PhotonSync.MuteNetworkBroadcasting; }
+            set { PhotonSync.MuteNetworkBroadcasting = value; }
+        }
 
-        //Implementing ISynchable
-        public bool PUNSyncEnabled => PUNSync;
-        public EventCaching CachingOptions => cachingOptions;
-        public bool MuteNetworkBroadcasting { get; set; }
+        public bool PUNSyncEnabled => PhotonSync.PUNSync;
 #endif
         
-        [SerializeField, HideInInspector] [Tooltip("Enables automatic logging of this state machine to a file.")]
-        private bool LogToFile;
-
-        [SerializeField, HideInInspector] [Tooltip("Name of the log file.")]
-        private string FileName = "main.log";
-
+        [SerializeField] private LogToFile logging = new LogToFile();
+        
         [SerializeField] private bool debugLog;
 
         private StateChangeEvent OnStateEnter = new StateChangeEvent();
@@ -106,10 +96,10 @@ namespace UE.StateMachine
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
             
-            if(LogToFile) FileLogger.Write(FileName, state.name + " (" + instance.KeyID + ") was entered.");
+            FileLogger.Write(logging, state.name + " (" + instance.KeyID + ") was entered.");
 
 #if UE_Photon
-            PhotonSync.SendEvent(this, PhotonSync.EventStateChange, state.name, instance.KeyID);
+            PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange, state.name, instance.KeyID);
 #endif
         }
 

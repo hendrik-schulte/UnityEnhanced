@@ -38,3 +38,34 @@ public float youNeedToKnowThat;
 ```
 
 ![](https://s18.postimg.org/ov2ozgtk9/image.png)
+
+### File Logger
+
+You can easily write your logs to a file using the FileLogger class. Simply write 
+
+``` cs
+FileLogger.Write("my.log", "Hello Logging World!");
+```
+
+### Cached Resources
+
+Multiple calls of Resources.Load for the same asset may cause an impact on your performance. This class makes it easy to cache your Resources.Load calls to a dictionary. Instead of calling 
+``` cs
+Resources.Load<MyAsset>("PathToMyAsset");
+```
+
+write
+
+``` cs
+CachedResources.Load<MyAsset>("PathToMyAsset");
+```
+
+and you are good to go.
+
+Use
+
+``` cs
+CachedResources.Flush();
+```
+
+To clear the cache.

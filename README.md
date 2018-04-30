@@ -21,6 +21,8 @@ A set of useful open-sourced tools for Unity3D I wrote or found over the time. T
   + Dynamically reference your data from scripts
   + Share data of multiple objects
   + Override data when needed
+- [Cached Resources](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/Common)
+- [Readonly Attributes](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/Common)
 
 Open particular folders for detailed description.
 
@@ -55,7 +57,5 @@ Copy content of this repository to a folder named *UnityEnhanced* inside of your
 The package includes [Assembly Definition Files](https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html). Since the Photon Networking package is optional, you may need to add or remove Photon as reference in the assembly definition. Or you can simply delete all *.asmdef* files.
 
 ## More to come soon
-
-- Demo Scenes
 
 Copyright (c) 2018, Hendrik Schulte

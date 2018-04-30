@@ -103,6 +103,16 @@ namespace UE.Common
         {
             return new Vector3(vec4.x, vec4.y, 0);
         }
+        
+        /// <summary>
+        /// Projects the given Vector2 onto the XZ-Plane thus y = 0.
+        /// </summary>
+        /// <param name="vec2"></param>
+        /// <returns></returns>
+        public static Vector3 X0Y(this Vector2 vec2)
+        {
+            return new Vector3(vec2.x, 0, vec2.y);
+        }
 
         /// <summary>
         /// Sets the distance to the left border in strechable mode.

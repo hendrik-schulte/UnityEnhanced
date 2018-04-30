@@ -22,22 +22,22 @@ namespace UE.Events
 
         private void OnEnable()
         {
-            if (!persistent) Event.RegisterListener(this, key);
+            if (!persistent) Event.AddListener(this, key);
         }
 
         private void OnDisable()
         {
-            if (!persistent) Event.UnregisterListener(this, key);
+            if (!persistent) Event.RemoveListener(this, key);
         }
 
         private void Awake()
         {
-            if (persistent) Event.RegisterListener(this, key);
+            if (persistent) Event.AddListener(this, key);
         }
 
         private void OnDestroy()
         {
-            if (persistent) Event.UnregisterListener(this, key);
+            if (persistent) Event.RemoveListener(this, key);
         }
 
         /// <summary>

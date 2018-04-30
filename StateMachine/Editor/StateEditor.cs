@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace UE.StateMachine
@@ -92,3 +93,4 @@ namespace UE.StateMachine
         }
     }
 }
+#endif

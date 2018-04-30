@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 
 namespace UE.Variables
 {
@@ -7,3 +8,4 @@ namespace UE.Variables
     {
     }
 }
+#endif
