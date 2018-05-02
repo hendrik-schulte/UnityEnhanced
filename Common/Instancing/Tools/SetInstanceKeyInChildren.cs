@@ -2,6 +2,7 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace VRMP.Scripts.Util
@@ -12,10 +13,15 @@ namespace VRMP.Scripts.Util
     public class SetInstanceKeyInChildren : MonoBehaviour
     {
         public Object instanceKey;
-        
+
         public void Apply()
         {
             var instanceObservers = GetComponentsInChildren<InstanceObserver>(true);
+
+#if UNITY_EDITOR
+            Debug.Log("Editor Undo stuff on " + gameObject.name);
+            Undo.RecordObjects(instanceObservers, "Batch-applying instance key to object hierachy.");
+#endif
 
             foreach (var iO in instanceObservers)
             {
@@ -23,16 +29,15 @@ namespace VRMP.Scripts.Util
             }
         }
     }
-    
-    #if UNITY_EDITOR
+
+#if UNITY_EDITOR
     [CustomEditor(typeof(SetInstanceKeyInChildren), true)]
-    [CanEditMultipleObjects]
     public class SetInstanceInChidrenEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
+
             var setInstanceKeyInChildren = target as SetInstanceKeyInChildren;
 
             if (GUILayout.Button("Apply"))

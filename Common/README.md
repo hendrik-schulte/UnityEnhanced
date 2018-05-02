@@ -47,6 +47,8 @@ You can easily write your logs to a file using the FileLogger class. Simply writ
 FileLogger.Write("my.log", "Hello Logging World!");
 ```
 
+The Event system and State Machine directly support file logging (enable in inspector). 
+
 ### Cached Resources
 
 Multiple calls of Resources.Load for the same asset may cause an impact on your performance. This class makes it easy to cache your Resources.Load calls to a dictionary. Instead of calling 

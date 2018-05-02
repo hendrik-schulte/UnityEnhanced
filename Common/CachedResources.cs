@@ -5,7 +5,7 @@ namespace UE.Common
 {
     /// <summary>
     /// This class allows automatic caching of resources to save performance in reoccouring
-    /// Resources.Load calls. Just use CachedResources.Load as you would normally use Resources.Load.
+    /// Resources.Load calls. Just use CachedResources.Load<> as you would normally use Resources.Load<>.
     /// </summary>
     public static class CachedResources
     {
