@@ -126,7 +126,6 @@ namespace UE.StateMachine
 
             Logging.Log(this, "'" + gameObject.name + "' Removing Listener", debug);
             
-//            activeStates[0].stateManager.OnStateEnter.RemoveListener(OnStateEnter);
             activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
         }
 
@@ -150,8 +149,7 @@ namespace UE.StateMachine
 
         protected virtual void OnDrawGizmos()
         {
-            if(!debug) return;
-            if (!HasStates()) return;
+            if(!debug || !HasStates() || !Application.isPlaying) return;
 
             activeStates[0].stateManager?.DrawWorldSpaceGizmo(transform.position, key);
         }

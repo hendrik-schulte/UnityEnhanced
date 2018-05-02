@@ -33,6 +33,8 @@ namespace UE.StateMachine
 
         private IEnumerator RouletteBreak()
         {
+            yield return null;
+            
             var bonusChance = 0f;
             
             while (true)

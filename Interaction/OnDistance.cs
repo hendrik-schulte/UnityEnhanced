@@ -7,6 +7,10 @@ using UnityEngine.Events;
 
 namespace UE.Interaction
 {
+    /// <summary>
+    /// This component checks the distance between this object and a target object and fires an event as soon as
+    /// the object comes closer than the given treshhold distance.
+    /// </summary>
     public class OnDistance : InstanceObserver
     {
         [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;
@@ -14,12 +18,11 @@ namespace UE.Interaction
         public TransformReference target;
 
         public EnterMode Mode;
-
-        [Header("Restrictions")] public float Threshold;
-
-        [Header("Update Frequency")] [Tooltip("Defines the frequency by which the distance check is performed.")]
+        [Tooltip("Defines the frequency by which the distance check is performed.")]
         [SerializeField]
         private FloatReference UpdateInterval = new FloatReference(0);
+        
+        [Header("Restrictions")] public float Threshold;
 
         [Header("Response")] public UnityEvent OnTriggered;
 
@@ -36,6 +39,8 @@ namespace UE.Interaction
 
         private IEnumerator CheckDistance()
         {
+            yield return null;
+            
             while (!target.Value)
             {
                 Logging.Log(this, "Target for proximity check is null!", Logging.Level.Warning, loggingLevel);
@@ -53,7 +58,7 @@ namespace UE.Interaction
                 if ((Mode == EnterMode.IsCloserThan && distance < Threshold) ||
                     (Mode == EnterMode.IsFurtherThan && distance > Threshold))
                 {
-                    Logging.Log(this, "State entered", Logging.Level.Info, loggingLevel);
+                    Logging.Log(this, "Distance reached!", Logging.Level.Info, loggingLevel);
 
                     OnTriggered.Invoke();
                     Triggered();

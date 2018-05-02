@@ -49,7 +49,7 @@ namespace UE.Events
 
         [SerializeField] private LogToFile logging = new LogToFile();
 
-        [SerializeField] private bool debugLog;
+        [SerializeField] private bool logToConsole;
 
         [Multiline] public string DeveloperDescription = "";
 
@@ -75,7 +75,7 @@ namespace UE.Events
         /// </summary>
         public void Raise(T value, Object key = null)
         {
-            if (debugLog) Debug.Log("Parameter Event '" + name + "' was raised with parameter: '" + value + "'!");
+            if (logToConsole) Debug.Log("Parameter Event '" + name + "' was raised with parameter: '" + value + "'!");
 
             RaiseInstance(Instance(key), value);
         }
@@ -103,7 +103,7 @@ namespace UE.Events
         /// </summary>
         public void RaiseAllInstances(T value)
         {
-            Logging.Log(this, name + " was raised for all instances with value: " + value, debugLog);
+            Logging.Log(this, name + " was raised for all instances with value: " + value, logToConsole);
 
             RaiseInstance(this, value);
 

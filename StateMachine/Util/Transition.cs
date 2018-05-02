@@ -1,0 +1,74 @@
+﻿using System.Collections;
+using UE.Common;
+using UE.Instancing;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace UE.StateMachine
+{
+    public abstract class Transition : InstanceObserver
+    {
+        [SerializeField] protected State transitState;
+        [SerializeField] protected State followingState;
+
+        [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;
+
+        [SerializeField] private UnityEvent OnTransitionStart;
+        [SerializeField] private UnityEvent OnTransitionComplete;
+
+
+        protected virtual void Awake()
+        {
+            if (transitState.stateManager != followingState.stateManager)
+            {
+                Logging.Log(this, "The states do not belong to the same state machine!",
+                    Logging.Level.Error, loggingLevel);
+                return;
+            }
+
+            Logging.Log(this, "'" + gameObject.name + "' Adding Listener", Logging.Level.Verbose, loggingLevel);
+            transitState.stateManager.AddStateEnterListener(OnStateEnter, key);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            Logging.Log(this, "'" + gameObject.name + "' Removing Listener", Logging.Level.Verbose, loggingLevel);
+
+            transitState.stateManager.RemoveStateEnterListener(OnStateEnter, key);
+        }
+
+        private void OnStateEnter(State state)
+        {
+            if (state != transitState) return;
+
+            Logging.Log(this, "'" + gameObject.name + "' Starting transition ...", Logging.Level.Info, loggingLevel);
+
+            OnTransitionStart.Invoke();
+            StartCoroutine(TransitionStart());
+        }
+
+        protected abstract IEnumerator TransitionStart();
+
+        protected void TransitionComplete()
+        {
+            if (!transitState.IsActive(key))
+            {
+                Logging.Log(this,
+                    "'" + gameObject.name + "' Transition completed but transit state is not active anymore!",
+                    Logging.Level.Warning, loggingLevel);
+
+                return;
+            }
+
+            Logging.Log(this, "'" + gameObject.name + "' Transition completed!", Logging.Level.Info, loggingLevel);
+
+            OnTransitionComplete.Invoke();
+            followingState.Enter(key);
+        }
+
+        public override IInstanciable GetTarget()
+        {
+            return !transitState ? null : transitState.stateManager;
+        }
+    }
+}

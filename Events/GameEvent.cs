@@ -39,7 +39,7 @@ namespace UE.Events
         
         [SerializeField] private LogToFile logging = new LogToFile();
 
-        [SerializeField] private bool debugLog;
+        [SerializeField] private bool logToConsole;
 
 #if UNITY_EDITOR
         [Multiline] public string DeveloperDescription = "";
@@ -67,7 +67,7 @@ namespace UE.Events
         /// <param name="key"></param>
         public void Raise(Object key)
         {
-            Logging.Log(this, name + " was raised!", debugLog);
+            Logging.Log(this, name + " was raised!", logToConsole);
 
             RaiseInstance(Instance(key));
         }
@@ -94,7 +94,7 @@ namespace UE.Events
         /// </summary>
         public void RaiseAllInstances()
         {
-            Logging.Log(this, name + " was raised for all instances!", debugLog);
+            Logging.Log(this, name + " was raised for all instances!", logToConsole);
 
             RaiseInstance(this);
 
