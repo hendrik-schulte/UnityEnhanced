@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UE.StateMachine
 {
     /// <summary>
-    /// A state within the state machine.
+    /// A state asset used within the state machine.
     /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State")]
     public class State : ScriptableObject
@@ -97,9 +97,9 @@ namespace UE.StateMachine
         /// This draws a state gizmo at the given world space position.
         /// </summary>
         /// <param name="position"></param>
-        public void DrawWorldSpaceGizmo(Vector3 position)
+        public void DrawWorldSpaceGizmo(Vector3 position, Color? color = null)
         {
-            Gizmo.DrawWorldSpaceString("Current: " + name, position);
+            Gizmo.DrawWorldSpaceString("Current: " + name, position, color);
         }
     }
 }

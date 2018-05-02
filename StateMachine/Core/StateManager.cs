@@ -8,7 +8,6 @@ using UnityEngine.Events;
 using Object = UnityEngine.Object;
 #if UE_Photon
 using UE.PUNNetworking;
-
 #endif
 
 namespace UE.StateMachine
@@ -21,8 +20,7 @@ namespace UE.StateMachine
     public class StateManager : InstanciableSO<StateManager>
     {
 #if UE_Photon
-        [SerializeField]
-        private PhotonSync PhotonSync;
+        [SerializeField] private PhotonSync PhotonSync;
 
         protected override PhotonSync PhotonSyncSettings => PhotonSync;
 
@@ -37,10 +35,16 @@ namespace UE.StateMachine
 
         public bool PUNSyncEnabled => PhotonSync.PUNSync;
 #endif
-        
-        [SerializeField] private LogToFile logging = new LogToFile();
-        
-        [SerializeField] private bool debugLog;
+
+        [SerializeField] private LogToFile fileLogging = new LogToFile();
+
+        /// <summary>
+        /// Returns true if file logging is enabled.
+        /// </summary>
+        public bool FileLoggingEnabled => fileLogging.logToFile;
+        public bool ConsoleLoggingEnabled => logToConsole;
+
+        [SerializeField] private bool logToConsole;
 
         private StateChangeEvent OnStateEnter = new StateChangeEvent();
         private StateChangeEvent OnStateLeave = new StateChangeEvent();
@@ -90,13 +94,13 @@ namespace UE.StateMachine
                 return;
             }
 
-            if (debugLog) Logging.Log(this, "Change State to: " + state);
+            if (logToConsole) Logging.Log(this, "Change State to: " + state);
 
             instance.OnStateLeave.Invoke(instance._state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
-            
-            FileLogger.Write(logging, state.name + " (" + instance.KeyID + ") was entered.");
+
+            FileLogger.Write(fileLogging, state.name + " (" + instance.KeyID + ") was entered.");
 
 #if UE_Photon
             PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange, state.name, instance.KeyID);
@@ -110,9 +114,9 @@ namespace UE.StateMachine
         public void SetStateAllInstances(State state)
         {
             SetStateInstance(this, state);
-            
-            if(!Instanced) return;
-            
+
+            if (!Instanced) return;
+
             foreach (var instance in GetInstances())
             {
                 SetStateInstance(instance, state);
@@ -151,8 +155,8 @@ namespace UE.StateMachine
         {
             if (GetState(key)) return;
 
-            if (InitialState) Logging.Log(this, "Initializing with " + InitialState.name, debugLog);
-            else Logging.Log(this, "Initializing with null", debugLog);
+            if (InitialState) Logging.Log(this, "Initializing with " + InitialState.name, logToConsole);
+            else Logging.Log(this, "Initializing with null", logToConsole);
 
             SetState(InitialState, key);
         }
@@ -185,13 +189,13 @@ namespace UE.StateMachine
         public bool AnyInstanceNotInEitherState(params State[] states)
         {
             if (!states.Any()) return true;
-                
+
             if (states.Any(state => state.stateManager != this))
             {
                 Logging.Warning(this, "The states checked do not belong to this state machine.");
                 return false;
             }
-            
+
             if (!Instanced)
                 return !states.Contains(_state);
 
@@ -199,7 +203,7 @@ namespace UE.StateMachine
             {
                 if (!states.Contains(instance._state)) return true;
             }
-            
+
             return false;
         }
 
@@ -216,22 +220,34 @@ namespace UE.StateMachine
         /// This draws a state gizmo at the given world space position.
         /// </summary>
         /// <param name="position"></param>
-        /// <param name="key"></param>
+        /// <param name="key">Instance Key</param>
         public void DrawWorldSpaceGizmo(Vector3 position, Object key = null)
+        {
+            DrawWorldSpaceGizmo(position, null, key);
+        }
+
+        /// <summary>
+        /// This draws a state gizmo at the given world space position.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="color">Color of the gizmo.</param>
+        /// <param name="key">Instance Key</param>
+        public void DrawWorldSpaceGizmo(Vector3 position, Color? color = null, Object key = null)
         {
             var state = GetState(key);
 
             if (!Application.isPlaying)
             {
                 if (HasInitialState())
-                    InitialState.DrawWorldSpaceGizmo(position);
+                    InitialState.DrawWorldSpaceGizmo(position, color);
                 else
-                    Gizmo.DrawWorldSpaceString("Starting with: Null", position);
+                    Gizmo.DrawWorldSpaceString("Starting with: Null", position, color);
+
                 return;
             }
 
-            if (!state) Gizmo.DrawWorldSpaceString("Current: Null", position);
-            else state.DrawWorldSpaceGizmo(position);
+            if (!state) Gizmo.DrawWorldSpaceString("Current: Null", position, color);
+            else state.DrawWorldSpaceGizmo(position, color);
         }
     }
 }

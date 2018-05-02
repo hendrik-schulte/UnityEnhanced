@@ -9,10 +9,12 @@ namespace UE.StateMachine
     public class StateEditor : Editor
     {
         private SerializedProperty m_Script;
+        private SerializedProperty stateManagerProp;
 
         private void OnEnable()
         {
             m_Script = serializedObject.FindProperty("m_Script");
+            stateManagerProp = serializedObject.FindProperty("stateManager");
         }
 
         public override void OnInspectorGUI()
@@ -22,20 +24,31 @@ namespace UE.StateMachine
             GUI.enabled = false;
             EditorGUILayout.ObjectField(m_Script);
             GUI.enabled = true;
+            
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(stateManagerProp);
 
             if (state.stateManager)
             {
+                EditorGUILayout.LabelField("Inherited from StateManager:");
+
                 GUI.enabled = false;
+                EditorGUI.indentLevel++;
+
                 EditorGUILayout.Toggle("Instanced", state.stateManager.Instanced);
 #if UE_Photon
                 EditorGUILayout.Toggle("PUN Sync", state.stateManager.PUNSyncEnabled);
 #endif
+                EditorGUILayout.Toggle("Log To File", state.stateManager.FileLoggingEnabled);
+                EditorGUILayout.Toggle("Log To Console", state.stateManager.ConsoleLoggingEnabled);
+
+                EditorGUI.indentLevel--;
                 GUI.enabled = true;
             }
 
-            serializedObject.Update();
 
-            DrawPropertiesExcluding(serializedObject, "m_Script");
+            DrawPropertiesExcluding(serializedObject, "m_Script", "stateManager");
 
             serializedObject.ApplyModifiedProperties();
 

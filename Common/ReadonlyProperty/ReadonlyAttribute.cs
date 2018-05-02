@@ -41,11 +41,21 @@ namespace UE.Common
                         valueStr = prop.enumDisplayNames[prop.enumValueIndex];
                         break;
                     default:
-                        valueStr = "(not supported)";
-                        break;
+//                        valueStr = "(not supported)";
+                        DrawDisabledProperty(position, prop);
+                        return;
                 }
 
                 EditorGUI.LabelField(position, label.text, valueStr);
+            }
+
+            private void DrawDisabledProperty(Rect position, SerializedProperty prop)
+            {
+                var previous = GUI.enabled;
+                
+                GUI.enabled = false;
+                EditorGUI.PropertyField(position, prop);
+                GUI.enabled = previous;
             }
         }
     

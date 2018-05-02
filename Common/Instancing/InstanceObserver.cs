@@ -17,12 +17,13 @@ namespace UE.Instancing
         [SerializeField, HideInInspector] private Object _key;
 
         /// <summary>
-        /// The instance key defined in the inspector.
+        /// The instance key defined in the inspector. Use this for all calls on the instanciated object.
         /// </summary>
         protected Object key => _key;
 
         /// <summary>
-        /// Returns the instanciated object.
+        /// Returns the instanciated object. It is used to display the instance key property in the inspector
+        /// only when instancing is enabled for the returned object.
         /// </summary>
         /// <returns></returns>
         public abstract IInstanciable GetTarget();

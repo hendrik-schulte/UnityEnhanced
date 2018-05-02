@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 23750381020593574}
   - component: {fileID: 114151353045106578}
   - component: {fileID: 114992230562864288}
+  - component: {fileID: 114662563614018460}
   m_Layer: 12
   m_Name: InstancedState
   m_TagString: Untagged
@@ -195,6 +196,21 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   state: {fileID: 11400000, guid: 5534f44430060f5469d2b56b9d819869, type: 2}
+--- !u!114 &114662563614018460
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1338201642037702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173797eb8c04402381c65c697a87ec46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: {fileID: 1338201642037702}
+  stateManager: {fileID: 11400000, guid: 96dc01313d9e4f04fbdc1eee5a65be65, type: 2}
+  onlyWhenSelected: 0
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &114795858104947584
 MonoBehaviour:
   m_ObjectHideFlags: 1

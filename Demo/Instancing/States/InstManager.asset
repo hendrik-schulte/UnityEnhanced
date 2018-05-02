@@ -15,7 +15,7 @@ MonoBehaviour:
   PhotonSync:
     PUNSync: 0
     cachingOptions: 0
-  logging:
+  fileLogging:
     logToFile: 0
     FileName: main.log
   debugLog: 0

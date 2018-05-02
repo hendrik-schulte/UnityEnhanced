@@ -1,0 +1,23 @@
+﻿using UE.Events;
+using UE.Instancing;
+using UE.Interaction;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace UE.Interaction
+{
+    public class SendTriggerEnterRandomBool : OnTrigger
+    {
+        [SerializeField] private BoolEvent Event;
+
+        protected override void Triggered()
+        {
+            Event.Raise(Random.value > 0.5f,  key);
+        }
+
+        public override IInstanciable GetTarget()
+        {
+            return Event;
+        }
+    }
+}
