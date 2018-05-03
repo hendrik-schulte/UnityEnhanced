@@ -1,5 +1,5 @@
 # UnityEnhanced
-A set of useful open-sourced tools for Unity3D I wrote or found over the time. They aim for easy and powerful architecture of your project without writing much code.
+A set of useful tools aimed at easy and powerful architecture in Unity3D.
 
 ### Most notably
 - A [State Machine](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/StateMachine)
