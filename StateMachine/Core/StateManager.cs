@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using Object = UnityEngine.Object;
 #if UE_Photon
 using UE.PUNNetworking;
+
 #endif
 
 namespace UE.StateMachine
@@ -33,21 +34,45 @@ namespace UE.StateMachine
             set { PhotonSync.MuteNetworkBroadcasting = value; }
         }
 
+        /// <summary>
+        /// Returns true when Photon sync is enabled.
+        /// </summary>
         public bool PUNSyncEnabled => PhotonSync.PUNSync;
 #endif
 
-        [SerializeField] private LogToFile fileLogging = new LogToFile();
+        /// <summary>
+        /// Settings for file logging.
+        /// </summary>
+        [SerializeField] 
+        private LogToFile fileLogging = new LogToFile();
 
         /// <summary>
         /// Returns true if file logging is enabled.
         /// </summary>
         public bool FileLoggingEnabled => fileLogging.logToFile;
+
+        /// <summary>
+        /// This returns true when console logging is enabled.
+        /// </summary>
         public bool ConsoleLoggingEnabled => logToConsole;
 
-        [SerializeField] private bool logToConsole;
+        /// <summary>
+        /// Logging to console enabled.
+        /// </summary>
+        [SerializeField] 
+        private bool logToConsole;
 
-        private StateChangeEvent OnStateEnter = new StateChangeEvent();
-        private StateChangeEvent OnStateLeave = new StateChangeEvent();
+        /// <summary>
+        /// This event is triggered when a state is entered.
+        /// Provides the new state as parameter.
+        /// </summary>
+        private StateEvent OnStateEnter = new StateEvent();
+        
+        /// <summary>
+        /// This event is triggered when a state is left.
+        /// Provides the left and upcoming state as parameter.
+        /// </summary>
+        private StateStateEvent OnStateLeave = new StateStateEvent();
 
 #if UNITY_EDITOR
         [Multiline] public string DeveloperDescription = "";
@@ -76,10 +101,10 @@ namespace UE.StateMachine
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="state"></param>
-        /// <param name="key"></param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         private void SetStateInstance(StateManager instance, State state, Object key = null)
         {
-            if (instance._state == state) return;
+            if (instance._state == state) return; //The state to enter is already active.
 
             if (state == null)
             {
@@ -93,10 +118,12 @@ namespace UE.StateMachine
                                     "is not controlled by this state manager!");
                 return;
             }
-
-            if (logToConsole) Logging.Log(this, "Change State to: " + state);
-
-            instance.OnStateLeave.Invoke(instance._state);
+            
+#if UNITY_EDITOR
+            Logging.Log(this, "Change State to: " + state, logToConsole);
+#endif
+      
+            instance.OnStateLeave.Invoke(instance._state, state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
 
@@ -123,34 +150,60 @@ namespace UE.StateMachine
             }
         }
 
+        /// <summary>
+        /// Returns the current state of this state machine.
+        /// </summary>
+        /// <param name="key">Key for instanced StateMachine.</param>
+        /// <returns></returns>
         public State GetState(Object key = null)
         {
             return Instance(key)._state;
         }
 
+        /// <summary>
+        /// Register a listener to the OnStateEntered event. Provides the entered state as parameter.
+        /// </summary>
+        /// <param name="action">The Action to perform.</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         public void AddStateEnterListener(UnityAction<State> action, Object key = null)
         {
             Instance(key).OnStateEnter.AddListener(action);
         }
 
+        /// <summary>
+        /// Remove a listener from the OnStateEntered event.
+        /// </summary>
+        /// <param name="action">The Action to remove.</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         public void RemoveStateEnterListener(UnityAction<State> action, Object key = null)
         {
             Instance(key).OnStateEnter.RemoveListener(action);
         }
 
-        public void AddStateLeaveListener(UnityAction<State> action, Object key = null)
+        /// <summary>
+        /// Register a listener to the OnStateLeave event. Provides the left and the upcoming state as parameter.
+        /// </summary>
+        /// <param name="action">The Action to perform.</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
+        public void AddStateLeaveListener(UnityAction<State, State> action, Object key = null)
         {
-            Instance(key).OnStateEnter.AddListener(action);
+            Instance(key).OnStateLeave.AddListener(action);
         }
-
-        public void RemoveStateLeaveListener(UnityAction<State> action, Object key = null)
+        
+        /// <summary>
+        /// Remove a listener from the OnStateLeave event.
+        /// </summary>
+        /// <param name="action">The Action to remove.</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
+        public void RemoveStateLeaveListener(UnityAction<State, State> action, Object key = null)
         {
-            Instance(key).OnStateEnter.RemoveListener(action);
+            Instance(key).OnStateLeave.RemoveListener(action);
         }
 
         /// <summary>
         /// This is called when a StateListener starts. Used for initialization of this state machine.
         /// </summary>
+        /// <param name="key">Key for instanced StateMachine.</param>
         internal void Init(Object key = null)
         {
             if (GetState(key)) return;
@@ -220,7 +273,7 @@ namespace UE.StateMachine
         /// This draws a state gizmo at the given world space position.
         /// </summary>
         /// <param name="position"></param>
-        /// <param name="key">Instance Key</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         public void DrawWorldSpaceGizmo(Vector3 position, Object key = null)
         {
             DrawWorldSpaceGizmo(position, null, key);
@@ -231,7 +284,7 @@ namespace UE.StateMachine
         /// </summary>
         /// <param name="position"></param>
         /// <param name="color">Color of the gizmo.</param>
-        /// <param name="key">Instance Key</param>
+        /// <param name="key">Key for instanced StateMachine.</param>
         public void DrawWorldSpaceGizmo(Vector3 position, Color? color = null, Object key = null)
         {
             var state = GetState(key);

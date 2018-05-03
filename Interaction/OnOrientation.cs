@@ -8,21 +8,24 @@ using UnityEngine.Events;
 namespace UE.Interaction
 {
     public class OnOrientation : InstanceObserver
-    {        
+    {
         public TransformReference target;
 
         [Tooltip("Right - Red - X\nUp - Green - Y\nForward - Blue - Z")]
         public EnterMode Mode = EnterMode.Forward;
 
-        [Tooltip("Defines the frequency by which the orientation check is performed.")]
-        [SerializeField]
+        [Tooltip("Defines the frequency by which the orientation check is performed.")] [SerializeField]
         private FloatReference UpdateInterval = new FloatReference(0);
-        
+
         [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;
-        
-        [Tooltip("The angle between the forward vectors of the targets needs to be smaller than this.")]
-        [Range(0, 90)]
+
+        [Tooltip("The angle between the forward vectors of the targets needs to be smaller than this.")] [Range(0, 90)]
         public float ThresholdAngle;
+
+        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [Range(0, 5)]
+        private float cooldown;
+
+        private bool coolingDown;
 
         public enum EnterMode
         {
@@ -32,16 +35,23 @@ namespace UE.Interaction
         }
 
         [Header("Response")] public UnityEvent OnTriggered;
-        
+
         protected virtual void OnEnable()
         {
+            coolingDown = false;
+
             StartCoroutine(CheckDistance());
+        }
+
+        private void CancelCooldown()
+        {
+            coolingDown = false;
         }
 
         private IEnumerator CheckDistance()
         {
             yield return null;
-            
+
             while (!target.Value)
             {
                 Logging.Log(this, "Target for orientation check is null!", Logging.Level.Warning, loggingLevel);
@@ -52,6 +62,9 @@ namespace UE.Interaction
 
             while (true)
             {
+                while (coolingDown)
+                    yield return null;
+
                 float angle;
 
                 switch (Mode)
@@ -70,23 +83,30 @@ namespace UE.Interaction
                         break;
                 }
 
-                Logging.Log(this, "Performing orientation check. Angle: " + angle, Logging.Level.Verbose, loggingLevel);
+                Logging.Log(this, "Performing orientation check. Angle: " + angle, Logging.Level.Verbose,
+                    loggingLevel);
 
                 if (angle < ThresholdAngle)
-                {
-                    Logging.Log(this, "State entered", Logging.Level.Info, loggingLevel);
 
-                    OnTriggered.Invoke();
                     Triggered();
-                }
-                
+
+
                 if (UpdateInterval == 0) yield return null;
                 else yield return new WaitForSeconds(UpdateInterval);
             }
         }
 
+        /// <summary>
+        /// This function is called whenever the given requirements are fulfilled.
+        /// It is meant to be overridden by subclasses for custom behaviour.
+        /// </summary>
         protected virtual void Triggered()
         {
+            coolingDown = true;
+            Invoke(nameof(CancelCooldown), cooldown);
+
+            Logging.Log(this, "Triggered", Logging.Level.Info, loggingLevel);
+            OnTriggered.Invoke();
         }
 
         public override IInstanciable GetTarget()

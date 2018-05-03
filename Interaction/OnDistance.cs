@@ -22,8 +22,14 @@ namespace UE.Interaction
         [SerializeField]
         private FloatReference UpdateInterval = new FloatReference(0);
         
-        [Header("Restrictions")] public float Threshold;
+        [Header("Restrictions")] 
+        public FloatReference Threshold = new FloatReference(1);
+        
+        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [Range(0, 5)]
+        private float cooldown;
 
+        private bool coolingDown;
+        
         [Header("Response")] public UnityEvent OnTriggered;
 
         public enum EnterMode
@@ -34,9 +40,16 @@ namespace UE.Interaction
 
         protected virtual void OnEnable()
         {
+            coolingDown = false;
+            
             StartCoroutine(CheckDistance());
         }
 
+        private void CancelCooldown()
+        {
+            coolingDown = false;
+        }
+        
         private IEnumerator CheckDistance()
         {
             yield return null;
@@ -50,7 +63,10 @@ namespace UE.Interaction
             Logging.Log(this, "Target found.", Logging.Level.Verbose, loggingLevel);
 
             while (true)
-            {                                
+            {                        
+                while (coolingDown)
+                    yield return null;    
+                
                 Logging.Log(this, "Performing distance check.", Logging.Level.Verbose, loggingLevel);
 
                 var distance = Vector3.Distance(transform.position, target.Value.position);
@@ -60,7 +76,6 @@ namespace UE.Interaction
                 {
                     Logging.Log(this, "Distance reached!", Logging.Level.Info, loggingLevel);
 
-                    OnTriggered.Invoke();
                     Triggered();
                 }
                 
@@ -70,7 +85,11 @@ namespace UE.Interaction
         }
 
         protected virtual void Triggered()
-        {
+        {            
+            coolingDown = true;
+            Invoke(nameof(CancelCooldown), cooldown);
+            
+            OnTriggered.Invoke();
         }
 
         public override IInstanciable GetTarget()

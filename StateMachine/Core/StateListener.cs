@@ -59,6 +59,7 @@ namespace UE.StateMachine
             stateManager.Init(key);
 
             stateManager.AddStateEnterListener(OnStateEnter, key);
+            stateManager.AddStateLeaveListener(OnStateLeft, key);
 
             if (IsActiveState(stateManager.GetState(key)))
             {
@@ -106,8 +107,16 @@ namespace UE.StateMachine
                 Activated();
                 OnActivated.Invoke();
             }
+        }
 
-            if (previouslyActive && !Active)
+        /// <summary>
+        /// This is called when a state is left.
+        /// </summary>
+        /// <param name="leftState"></param>
+        /// <param name="upcomingState"></param>
+        private void OnStateLeft(State leftState, State upcomingState)
+        {
+            if (IsActiveState(leftState) && !IsActiveState(upcomingState))
             {
 #if UNITY_EDITOR
                 Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Deactivated", debug);
@@ -144,7 +153,12 @@ namespace UE.StateMachine
             Logging.Log(this, "'" + gameObject.name + "' Removing Listener", debug);
 #endif
 
+            //when leaving play mode, the key object may already be destroyed
+            //so we avoid using the wrong key and return.
+            if(activeStates[0].stateManager.Instanced && key == null) return;
+            
             activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
+            activeStates[0].stateManager.RemoveStateLeaveListener(OnStateLeft, key);
         }
 
         public override IInstanciable GetTarget()

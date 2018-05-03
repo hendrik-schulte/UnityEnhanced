@@ -10,6 +10,7 @@ namespace UE.Interaction
 
         protected override void Triggered()
         {
+            base.Triggered();
             state.Enter(key);
         }
 

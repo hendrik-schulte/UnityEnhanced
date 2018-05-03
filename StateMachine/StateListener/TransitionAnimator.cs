@@ -19,7 +19,7 @@ namespace UE.StateMachine
 
         //Hash of the parameter we use to control the transitions.
         private int m_OpenParameterId;
- 
+
         //Animator State and Transition names we need to check against.
         const string k_OpenTransitionName = "Open";
         const string k_ClosedStateName = "Closed";
@@ -29,7 +29,7 @@ namespace UE.StateMachine
             animator = GetComponent<Animator>();
             m_OpenParameterId = Animator.StringToHash(k_OpenTransitionName);
         }
-        
+
         public void Open()
         {
             Activated();
@@ -39,7 +39,7 @@ namespace UE.StateMachine
         {
             Deactivated();
         }
-        
+
         /// <summary>
         /// Toggle (open / close) this window.
         /// </summary>
@@ -64,8 +64,10 @@ namespace UE.StateMachine
             animator.enabled = true;
             if (moveToFront) transform.SetAsLastSibling();
             animator.SetBool(m_OpenParameterId, true);
-            
-            if (debug) Logging.Log(this, "'" + gameObject.name + "' Opened");
+
+#if UNITY_EDITOR
+            Logging.Log(this, "'" + gameObject.name + "' Opened", debug);
+#endif
         }
 
         /// <inheritdoc />
@@ -77,7 +79,7 @@ namespace UE.StateMachine
         {
             //Start Coroutine to disable the hierarchy when closing animation finishes.
             StopAllCoroutines();
-            
+
             animator.SetBool(m_OpenParameterId, false);
 
             StartCoroutine(DisablePanelDelayed());
@@ -105,9 +107,10 @@ namespace UE.StateMachine
             }
 
             if (!shouldBeClosed) yield break;
-            
-            if (debug) Logging.Log(this, "'" + gameObject.name + "' Closed");
 
+#if UNITY_EDITOR
+            Logging.Log(this, "'" + gameObject.name + "' Closed", debug);
+#endif
             gameObject.SetActive(false);
             animator.enabled = false;
         }

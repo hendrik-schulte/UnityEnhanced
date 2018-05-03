@@ -6,6 +6,9 @@ using UnityEngine.Events;
 
 namespace UE.StateMachine
 {
+    /// <summary>
+    /// A transition is used to automatically move to annother state when a condition is met.
+    /// </summary>
     public abstract class Transition : InstanceObserver
     {
         [SerializeField] protected State transitState;
@@ -43,7 +46,13 @@ namespace UE.StateMachine
 
             Logging.Log(this, "'" + gameObject.name + "' Starting transition ...", Logging.Level.Info, loggingLevel);
 
-            OnTransitionStart.Invoke();
+            StartTransition(true);
+        }
+
+        protected void StartTransition(bool triggerEvent)
+        {
+            if(triggerEvent) OnTransitionStart.Invoke();
+            StopAllCoroutines();
             StartCoroutine(TransitionStart());
         }
 

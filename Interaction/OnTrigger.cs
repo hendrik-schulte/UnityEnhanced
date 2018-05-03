@@ -96,9 +96,6 @@ namespace UE.Interaction
 
             Logging.Log(this, "Triggered by " + other.gameObject.name, Logging.Level.Info, loggingLevel);
 
-            coolingDown = true;
-            Invoke(nameof(OnEnable), cooldown);
-
             Triggered();
         }
 
@@ -122,6 +119,9 @@ namespace UE.Interaction
         /// </summary>
         protected virtual void Triggered()
         {
+            coolingDown = true;
+            Invoke(nameof(OnEnable), cooldown);
+            
             OnTriggerEnterEvent.Invoke();
         }
 
