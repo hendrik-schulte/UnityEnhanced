@@ -99,7 +99,6 @@ namespace UE.Interaction
             coolingDown = true;
             Invoke(nameof(OnEnable), cooldown);
 
-            OnTriggerEnterEvent.Invoke();
             Triggered();
         }
 
@@ -123,6 +122,7 @@ namespace UE.Interaction
         /// </summary>
         protected virtual void Triggered()
         {
+            OnTriggerEnterEvent.Invoke();
         }
 
         public override IInstanciable GetTarget()

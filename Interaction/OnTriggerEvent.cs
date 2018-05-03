@@ -11,6 +11,8 @@ namespace UE.Interaction
 
         protected override void Triggered()
         {
+            base.Triggered();
+            
             gameEvent.Raise(key);
         }
 

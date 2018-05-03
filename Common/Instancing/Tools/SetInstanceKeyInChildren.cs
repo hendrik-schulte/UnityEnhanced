@@ -1,10 +1,8 @@
-﻿using UE.Instancing;
+﻿#if UNITY_EDITOR
 using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
-namespace VRMP.Scripts.Util
+namespace UE.Instancing
 {
     /// <summary>
     /// This component allows to change all instance keys of an object hierachy at once.
@@ -12,10 +10,12 @@ namespace VRMP.Scripts.Util
     public class SetInstanceKeyInChildren : MonoBehaviour
     {
         public Object instanceKey;
-        
+
         public void Apply()
         {
             var instanceObservers = GetComponentsInChildren<InstanceObserver>(true);
+
+            Undo.RecordObjects(instanceObservers, "Batch-Applying Instance Key for InstanceObservers in Hierachy.");
 
             foreach (var iO in instanceObservers)
             {
@@ -23,16 +23,14 @@ namespace VRMP.Scripts.Util
             }
         }
     }
-    
-    #if UNITY_EDITOR
+
     [CustomEditor(typeof(SetInstanceKeyInChildren), true)]
-    [CanEditMultipleObjects]
     public class SetInstanceInChidrenEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
+
             var setInstanceKeyInChildren = target as SetInstanceKeyInChildren;
 
             if (GUILayout.Button("Apply"))
@@ -41,5 +39,5 @@ namespace VRMP.Scripts.Util
             }
         }
     }
-#endif
 }
+#endif

@@ -13,13 +13,22 @@ namespace UE.Interaction
 
         protected override void Triggered()
         {
-            if(stateB.IsActive(key)) 
+            if (stateB.IsActive(key))
+            {
+                base.Triggered();
                 stateA.Enter(key);
-            else if(stateA.IsActive(key)) 
+            }
+            else if (stateA.IsActive(key))
+            {
+                base.Triggered();
                 stateB.Enter(key);
-            else Logging.Log(this, "This component assumes that it is used for a " +
-                                   "two-state system with one state always enabled.", 
-                Logging.Level.Warning, loggingLevel);
+            }
+            else
+            {
+                Logging.Log(this, "This component assumes that it is used for a " +
+                                  "two-state system with one state always enabled.",
+                    Logging.Level.Warning, loggingLevel);
+            }
         }
 
         public override IInstanciable GetTarget()

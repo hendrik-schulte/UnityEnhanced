@@ -1,8 +1,6 @@
 ﻿using UE.Events;
 using UE.Instancing;
-using UE.Interaction;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace UE.Interaction
 {
@@ -12,6 +10,8 @@ namespace UE.Interaction
 
         protected override void Triggered()
         {
+            base.Triggered();
+            
             Event.Raise(Random.value > 0.5f,  key);
         }
 

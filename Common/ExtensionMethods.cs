@@ -343,5 +343,21 @@ namespace UE.Common
                 }
             }
         }
+        
+        /// <summary>
+        /// Returns the hierachy above this transform as a string.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public static string GetTransformHierachy(this Transform transform)
+        {
+            string path = transform.name;
+            while (transform.parent != null)
+            {
+                transform = transform.parent;
+                path = transform.name + "/" + path;
+            }
+            return path;
+        }
     }
 }
