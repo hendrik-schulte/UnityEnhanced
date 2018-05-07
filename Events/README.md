@@ -100,7 +100,7 @@ Now you listen to the event like this:
 
 ## Going deeper: Networked Events
 
-By checking the *PUN Sync* check box you can distribute your event automatically within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. You use the system as usual but any networked event will be raised for all players. Works with *Instanced Events* as well. All event assets need to be placed within the root of a Resources folder with a unique name. You need a *Photon Sync* Component somewhere in your scene.
+By checking the *PUN Sync* check box you can distribute your event automatically within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. You use the system as usual but any networked event will be raised for all players. Works with *Instanced Events* as well. All event assets need to be placed within the root of a Resources folder with a unique name. You need a *Photon Sync Manager* Component somewhere in your scene.
 
 ## Acknowledgement
 
