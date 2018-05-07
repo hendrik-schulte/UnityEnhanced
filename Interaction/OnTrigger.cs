@@ -35,9 +35,11 @@ namespace UE.Interaction
                  "only triggers when any state instance is not in the given states.")]
         private bool invertState;
 
+#pragma warning disable 0108
         [Tooltip("The event only triggers when this is the other collider or null.")] [SerializeField]
         private Collider collider;
-
+#pragma warning restore 0108
+        
         [Tooltip("The event only triggers when the colliding GameObject has the given name.")] [SerializeField]
         private string colliderNameContains;
 

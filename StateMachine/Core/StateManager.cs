@@ -75,7 +75,9 @@ namespace UE.StateMachine
         private StateStateEvent OnStateLeave = new StateStateEvent();
 
 #if UNITY_EDITOR
+#pragma warning disable 0414  
         [SerializeField, Multiline] private string DeveloperDescription = "";
+#pragma warning restore 0414        
 #endif
 
         [Tooltip("The initial state of this system when the application is started.")]
