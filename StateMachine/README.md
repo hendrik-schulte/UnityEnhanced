@@ -38,4 +38,4 @@ For prefabs you can use the root GameObject as a key. Every prefab now has its o
 
 ## Going deeper: Networked State Machines
 
-By checking the *PUN Sync* check box you can sync the state machine within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. State changes are propagated towards other players automatically. Works with *Instanced State Machines* as well. All state assets need to be placed within the root of a Resources folder with a unique name. You need a *Photon Sync* Component somewhere in your scene.
+By checking the *PUN Sync* check box you can sync the state machine within a [Photon Unity Networking](https://www.photonengine.com/en/PUN) system. State changes are propagated towards other players automatically. Works with *Instanced State Machines* as well. All state assets need to be placed within the root of a Resources folder with a unique name. You need a *Photon Sync Manager* Component somewhere in your scene.
