@@ -1,6 +1,6 @@
 # StateMachine
 
-This is a simple yet powerful [finit-state machine](https://en.wikipedia.org/wiki/Finite-state_machine) based on ScriptableObjects. It can be used to easily manage the program flow. You define a global set of states that your scene objects listen to.
+This is a simple yet powerful [finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine) based on ScriptableObjects. It can be used to easily manage the program flow. You define a global set of states that your scene objects listen to.
 
 ## Getting Started:
 - Create a StateManager asset for every universe of states you like.
