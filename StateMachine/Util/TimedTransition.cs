@@ -16,8 +16,8 @@ namespace UE.StateMachine
         /// Rewinds this transitions progress.
         /// </summary>
         public void Rewind()
-        {
-            if(!enabled) return;
+        {            
+            if(!gameObject.activeInHierarchy) return;
             
             if (!transitState.IsActive(key))
             {

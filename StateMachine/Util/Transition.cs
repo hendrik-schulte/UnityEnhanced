@@ -16,6 +16,8 @@ namespace UE.StateMachine
 
         [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;
 
+        [SerializeField] private bool EnterFollowingStateOnDisable;
+
         [SerializeField] private UnityEvent OnTransitionStart;
         [SerializeField] private UnityEvent OnTransitionComplete;
 
@@ -51,6 +53,8 @@ namespace UE.StateMachine
 
         protected void StartTransition(bool triggerEvent)
         {
+            if(!gameObject.activeInHierarchy) return;
+
             if(triggerEvent) OnTransitionStart.Invoke();
             StopAllCoroutines();
             StartCoroutine(TransitionStart());
@@ -73,6 +77,14 @@ namespace UE.StateMachine
 
             OnTransitionComplete.Invoke();
             followingState.Enter(key);
+        }
+
+        protected virtual void OnDisable()
+        {
+            if (EnterFollowingStateOnDisable)
+            {
+                followingState.Enter(key);
+            }
         }
 
         public override IInstanciable GetTarget()
