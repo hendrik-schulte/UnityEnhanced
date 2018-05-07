@@ -1,6 +1,6 @@
 # StateMachine
 
-This is a simple yet powerful state machine based on ScriptableObjects.
+This is a simple yet powerful [finit-state machine](https://en.wikipedia.org/wiki/Finite-state_machine) based on ScriptableObjects. It can be used to easily manage the program flow. You define a global set of states that your scene objects listen to.
 
 ## Getting Started:
 - Create a StateManager asset for every universe of states you like.
@@ -9,7 +9,7 @@ This is a simple yet powerful state machine based on ScriptableObjects.
 > Right click in your Project Window > Create > State Machine > State
 - Add one of the components described below to the GameObject you wish to be controlled by the state.
 - Add a reference to the states the component should be active in to the *Active States* list of the component.
-- *[Optional]*: Mark one of the states as initial state to define wich state the application starts in.
+- *[Optional]*: Mark one of the states as initial state to define which state the application starts in.
 > You do this by clicking a state asset and click the *Set Initial State* button.
 
 ### [StateListener](Core/StateListener.cs)
