@@ -11,6 +11,7 @@ namespace UE.Interaction
     /// This component checks the distance between this object and a target object and fires an event as soon as
     /// the object comes closer than the given treshhold distance.
     /// </summary>
+    [AddComponentMenu("Unity Enhanced/Interaction/OnDistance")]
     public class OnDistance : InstanceObserver
     {
         [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;

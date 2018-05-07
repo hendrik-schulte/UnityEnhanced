@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UE.Interaction
 {
+    [AddComponentMenu("Unity Enhanced/Interaction/OnTriggerRandomFloatEvent")]
     public class SendTriggerEnterRandomFloat : OnTrigger
     {
         [SerializeField] private FloatEvent Event;

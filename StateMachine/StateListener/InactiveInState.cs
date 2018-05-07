@@ -1,9 +1,12 @@
-﻿namespace UE.StateMachine
+﻿using UnityEngine;
+
+namespace UE.StateMachine
 {
     /// <summary>
     /// This component deactivates this game object when one of the given states
     /// is activated and activates it as soon as the state is left.
     /// </summary>
+    [AddComponentMenu("Unity Enhanced/State Machine/Inactive In State", 2)]
     public class InactiveInState : StateListener
     {
         protected override void Activated()

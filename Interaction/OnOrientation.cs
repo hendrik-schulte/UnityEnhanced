@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 namespace UE.Interaction
 {
+    [AddComponentMenu("Unity Enhanced/Interaction/OnOrientation")]
     public class OnOrientation : InstanceObserver
     {
         public TransformReference target;

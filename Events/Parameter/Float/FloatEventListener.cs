@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
+    [AddComponentMenu("Unity Enhanced/Events/Float Event Listener", 1)]
     public class FloatEventListener : ParameterEventListener<float, FloatEvent>
     {
         [SerializeField]

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UE.Interaction
 {
+    [AddComponentMenu("Unity Enhanced/Interaction/OnTriggerStateSwitch")]
     [RequireComponent(typeof(Collider))]
     public class OnTriggerStateSwitch : OnTrigger
     {

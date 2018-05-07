@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
+    [AddComponentMenu("Unity Enhanced/Events/String Event Listener", 1)]
     public class StringEventListener : ParameterEventListener<string, StringEvent>
     {
         [SerializeField]

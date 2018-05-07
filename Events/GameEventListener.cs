@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
+    [AddComponentMenu("Unity Enhanced/Events/Game Event Listener", 0)]
     public class GameEventListener : InstanceObserver
     {
         [Tooltip("When this is checked, the listener will still work when the game object is disabled.")]

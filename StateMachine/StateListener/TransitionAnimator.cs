@@ -10,6 +10,7 @@ namespace UE.StateMachine
     /// animation state. For performance reasons it is recommended to use TransitionAlphaBlend
     /// whenever possible.
     /// </summary>
+    [AddComponentMenu("Unity Enhanced/State Machine/Transition Animator", 4)]
     [RequireComponent(typeof(Animator))]
     public class TransitionAnimator : StateListener
     {

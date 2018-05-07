@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UE.Interaction
 {
+    [AddComponentMenu("Unity Enhanced/Interaction/OnTriggerEvent")]
     [RequireComponent(typeof(Collider))]
     public class OnTriggerEvent : OnTrigger
     {

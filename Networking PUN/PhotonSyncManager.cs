@@ -13,6 +13,7 @@ namespace UE.PUNNetworking
     /// This component is used to synchronize UE.Events and UE.StateMachine automatically
     /// within a Photon Networking system.
     /// </summary>
+    [AddComponentMenu("Unity Enhanced/Networking Photon/PhotonSyncManager")]
     public class PhotonSyncManager : PunBehaviour
     {
         [SerializeField] private bool debugLog;

@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
+    [AddComponentMenu("Unity Enhanced/Events/Vector3 Event Listener", 1)]
     public class Vector3EventListener : ParameterEventListener<Vector3, Vector3Event>
     {
         [SerializeField]

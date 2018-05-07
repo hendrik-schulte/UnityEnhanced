@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 namespace UE.Interaction
 {
+    [AddComponentMenu("Unity Enhanced/Interaction/OnTrigger")]
     [RequireComponent(typeof(Collider))]
     public class OnTrigger : InstanceObserver
     {

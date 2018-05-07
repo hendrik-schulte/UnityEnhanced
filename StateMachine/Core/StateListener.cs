@@ -10,6 +10,7 @@ namespace UE.StateMachine
     /// <summary>
     /// This component sends events when the given states are activated. Can be inherited for special applications.
     /// </summary>
+    [AddComponentMenu("Unity Enhanced/State Machine/State Listener", 0)]
     public class StateListener : InstanceObserver
     {
 #if UNITY_EDITOR

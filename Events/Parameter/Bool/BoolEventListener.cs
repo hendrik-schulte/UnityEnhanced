@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
+    [AddComponentMenu("Unity Enhanced/Events/Bool Event Listener", 1)]
     public class BoolEventListener : ParameterEventListener<bool, BoolEvent>
     {
         [SerializeField]
