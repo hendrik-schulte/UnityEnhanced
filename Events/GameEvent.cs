@@ -25,7 +25,7 @@ namespace UE.Events
         [SerializeField]
         private PhotonSync PhotonSync;
 
-        protected override PhotonSync PhotonSyncSettings => PhotonSync;
+        public override PhotonSync PhotonSyncSettings => PhotonSync;
         
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.

@@ -21,22 +21,22 @@ namespace UE.Events
         [Tooltip("Response to invoke when Event is raised.")]
         public UnityEvent Response;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             if (!persistent) Event.AddListener(this, key);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (!persistent) Event.RemoveListener(this, key);
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (persistent) Event.AddListener(this, key);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (persistent) Event.RemoveListener(this, key);
         }

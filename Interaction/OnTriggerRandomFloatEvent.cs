@@ -11,9 +11,9 @@ namespace UE.Interaction
 
         [SerializeField] private float range = 2f;
 
-        protected override void Triggered()
+        protected override void Triggered(Component other)
         {
-            base.Triggered();
+            base.Triggered(other);
             
             Event.Raise(Random.value * range, key);
         }

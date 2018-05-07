@@ -23,7 +23,7 @@ namespace UE.StateMachine
 #if UE_Photon
         [SerializeField] private PhotonSync PhotonSync;
 
-        protected override PhotonSync PhotonSyncSettings => PhotonSync;
+        public override PhotonSync PhotonSyncSettings => PhotonSync;
 
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.
@@ -75,11 +75,23 @@ namespace UE.StateMachine
         private StateStateEvent OnStateLeave = new StateStateEvent();
 
 #if UNITY_EDITOR
-        [Multiline] public string DeveloperDescription = "";
+        [SerializeField, Multiline] private string DeveloperDescription = "";
 #endif
 
         [Tooltip("The initial state of this system when the application is started.")]
         public State InitialState;
+
+        private void Awake()
+        {
+            //When copying a state manager, check for initial state not 
+            //to reference a state of the original state machine.
+            if (InitialState != null)
+            {
+                if(InitialState.stateManager == this) return;
+
+                InitialState = null;
+            }
+        }
 
         /// <summary>
         /// The current state of this state machine.
@@ -115,7 +127,7 @@ namespace UE.StateMachine
             if (state.stateManager != this)
             {
                 Logging.Error(this, "The state " + state.name + " you want to enter " +
-                                    "is not controlled by this state manager!");
+                                    "is not controlled by this state manager '"+ name +"'!");
                 return;
             }
             

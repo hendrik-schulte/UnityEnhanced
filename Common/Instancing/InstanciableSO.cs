@@ -57,7 +57,7 @@ namespace UE.Instancing
         /// <summary>
         /// Returns the Photon Sync settings or null if this object is not syncable.
         /// </summary>
-        protected abstract PhotonSync PhotonSyncSettings { get; }
+        public abstract PhotonSync PhotonSyncSettings { get; }
 #endif
 
         /// <summary>
@@ -214,6 +214,13 @@ namespace UE.Instancing
         /// Returns a collection of instance keys.
         /// </summary>
         Object[] Keys { get; }
+        
+#if UE_Photon    
+        /// <summary>
+        /// Returns the Photon Sync settings or null if this object is not syncable.
+        /// </summary>
+        PhotonSync PhotonSyncSettings { get; }
+#endif
     }
 
 #if UNITY_EDITOR

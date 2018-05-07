@@ -17,6 +17,8 @@ namespace UE.StateMachine
         /// </summary>
         public void Rewind()
         {
+            if(!enabled) return;
+            
             if (!transitState.IsActive(key))
             {
                 transitState.Enter(key);

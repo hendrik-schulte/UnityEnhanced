@@ -97,7 +97,7 @@ namespace UE.Interaction
 
             Logging.Log(this, "Triggered by " + other.gameObject.name, Logging.Level.Info, loggingLevel);
 
-            Triggered();
+            Triggered(other);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace UE.Interaction
         /// This function is called whenever the a collision meets the given requirements.
         /// It is meant to be overridden by subclasses for custom behaviour.
         /// </summary>
-        protected virtual void Triggered()
+        protected virtual void Triggered(Component other)
         {
             coolingDown = true;
             Invoke(nameof(OnEnable), cooldown);

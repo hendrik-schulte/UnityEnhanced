@@ -12,16 +12,16 @@ namespace UE.Interaction
         [SerializeField] private State stateA;
         [SerializeField] private State stateB;
 
-        protected override void Triggered()
+        protected override void Triggered(Component other)
         {
             if (stateB.IsActive(key))
             {
-                base.Triggered();
+                base.Triggered(other);
                 stateA.Enter(key);
             }
             else if (stateA.IsActive(key))
             {
-                base.Triggered();
+                base.Triggered(other);
                 stateB.Enter(key);
             }
             else

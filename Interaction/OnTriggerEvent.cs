@@ -10,9 +10,9 @@ namespace UE.Interaction
     {
         [SerializeField] private GameEvent gameEvent;
 
-        protected override void Triggered()
+        protected override void Triggered(Component other)
         {
-            base.Triggered();
+            base.Triggered(other);
             
             gameEvent.Raise(key);
         }

@@ -34,10 +34,10 @@ namespace UE.Instancing
         /// <param name="instanceKey"></param>
         public virtual void SetKey(Object instanceKey)
         {
-            if(Application.isPlaying) 
+            if (Application.isPlaying)
                 Logging.Warning(this, "Setting instance key at runtime. This is not recommended " +
                                       "and might cause undefined behaviour.");
-            
+
             _key = instanceKey;
         }
     }
@@ -63,6 +63,27 @@ namespace UE.Instancing
             {
                 if (listener.GetTarget().Instanced)
                 {
+                    if (key.objectReferenceValue == null) EditorGUILayout.HelpBox(
+                        "Your target asset has instancing enabled but you did not assign an Instance Key.", 
+                        MessageType.Error);    
+                    
+#if UE_Photon
+                    else if (listener.GetTarget().PhotonSyncSettings.PUNSync)
+                    {
+                        PhotonView keyGO;
+
+                        keyGO = (key.objectReferenceValue as GameObject)?.GetPhotonView();
+
+                        if (keyGO == null) (key.objectReferenceValue as Component)?.GetComponent<PhotonView>();
+                        
+                        if (keyGO == null) EditorGUILayout.HelpBox(
+                            "Photon Sync is enabled for your target asset, but your Instance Key Object has no " +
+                            "PhotonView attached. You need to assign a PhotonView component or a parenting " +
+                            "GameObject!", 
+                            MessageType.Error);                            
+                    }
+#endif
+                    
                     EditorGUILayout.ObjectField(
                         key, new GUIContent("Instance Key",
                             "This is the key to an instance of the ScriptableObject below. Allows to reference " +

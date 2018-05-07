@@ -9,9 +9,9 @@ namespace UE.Interaction
     {
         [SerializeField] private BoolEvent Event;
 
-        protected override void Triggered()
+        protected override void Triggered(Component other)
         {
-            base.Triggered();
+            base.Triggered(other);
             
             Event.Raise(Random.value > 0.5f,  key);
         }

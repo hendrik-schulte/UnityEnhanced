@@ -46,6 +46,12 @@ namespace UE.StateMachine
                 EditorGUI.indentLevel--;
                 GUI.enabled = true;
             }
+            else
+            {
+                EditorGUILayout.HelpBox(
+                    "You need to assign a State Manager asset or your state is useless.", 
+                    MessageType.Warning);
+            }
 
 
             DrawPropertiesExcluding(serializedObject, "m_Script", "stateManager");
