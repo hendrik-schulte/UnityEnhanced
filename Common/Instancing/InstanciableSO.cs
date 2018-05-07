@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ProBuilder2.Common;
 using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
@@ -284,7 +283,7 @@ namespace UE.Instancing
             OnInspectorGUITop();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, new string[]{"m_Script"}.Concat(ExcludeProperties()));
+            DrawPropertiesExcluding(serializedObject, string.Concat(new[]{"m_Script"}, ExcludeProperties()));
             serializedObject.ApplyModifiedProperties();
         }
 
