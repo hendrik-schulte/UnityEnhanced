@@ -4,6 +4,7 @@ using System.Linq;
 using UE.Common;
 using UnityEngine;
 using UnityEngine.Events;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -283,7 +284,7 @@ namespace UE.Instancing
             OnInspectorGUITop();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, string.Concat(new[]{"m_Script"}, ExcludeProperties()));
+            DrawPropertiesExcluding(serializedObject, new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
             serializedObject.ApplyModifiedProperties();
         }
 
