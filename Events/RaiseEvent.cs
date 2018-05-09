@@ -1,14 +1,19 @@
-﻿using UnityEngine;
+﻿using UE.Instancing;
 
 namespace UE.Events
 {
-    public class RaiseEvent : MonoBehaviour
+    public class RaiseEvent : InstanceObserver
     {
         public GameEvent gameEvent;
 
         public void Raise()
         {
-            gameEvent.Raise();
+            gameEvent.Raise(key);
+        }
+
+        public override IInstanciable GetTarget()
+        {
+            return gameEvent;
         }
     }
 }

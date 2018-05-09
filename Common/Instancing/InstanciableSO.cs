@@ -188,7 +188,7 @@ namespace UE.Instancing
                 if (view) return view;
             }
 
-            Logging.Error(this, "Syncable intanced objects need to have a PhotonView " +
+            Logging.Error(this, "'" + name +  "': Syncable intanced objects need to have a PhotonView " +
                                 "or a parenting GameObject as key object!");
             return null;
         }
