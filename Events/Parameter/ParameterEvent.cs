@@ -91,8 +91,11 @@ namespace UE.Events
                 instance.eventListeners[i].OnEventRaised(value);
             instance.OnEventTriggered.Invoke(value);
 
-            FileLogger.Write(logging, name + " (" + instance.KeyID + ") was raised with parameter " + value + " !");
-
+            if(Instanced) FileLogger.Write(logging, 
+                name + " was raised with parameter " + value + ".", 
+                instance.KeyID.ToString());
+            else FileLogger.Write(logging, name + " was raised with parameter " + value + ".");
+            
 #if UE_Photon
             PhotonSyncManager.SendEventParam(PhotonSync, name, instance.KeyID, value);
 #endif

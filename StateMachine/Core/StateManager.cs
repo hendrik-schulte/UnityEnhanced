@@ -141,7 +141,10 @@ namespace UE.StateMachine
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
 
-            FileLogger.Write(fileLogging, state.name + " (" + instance.KeyID + ") was entered.");
+            if(Instanced) FileLogger.Write(fileLogging, 
+                state.name + " was entered.", 
+                instance.KeyID.ToString());
+            else FileLogger.Write(fileLogging, state.name + " was entered.");
 
 #if UE_Photon
             PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange, state.name, instance.KeyID);

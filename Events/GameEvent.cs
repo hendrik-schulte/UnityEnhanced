@@ -82,8 +82,11 @@ namespace UE.Events
                 instance.eventListeners[i].OnEventRaised();
             instance.OnEventTriggered.Invoke();
             
-            FileLogger.Write(logging, name + " (" + instance.KeyID + ") was raised!");
-
+            if(Instanced) FileLogger.Write(logging, 
+                name + " was raised.", 
+                instance.KeyID.ToString());
+            else FileLogger.Write(logging, name + " was raised.");
+            
 #if UE_Photon
             PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventRaiseUEGameEvent, name, instance.KeyID);
 #endif

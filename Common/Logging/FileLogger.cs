@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -73,11 +74,28 @@ namespace UE.Common
             stream.Flush();
         }
 
-        public static void Write(LogToFile settings, string message)
+        /// <summary>
+        /// Write a message to a log file based on the given log settings.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="message"></param>
+        /// <param name="prefix">prefix added </param>
+        public static void Write(LogToFile settings, string message, string prefix = "")
         {
-            if(!settings.logToFile) return;
-            
-            Write(settings.FileName, message);
+            if (!settings.logToFile) return;
+
+            if (prefix.Any())
+            {
+                var path = prefix + "_" + Path.GetFileName(settings.FileName);
+
+                var directory = Path.GetDirectoryName(settings.FileName);
+
+                if (directory.Any())
+                    path = directory + "/" + path;
+
+                Write(path, message);
+            }
+            else Write(settings.FileName, message);
         }
 
 #if UNITY_EDITOR
@@ -87,7 +105,7 @@ namespace UE.Common
         /// <param name="enabledField">Bool property defining if logging is enabled.</param>
         /// <param name="fileName">String property defining the path to the log file.</param>
         public static void LoggerControl(
-            SerializedProperty enabledField, 
+            SerializedProperty enabledField,
             SerializedProperty fileName)
         {
             EditorGUILayout.PropertyField(enabledField);
@@ -107,9 +125,9 @@ namespace UE.Common
         }
 
         private static void DrawLoggingSettings(
-            SerializedProperty enabledField, 
+            SerializedProperty enabledField,
             SerializedProperty fileName,
-            SerializedProperty separateLogsForInstance, 
+            SerializedProperty separateLogsForInstance,
             bool instanced)
         {
             if (!enabledField.boolValue) return;
@@ -117,7 +135,7 @@ namespace UE.Common
             EditorGUI.indentLevel++;
 
             EditorGUILayout.PropertyField(fileName);
-            if(instanced && separateLogsForInstance != null) 
+            if (instanced && separateLogsForInstance != null)
                 EditorGUILayout.PropertyField(separateLogsForInstance);
 
             EditorGUI.indentLevel--;
