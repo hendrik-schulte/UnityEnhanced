@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using UE.Common;
+using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
@@ -226,18 +227,22 @@ namespace UE.Instancing
 #if UNITY_EDITOR
     [CustomEditor(typeof(InstanciableSO<>), true)]
     [CanEditMultipleObjects]
-    public class InstanciableSOEditor : Editor
+    public class InstanciableSOEditor : ReorderableArrayInspector
     {
         private SerializedProperty m_Script;
         private SerializedProperty instanced;
 
-        protected virtual void OnEnable()
+        protected override void InitInspector()
         {
+            base.InitInspector();
+		
+            alwaysDrawInspector = true;
+            
             m_Script = serializedObject.FindProperty("m_Script");
             instanced = serializedObject.FindProperty("instanced");
         }
 
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
             var instancedSO = target as IInstanciable;
 
@@ -284,7 +289,7 @@ namespace UE.Instancing
             OnInspectorGUITop();
 
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
+            DrawPropertiesExcept(new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
             serializedObject.ApplyModifiedProperties();
         }
 

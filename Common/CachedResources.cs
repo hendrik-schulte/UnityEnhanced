@@ -13,7 +13,7 @@ namespace UE.Common
         /// This is the Resources cache.
         /// </summary>
         private static readonly Dictionary<string, Object> cache = new Dictionary<string, Object>();
-
+        
         /// <summary>
         /// Clears the cache.
         /// </summary>

@@ -12,9 +12,9 @@ namespace UE.StateMachine
         {
         }
         
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
-            base.OnInspectorGUI();
+            base.DrawInspector();
 
             var stateManager = target as StateManager;
 

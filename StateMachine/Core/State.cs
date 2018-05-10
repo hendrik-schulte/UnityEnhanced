@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UE.Common.SubjectNerd.Utilities;
 using UE.Instancing;
 using UE.UI;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace UE.StateMachine
     public class State : ScriptableObject
     {
         [Tooltip("This is the manager in wich this state is managed.")]
+        [EditScriptable]
         public StateManager stateManager;
 
 #if UNITY_EDITOR

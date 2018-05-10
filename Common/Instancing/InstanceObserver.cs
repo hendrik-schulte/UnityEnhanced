@@ -1,4 +1,5 @@
 ﻿using UE.Common;
+using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -45,16 +46,20 @@ namespace UE.Instancing
 #if UNITY_EDITOR
     [CustomEditor(typeof(InstanceObserver), true)]
     [CanEditMultipleObjects]
-    public class InstanceObserverEditor : Editor
+    public class InstanceObserverEditor : ReorderableArrayInspector
     {
         private SerializedProperty key;
 
-        protected virtual void OnEnable()
+        protected override void InitInspector()
         {
+            base.InitInspector();
+            
+            alwaysDrawInspector = true;
+            
             key = serializedObject.FindProperty("_key");
         }
 
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
             var listener = target as InstanceObserver;
             serializedObject.Update();
@@ -92,7 +97,7 @@ namespace UE.Instancing
                 }
             }
 
-            DrawPropertiesExcluding(serializedObject, "m_Script");
+            DrawPropertiesExcept("m_Script");
             serializedObject.ApplyModifiedProperties();
         }
     }

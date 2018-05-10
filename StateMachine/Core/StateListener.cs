@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UE.Common;
+using UE.Common.SubjectNerd.Utilities;
 using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,7 +17,7 @@ namespace UE.StateMachine
 #if UNITY_EDITOR
         [SerializeField] protected bool debug;
 #endif
-        [SerializeField] private List<State> activeStates = new List<State>() {null};
+        [SerializeField] [Reorderable] protected List<State> activeStates = new List<State>() {null};
 
         [SerializeField] protected UnityEvent OnActivated;
         [SerializeField] protected UnityEvent OnDeactivated;
@@ -156,8 +157,8 @@ namespace UE.StateMachine
 
             //when leaving play mode, the key object may already be destroyed
             //so we avoid using the wrong key and return.
-            if(activeStates[0].stateManager.Instanced && key == null) return;
-            
+            if (activeStates[0].stateManager.Instanced && key == null) return;
+
             activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
             activeStates[0].stateManager.RemoveStateLeaveListener(OnStateLeft, key);
         }
@@ -188,4 +189,6 @@ namespace UE.StateMachine
         }
 #endif
     }
+
+
 }
