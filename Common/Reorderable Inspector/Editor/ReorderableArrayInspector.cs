@@ -91,7 +91,7 @@ namespace UE.Common.SubjectNerd.Utilities
 				if (GetGrandParentPath(property).Equals(Parent) == false)
 					return;
 
-				ReorderableList propList = new ReorderableList(
+				var propList = new ReorderableList(
 					property.serializedObject, property,
 					draggable: true, displayHeader: false,
 					displayAddButton: true, displayRemoveButton: true)
@@ -143,6 +143,17 @@ namespace UE.Common.SubjectNerd.Utilities
 					GUI.Box(rect, GUIContent.none, styleHighlight);
 				};
 #endif
+//				propList.onRemoveCallback = delegate(ReorderableList list)
+//				{
+//					list.
+//					
+//					for (var i = list.list.Count - 1; i >= 0; i--)
+//					{ 
+//						if(list.list[i] == null) list.list.RemoveAt(i);
+//					}
+//				};
+				
+				
 				propIndex.Add(property.propertyPath, propList);
 			}
 

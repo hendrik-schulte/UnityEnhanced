@@ -3,6 +3,9 @@ using System.Linq;
 using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UE.Instancing;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -40,11 +43,10 @@ namespace UE.StateMachine
             var stateManager = activeStates[0].stateManager;
 
 #if UNITY_EDITOR
-            //check if all states are in the same state system
-            foreach (var state in activeStates)
-            {
-                if (state.stateManager == stateManager) continue;
 
+            //check if all states are in the same state system
+            if (!StatesShareStateManager(activeStates))
+            {
                 enabled = false;
                 Logging.Warning(this,
                     "'" + transform.GetTransformHierachy() + "': Not all states belong to the same state machine!");
@@ -180,6 +182,27 @@ namespace UE.StateMachine
         {
             return activeStates.Any() && activeStates[0] != null;
         }
+
+        /// <summary>
+        /// Returns true if all given states share the same StateManager.
+        /// </summary>
+        /// <param name="states"></param>
+        /// <returns></returns>
+        internal static bool StatesShareStateManager(List<State> states)
+        {
+            if (!states.Any()) return true;
+
+            foreach (var state in states)
+            {
+                if (state == null || state.stateManager == states[0].stateManager) continue;
+
+                return false;
+            }
+
+            return true;
+        }
+
+
 #if UNITY_EDITOR
         protected virtual void OnDrawGizmos()
         {
@@ -190,5 +213,38 @@ namespace UE.StateMachine
 #endif
     }
 
+#if UNITY_EDITOR
+    [CustomEditor(typeof(StateListener), true)]
+    [CanEditMultipleObjects]
+    public class StateListenerEditor : InstanceObserverEditor
+    {
+        private SerializedProperty activeStates;
 
+        protected override void InitInspector()
+        {
+            base.InitInspector();
+
+            activeStates = serializedObject.FindProperty("activeStates");
+        }
+
+        protected override void DrawInspector()
+        {
+            var activeStatesList = activeStates.ToList<State>();
+
+            if (!(activeStatesList.Any() && activeStatesList[0] != null))
+
+                EditorGUILayout.HelpBox("You need to define at least one active state for this listener to work.",
+                    MessageType.Error);
+
+            else if (!StateListener.StatesShareStateManager(activeStatesList))
+
+                EditorGUILayout.HelpBox("Your states do not share the same StateManager. This is not supported.",
+                    MessageType.Error);
+
+
+            base.DrawInspector();
+        }
+    }
+
+#endif
 }

@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -61,6 +62,40 @@ namespace UE.Common
             }
 
             return position.GetSubRect(y, EditorGUIUtility.singleLineHeight);
+        }
+
+        /// <summary>
+        /// Casts the given property to a list.
+        /// Taken from https://answers.unity.com/questions/682932/using-generic-list-with-serializedproperty-inspect.html
+        /// </summary>
+        /// <param name="property"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<T> ToList<T>(this SerializedProperty property) where T : Object
+        {
+            var sp = property.Copy(); // copy so we don't iterate the original
+
+            sp.Next(true); // skip generic field
+            sp.Next(true); // advance to array size field
+
+            // Get the array size
+            var arrayLength = sp.intValue;
+
+            sp.Next(true); // advance to first array index
+
+            // Write values to list
+            var values = new List<T>(arrayLength);
+
+            var lastIndex = arrayLength - 1;
+            for (var i = 0;
+                i < arrayLength;
+                i++)
+            {
+                values.Add((T) sp.objectReferenceValue); // copy the value to the list
+                if (i < lastIndex) sp.Next(false); // advance without drilling into children
+            }
+
+            return values;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UE.Common;
+﻿using System.Linq;
+using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -97,8 +98,18 @@ namespace UE.Instancing
                 }
             }
 
-            DrawPropertiesExcept("m_Script");
+            DrawPropertiesExcept(new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
+
             serializedObject.ApplyModifiedProperties();
+        }
+        
+        /// <summary>
+        /// This can be overridden to exclude the given properties from being displayed in the inspector.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string[] ExcludeProperties()
+        {
+            return new string[0];
         }
     }
 #endif

@@ -11,7 +11,7 @@ using UnityEditor;
 namespace UE.Common
 {
     /// <summary>
-    /// This class enables easy logging to a file on disk. Automatically creates a StreamWriter
+    /// This class enables easy logging to a file on disc. Automatically creates a StreamWriter
     /// object for every log file path.
     /// </summary>
     public static class FileLogger
