@@ -218,16 +218,21 @@ namespace UE.StateMachine
         }
 
         /// <summary>
-        /// This is called when a StateListener starts. Used for initialization of this state machine.
+        /// This enters the initial state at startuo. If you rely on an initial state this must be called by any
+        /// MonoBehaviour at least once on Start. StateListeners do this automatically. If you don't use StateListeners
+        /// you need to call this method manually. It is required because ScriptableObject do not receive application
+        /// start events.
         /// </summary>
         /// <param name="key">Key for instanced StateMachine.</param>
-        internal void Init(Object key = null)
+        public void Init(Object key = null)
         {
             if (GetState(key)) return;
 
+#if UNITY_EDITOR
             if (InitialState) Logging.Log(this, "Initializing with " + InitialState.name, logToConsole);
             else Logging.Log(this, "Initializing with null", logToConsole);
-
+#endif
+            
             SetState(InitialState, key);
         }
 
