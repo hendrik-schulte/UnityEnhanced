@@ -19,18 +19,22 @@ namespace UE.Interaction
         public TransformReference target;
 
         public EnterMode Mode;
-        [Tooltip("Defines the frequency by which the distance check is performed.")]
-        [SerializeField]
+
+        [Tooltip("Defines the frequency by which the distance check is performed.")] [SerializeField]
         private FloatReference UpdateInterval = new FloatReference(0);
-        
-        [Header("Restrictions")] 
-        public FloatReference Threshold = new FloatReference(1);
-        
-        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [UnityEngine.Range(0, 5)]
+
+        [Header("Restrictions")] public FloatReference Threshold = new FloatReference(1);
+
+        [Tooltip("Disable this trigger for given seconds after it was triggered.")]
+        [SerializeField]
+        [UnityEngine.Range(0, 5)]
         private float cooldown;
 
         private bool coolingDown;
-        
+
+        [Tooltip("Defines a delay that .")] [SerializeField, Variables.Range(0f, 10f)]
+        private FloatReference DelayedStart = new FloatReference(0);
+
         [Header("Response")] public UnityEvent OnTriggered;
 
         public enum EnterMode
@@ -42,7 +46,7 @@ namespace UE.Interaction
         protected virtual void OnEnable()
         {
             coolingDown = false;
-            
+
             StartCoroutine(CheckDistance());
         }
 
@@ -50,25 +54,38 @@ namespace UE.Interaction
         {
             coolingDown = false;
         }
-        
+
         private IEnumerator CheckDistance()
         {
             yield return null;
-            
+
             while (!target.Value)
             {
-                Logging.Log(this, "Target for proximity check is null!", Logging.Level.Warning, loggingLevel);
+                Logging.Log(this, "'" + gameObject.name +"': Target for proximity check is null!", Logging.Level.Warning, loggingLevel);
                 yield return new WaitForSeconds(.2f);
             }
-
+            
+#if UNITY_EDITOR
             Logging.Log(this, "Target found.", Logging.Level.Verbose, loggingLevel);
+#endif
+            
+            if (DelayedStart > 0)
+            {
+                Logging.Log(this, "Start is delayed by " + DelayedStart + " seconds", Logging.Level.Info, loggingLevel);
+
+                yield return new WaitForSeconds(DelayedStart);
+                
+                Logging.Log(this, "Starting distance check.", Logging.Level.Info, loggingLevel);
+            }
 
             while (true)
-            {                        
+            {
                 while (coolingDown)
-                    yield return null;    
-                
+                    yield return null;
+
+#if UNITY_EDITOR
                 Logging.Log(this, "Performing distance check.", Logging.Level.Verbose, loggingLevel);
+#endif
 
                 var distance = Vector3.Distance(transform.position, target.Value.position);
 
@@ -79,17 +96,17 @@ namespace UE.Interaction
 
                     Triggered();
                 }
-                
+
                 if (UpdateInterval == 0) yield return null;
                 else yield return new WaitForSeconds(UpdateInterval);
             }
         }
 
         protected virtual void Triggered()
-        {            
+        {
             coolingDown = true;
             Invoke(nameof(CancelCooldown), cooldown);
-            
+
             OnTriggered.Invoke();
         }
 
