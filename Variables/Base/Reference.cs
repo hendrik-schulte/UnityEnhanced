@@ -6,6 +6,11 @@ using System;
 
 namespace UE.Variables
 {
+    /// <summary>
+    /// A Reference can either direct to a <see cref="Variable{T}"/> ScriptableObject or a constant value which can be
+    /// defined in the inspector. Needs to be implemented for concrete types!
+    /// </summary>
+    /// <typeparam name="T">The Type to be referenced</typeparam>
     [Serializable]
     public abstract class Reference<T>
     {

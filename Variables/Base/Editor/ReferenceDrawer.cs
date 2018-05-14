@@ -13,8 +13,8 @@ namespace UE.Variables
         /// <summary>
         /// Options to display in the popup to select constant or variable.
         /// </summary>
-        private readonly string[] popupOptions = 
-            { "Use Constant", "Use Variable" };
+        private readonly string[] popupOptions =
+            {"Use Constant", "Use Variable"};
 
         /// <summary> Cached style to use to draw the popup button. </summary>
         private GUIStyle popupStyle;
@@ -29,7 +29,7 @@ namespace UE.Variables
 
             label = EditorGUI.BeginProperty(position, label, property);
             position = EditorGUI.PrefixLabel(position, label);
-            
+
             EditorGUI.BeginChangeCheck();
 
             // Get properties
@@ -51,15 +51,30 @@ namespace UE.Variables
 
             useConstant.boolValue = result == 0;
 
-            EditorGUI.PropertyField(position, 
-                useConstant.boolValue ? constantValue : variable, 
-                GUIContent.none);
+            if (useConstant.boolValue)
+                DrawConstantProperty(position, property, constantValue);
+            else
+                EditorGUI.PropertyField(position, variable, GUIContent.none);
 
             if (EditorGUI.EndChangeCheck())
                 property.serializedObject.ApplyModifiedProperties();
 
             EditorGUI.indentLevel = indent;
             EditorGUI.EndProperty();
+        }
+
+        /// <summary>
+        /// Draws the constant property field. Override this if you want to use custom attributes.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="property"></param>
+        /// <param name="constantValue"></param>
+        protected virtual void DrawConstantProperty(
+            Rect position, 
+            SerializedProperty property,
+            SerializedProperty constantValue)
+        {
+            EditorGUI.PropertyField(position, constantValue, GUIContent.none);
         }
     }
 }

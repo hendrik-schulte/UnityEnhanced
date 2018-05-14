@@ -26,7 +26,7 @@ namespace UE.Interaction
         [Header("Restrictions")] 
         public FloatReference Threshold = new FloatReference(1);
         
-        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [Range(0, 5)]
+        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [UnityEngine.Range(0, 5)]
         private float cooldown;
 
         private bool coolingDown;

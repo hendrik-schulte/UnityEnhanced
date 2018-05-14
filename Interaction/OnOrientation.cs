@@ -20,10 +20,12 @@ namespace UE.Interaction
 
         [SerializeField] protected Logging.Level loggingLevel = Logging.Level.Warning;
 
-        [Tooltip("The angle between the forward vectors of the targets needs to be smaller than this.")] [Range(0, 90)]
+        [Tooltip("The angle between the forward vectors of the targets needs to be smaller than this.")] 
+        [UnityEngine.Range(0, 90)]
         public float ThresholdAngle;
 
-        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [Range(0, 5)]
+        [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] 
+        [UnityEngine.Range(0, 5)]
         private float cooldown;
 
         private bool coolingDown;
