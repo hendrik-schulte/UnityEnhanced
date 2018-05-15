@@ -21,7 +21,7 @@ namespace UE.Instancing
         /// <summary>
         /// The instance key defined in the inspector. Use this for all calls on the instanciated object.
         /// </summary>
-        protected Object key => _key;
+        public Object key => _key;
 
         /// <summary>
         /// Returns the instanciated object. It is used to display the instance key property in the inspector

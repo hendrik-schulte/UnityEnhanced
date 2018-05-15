@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using UE.Common.SubjectNerd.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,55 +7,37 @@ namespace UE.StateMachine
 {
     [CustomEditor(typeof(State))]
     [CanEditMultipleObjects]
-    public class StateEditor : Editor
+    public class StateEditor : ReorderableArrayInspector
     {
         private SerializedProperty m_Script;
-        private SerializedProperty stateManagerProp;
 
-        private void OnEnable()
+        protected override void InitInspector()
         {
+            base.InitInspector();
+
+            alwaysDrawInspector = true;
+
             m_Script = serializedObject.FindProperty("m_Script");
-            stateManagerProp = serializedObject.FindProperty("stateManager");
         }
 
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
             var state = target as State;
 
             GUI.enabled = false;
             EditorGUILayout.ObjectField(m_Script);
             GUI.enabled = true;
-            
+
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(stateManagerProp);
+            DrawProperty("stateManager");
 
-            if (state.stateManager)
-            {
-                EditorGUILayout.LabelField("Inherited from StateManager:");
-
-                GUI.enabled = false;
-                EditorGUI.indentLevel++;
-
-                EditorGUILayout.Toggle("Instanced", state.stateManager.Instanced);
-#if UE_Photon
-                EditorGUILayout.Toggle("PUN Sync", state.stateManager.PUNSyncEnabled);
-#endif
-                EditorGUILayout.Toggle("Log To File", state.stateManager.FileLoggingEnabled);
-                EditorGUILayout.Toggle("Log To Console", state.stateManager.ConsoleLoggingEnabled);
-
-                EditorGUI.indentLevel--;
-                GUI.enabled = true;
-            }
-            else
-            {
+            if (!state.stateManager)
                 EditorGUILayout.HelpBox(
-                    "You need to assign a State Manager asset or your state is useless.", 
+                    "You need to assign a State Manager asset or your state is useless.",
                     MessageType.Warning);
-            }
 
-
-            DrawPropertiesExcluding(serializedObject, "m_Script", "stateManager");
+            DrawPropertiesExcept("m_Script", "stateManager");
 
             serializedObject.ApplyModifiedProperties();
 
@@ -103,7 +86,7 @@ namespace UE.StateMachine
 
             if (initialState) EditorGUILayout.LabelField("Initial State", initialState.name);
             else EditorGUILayout.LabelField("Initial State", "None");
-            
+
             if (GUILayout.Button("Set Initial State"))
             {
                 state.stateManager.InitialState = state;

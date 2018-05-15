@@ -8,9 +8,6 @@ using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 #if UE_Photon
 using UE.PUNNetworking;
 
@@ -22,11 +19,10 @@ namespace UE.Events
     public class GameEvent : InstanciableSO<GameEvent>
     {
 #if UE_Photon
-        [SerializeField]
-        private PhotonSync PhotonSync;
+        [SerializeField] private PhotonSync PhotonSync;
 
         public override PhotonSync PhotonSyncSettings => PhotonSync;
-        
+
         /// <summary>
         /// When this is true, events are not broadcasted. Used to avoid echoing effects.
         /// </summary>Broadcasting
@@ -36,7 +32,7 @@ namespace UE.Events
             set { PhotonSync.MuteNetworkBroadcasting = value; }
         }
 #endif
-        
+
         [SerializeField] private LogToFile logging = new LogToFile();
 
         [SerializeField] private bool logToConsole;
@@ -81,12 +77,13 @@ namespace UE.Events
             for (var i = instance.eventListeners.Count - 1; i >= 0; i--)
                 instance.eventListeners[i].OnEventRaised();
             instance.OnEventTriggered.Invoke();
-            
-            if(Instanced) FileLogger.Write(logging, 
-                name + " was raised.", 
-                instance.KeyID.ToString());
+
+            if (Instanced)
+                FileLogger.Write(logging,
+                    name + " was raised.",
+                    instance.KeyID.ToString());
             else FileLogger.Write(logging, name + " was raised.");
-            
+
 #if UE_Photon
             PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventRaiseUEGameEvent, name, instance.KeyID);
 #endif
@@ -131,31 +128,4 @@ namespace UE.Events
             Instance(key).OnEventTriggered.RemoveListener(listener);
         }
     }
-
-#if UNITY_EDITOR
-    [CustomEditor(typeof(GameEvent), true)]
-    [CanEditMultipleObjects]
-    public class GameEventEditor : InstanciableSOEditor
-    {
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-
-            var gameEvent = target as GameEvent;
-
-            GUI.enabled = Application.isPlaying;
-
-            if (gameEvent.Instanced)
-            {
-                if (GUILayout.Button("Raise for all Instances"))
-                    gameEvent.RaiseAllInstances();
-            }
-            else
-            {
-                if (GUILayout.Button("Raise"))
-                    gameEvent.Raise();
-            }
-        }
-    }
-#endif
 }

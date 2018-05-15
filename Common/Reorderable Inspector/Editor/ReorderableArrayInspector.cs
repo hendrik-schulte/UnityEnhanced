@@ -867,7 +867,7 @@ namespace UE.Common.SubjectNerd.Utilities
 		/// </summary>
 		/// <param name="propertyStart">Property name to start from</param>
 		/// <param name="propertyStop">Property name to stop at</param>
-		public void DrawPropertiesFromUpTo(string propertyStart, string propertyStop)
+		protected void DrawPropertiesFromUpTo(string propertyStart, string propertyStop)
 		{
 			bool canDraw = false;
 			SerializedProperty iterProp = serializedObject.GetIterator();
@@ -887,7 +887,19 @@ namespace UE.Common.SubjectNerd.Utilities
 				});
 		}
 
-		public void DrawContextMenuButtons()
+		/// <summary>
+		/// Draws the given property.
+		/// </summary>
+		/// <param name="property"></param>
+		protected void DrawProperty(string property)
+		{
+			SerializedProperty iterProp = serializedObject.GetIterator();
+
+			IterateDrawProperty(iterProp,
+				() => property == iterProp.name ? IterControl.Draw : IterControl.Continue);
+		}
+
+		protected void DrawContextMenuButtons()
 		{
 			if (contextData.Count == 0) return;
 
