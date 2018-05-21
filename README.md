@@ -26,6 +26,11 @@ A set of useful tools aimed at easy and powerful architecture in Unity3D.
 
 Open particular folders for detailed description.
 
+## Requirements
+
+- Unity 2017.1 or later
+- .NET 4.6 or above
+
 ## Setup
 
 ### Installation as Git submodule
