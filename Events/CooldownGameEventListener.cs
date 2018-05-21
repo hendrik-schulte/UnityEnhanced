@@ -3,7 +3,7 @@
 namespace UE.Events
 {
     /// <summary>
-    /// This is an addition to the Game Event Listener that allows
+    /// This is an addition to the <see cref="GameEventListener"/> that allows
     /// you to introduce a cooldown to your event response. During
     /// the cooldown phase the response is not triggered.
     /// </summary>

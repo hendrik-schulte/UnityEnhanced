@@ -3,11 +3,11 @@ using System.Linq;
 using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UE.Instancing;
+using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace UE.StateMachine
 {

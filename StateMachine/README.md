@@ -22,11 +22,15 @@ This component simple activates or deactivates the parenting GameObject when ent
 
 ### [TransitionAlphaBlend](StateListener/TransitionAlphaBlend.cs)
 
-This component enables easy transitions between UI canvases by scripted fade-in and fade-out animations. Requires a canvas and a canvas group.
+This component enables easy transitions between UI canvases by scripted fade-in and fade-out animations. Requires a canvas and a canvas group component.
 
 ### [TransitionAnimator](StateListener/TransitionAnimator.cs)
 
-This component enables easy transitions using animations. Needs an Animator component with Animations named *Open* and *Closed*. A sampe animation can be found in [*/Animation/*](StateMachine/StateListener/Animation/). For performance reasons it is recommended to use TransitionAlphaBlend for Canvases whenever possible.
+This component enables easy transitions using animations. Needs an Animator component with Animations named *Open* and *Closed*. A sampe animation can be found in [*/Animation/*](StateMachine/StateListener/Animation/). For performance reasons it is recommended to use TransitionAlphaBlend for canvases whenever possible.
+
+### [TimedTransition](Util/TimedTransition.cs)
+
+A TimedTransition is used to automatically move to annother state when a given time has passed.
 
 ## Going deeper: Instanced State Machines
 

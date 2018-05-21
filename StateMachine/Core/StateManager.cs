@@ -13,14 +13,18 @@ using UE.PUNNetworking;
 
 namespace UE.StateMachine
 {
+    /// <inheritdoc />
     /// <summary>
-    /// The StateManager is the core of every state machine. It manages the current state
-    /// of the system and offers listeners to state enter and leave events.
+    /// The StateManager is the core of every state machine. It manages which <see cref="State"/> is
+    /// currently active in this system. Can be observed by <see cref="StateListener"/>s.
     /// </summary>
     [CreateAssetMenu(menuName = "State Machine/State Manager")]
     public class StateManager : InstanciableSO<StateManager>
     {
 #if UE_Photon
+        /// <summary>
+        /// Settings for photon sync.
+        /// </summary>
         [SerializeField] private PhotonSync PhotonSync;
 
         public override PhotonSync PhotonSyncSettings => PhotonSync;
@@ -80,6 +84,9 @@ namespace UE.StateMachine
 #pragma warning restore 0414        
 #endif
 
+        /// <summary>
+        /// This state will be entered as soon as the <see cref="Init"/> function is called for the forst time.
+        /// </summary>
         [Tooltip("The initial state of this system when the application is started.")]
         public State InitialState;
 
@@ -87,12 +94,9 @@ namespace UE.StateMachine
         {
             //When copying a state manager, check for initial state not 
             //to reference a state of the original state machine.
-            if (InitialState != null)
-            {
-                if(InitialState.stateManager == this) return;
+            if (InitialState == null || InitialState.stateManager == this) return;
 
-                InitialState = null;
-            }
+            InitialState = null;
         }
 
         /// <summary>

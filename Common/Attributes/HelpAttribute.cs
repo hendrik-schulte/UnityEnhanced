@@ -1,4 +1,7 @@
 ﻿using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace UE.Attributes
@@ -28,10 +31,6 @@ namespace UE.Attributes
     ///   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     /// </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-#if UNITY_EDITOR
-    using UnityEditor;
-
-#endif
 
     [AttributeUsage(AttributeTargets.Field, Inherited = true)]
     public class HelpAttribute : PropertyAttribute

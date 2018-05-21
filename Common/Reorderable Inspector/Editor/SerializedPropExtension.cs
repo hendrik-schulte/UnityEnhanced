@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 
 namespace UE.Common.SubjectNerd.Utilities
 {
@@ -168,11 +167,11 @@ namespace UE.Common.SubjectNerd.Utilities
 				return null;
 			
 			Type objType = obj.GetType();
-			const BindingFlags bindingFlags = System.Reflection.BindingFlags.GetField
-											  | System.Reflection.BindingFlags.GetProperty
-											  | System.Reflection.BindingFlags.Instance
-											  | System.Reflection.BindingFlags.NonPublic
-											  | System.Reflection.BindingFlags.Public;
+			const BindingFlags bindingFlags = BindingFlags.GetField
+											  | BindingFlags.GetProperty
+											  | BindingFlags.Instance
+											  | BindingFlags.NonPublic
+											  | BindingFlags.Public;
 			FieldInfo field = objType.GetField(prop.name, bindingFlags);
 			if (field == null)
 				return null;
@@ -263,11 +262,11 @@ namespace UE.Common.SubjectNerd.Utilities
 
 			Type attrType = typeof (T);
 			Type objType = obj.GetType();
-			const BindingFlags bindingFlags = System.Reflection.BindingFlags.GetField
-			                                  | System.Reflection.BindingFlags.GetProperty
-			                                  | System.Reflection.BindingFlags.Instance
-			                                  | System.Reflection.BindingFlags.NonPublic
-			                                  | System.Reflection.BindingFlags.Public;
+			const BindingFlags bindingFlags = BindingFlags.GetField
+			                                  | BindingFlags.GetProperty
+			                                  | BindingFlags.Instance
+			                                  | BindingFlags.NonPublic
+			                                  | BindingFlags.Public;
 			FieldInfo field = objType.GetField(prop.name, bindingFlags);
 			if (field != null)
 				return field.GetCustomAttributes(attrType, true);

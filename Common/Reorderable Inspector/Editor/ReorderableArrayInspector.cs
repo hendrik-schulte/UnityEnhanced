@@ -38,7 +38,7 @@ using Object = UnityEngine.Object;
 
 namespace UE.Common.SubjectNerd.Utilities
 {
-	[CustomEditor(typeof(UnityEngine.Object), true, isFallback = true)]
+	[CustomEditor(typeof(Object), true, isFallback = true)]
 	[CanEditMultipleObjects]
 	public class ReorderableArrayInspector : Editor
 	{
@@ -791,7 +791,7 @@ namespace UE.Common.SubjectNerd.Utilities
 		{
 			path = EditorUtility.SaveFilePanelInProject("Save ScriptableObject", "New " + type.Name + ".asset", "asset", "Enter a file name for the ScriptableObject.", path);
 			if (path == "") return null;
-			ScriptableObject asset = ScriptableObject.CreateInstance(type);
+			ScriptableObject asset = CreateInstance(type);
 			AssetDatabase.CreateAsset(asset, path);
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();

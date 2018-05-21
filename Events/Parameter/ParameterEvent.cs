@@ -7,9 +7,6 @@ using UE.Common;
 using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 #if UE_Photon
 using UE.PUNNetworking;
 
@@ -17,9 +14,11 @@ using UE.PUNNetworking;
 
 namespace UE.Events
 {
+    /// <inheritdoc />
     /// <summary>
-    /// An event that has sends parameter T with it. Needs to be inherited by a concrete ParameterEvent TS.
-    /// Example: class BoolEvent : ParameterEvent<bool, BoolEvent>
+    /// An event that has sends parameter T with it. Needs to be inherited by a
+    /// concrete <see cref="ParameterEvent{T,TS}"/>.
+    /// Example implementation: <see cref="BoolEvent"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TS"></typeparam>
@@ -27,6 +26,9 @@ namespace UE.Events
         where TS : ParameterEvent<T, TS>
     {
 #if UE_Photon
+        /// <summary>
+        /// Settings for photon sync.
+        /// </summary>
         [SerializeField] private PhotonSync PhotonSync;
 
         public override PhotonSync PhotonSyncSettings => PhotonSync;
@@ -47,8 +49,12 @@ namespace UE.Events
         public virtual bool IsNetworkingType => false;
 #endif
 
+        /// <summary>
+        /// Settings for file logging.
+        /// </summary>
         [SerializeField] private LogToFile logging = new LogToFile();
 
+        [Tooltip("Should this event be logged to the console (not in Build)?")]
         [SerializeField] private bool logToConsole;
 
         [Multiline] public string DeveloperDescription = "";
@@ -67,13 +73,15 @@ namespace UE.Events
         /// <param name="value"></param>
         public void Raise(T value)
         {
+            // Splitting functions to be able to call this from serialized functions calls.
+            // ReSharper disable once IntroduceOptionalParameters.Global
             Raise(value, null);
         }
 
         /// <summary>
         /// Fires an instanced event (or the main event if key == null) by the given instance key.
         /// </summary>
-        public void Raise(T value, Object key = null)
+        public void Raise(T value, Object key)
         {
             if (logToConsole) Debug.Log("Parameter Event '" + name + "' was raised with parameter: '" + value + "'!");
 
@@ -118,6 +126,11 @@ namespace UE.Events
             }
         }
 
+        /// <summary>
+        /// Register a listener to this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void AddListener(ParameterEventListener<T, TS> listener, Object key = null)
         {
             var instance = Instance(key);
@@ -126,11 +139,21 @@ namespace UE.Events
                 instance.eventListeners.Add(listener);
         }
 
+        /// <summary>
+        /// Register a listener to this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void AddListener(UnityAction<T> listener, Object key = null)
         {
             Instance(key).OnEventTriggered.AddListener(listener);
         }
 
+        /// <summary>
+        /// Remove a listener from this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void RemoveListener(ParameterEventListener<T, TS> listener, Object key = null)
         {
             var instance = Instance(key);
@@ -139,6 +162,11 @@ namespace UE.Events
                 instance.eventListeners.Remove(listener);
         }
 
+        /// <summary>
+        /// Remove a listener from this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void RemoveListener(UnityAction<T> listener, Object key = null)
         {
             Instance(key).OnEventTriggered.RemoveListener(listener);

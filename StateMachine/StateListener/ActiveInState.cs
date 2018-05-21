@@ -2,6 +2,7 @@
 
 namespace UE.StateMachine
 {
+    /// <inheritdoc />
     /// <summary>
     /// This component activates this game object when one of the given states
     /// is activated and disables it as soon as the state is left.

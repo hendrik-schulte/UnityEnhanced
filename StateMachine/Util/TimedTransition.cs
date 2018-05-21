@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace UE.StateMachine
 {
+    /// <inheritdoc />
     /// <summary>
-    /// This transition moves to the next state after a given time has passed.
+    /// This <see cref="T:UE.StateMachine.Transition" /> moves to the next state after a given time has passed.
     /// </summary>
     public class TimedTransition : Transition
     {

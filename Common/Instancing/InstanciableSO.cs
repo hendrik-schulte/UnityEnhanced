@@ -5,7 +5,6 @@ using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
-using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

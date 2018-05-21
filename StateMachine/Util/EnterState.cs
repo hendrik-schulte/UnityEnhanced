@@ -1,5 +1,4 @@
 ﻿using UE.Instancing;
-using UnityEngine;
 
 namespace UE.StateMachine
 {

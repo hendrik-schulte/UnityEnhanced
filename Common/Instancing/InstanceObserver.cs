@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEditor;
 
 namespace UE.Instancing
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class can be inherited to utilize the ScriptableObject instancing feature.
     /// By defining a key object, you access a specific instance of the referenced
@@ -76,9 +78,7 @@ namespace UE.Instancing
 #if UE_Photon
                     else if (listener.GetTarget().PhotonSyncSettings.PUNSync)
                     {
-                        PhotonView keyGO;
-
-                        keyGO = (key.objectReferenceValue as GameObject)?.GetPhotonView();
+                        var keyGO = (key.objectReferenceValue as GameObject)?.GetPhotonView();
 
                         if (keyGO == null) (key.objectReferenceValue as Component)?.GetComponent<PhotonView>();
                         
@@ -107,7 +107,7 @@ namespace UE.Instancing
         /// This can be overridden to exclude the given properties from being displayed in the inspector.
         /// </summary>
         /// <returns></returns>
-        protected virtual string[] ExcludeProperties()
+        protected virtual IEnumerable<string> ExcludeProperties()
         {
             return new string[0];
         }

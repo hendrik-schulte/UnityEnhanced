@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UE.StateMachine
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class enables easy transitions between multiple windows of the new UI System. 
     /// Uses the Animator component to animate transitions. There must be an "Open" and "Closed"
@@ -44,7 +45,6 @@ namespace UE.StateMachine
         /// <summary>
         /// Toggle (open / close) this window.
         /// </summary>
-        /// <param name="animOverride">Set to false to skip animation.</param>
         public void OpenClose()
         {
             if (gameObject.activeSelf)
@@ -53,11 +53,6 @@ namespace UE.StateMachine
                 Activated();
         }
 
-        /// <summary>
-        /// Closes the currently open panel and opens the provided one.
-        /// It also takes care of handling the navigation, setting the new Selected element.
-        /// </summary>
-        /// <param name="animOverride">Set to false to ignore animation</param>
         protected override void Activated()
         {
             StopAllCoroutines();
@@ -71,11 +66,6 @@ namespace UE.StateMachine
 #endif
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Closes the currently open Screen. It also takes care of navigation.
-        /// Reverting selection to the Selectable used before opening the current screen.
-        /// </summary>
         protected override void Deactivated(bool atStart = false)
         {
             //Start Coroutine to disable the hierarchy when closing animation finishes.
@@ -94,9 +84,9 @@ namespace UE.StateMachine
         private IEnumerator DisablePanelDelayed()
         {
             //Start the close animation.
-
             var closedStateReached = false;
             var shouldBeClosed = true;
+            
             while (!closedStateReached && shouldBeClosed)
             {
                 if (!animator.IsInTransition(0))

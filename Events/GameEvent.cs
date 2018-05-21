@@ -7,7 +7,6 @@ using UE.Common;
 using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
-using Object = UnityEngine.Object;
 #if UE_Photon
 using UE.PUNNetworking;
 
@@ -15,10 +14,18 @@ using UE.PUNNetworking;
 
 namespace UE.Events
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// A global event that can be observed by a <see cref="T:UE.Events.GameEventListener"/>.
+    /// It is created as an asset file and can be raised from anywhere in you project.
+    /// </summary>
     [CreateAssetMenu(menuName = "Events/Event()")]
     public class GameEvent : InstanciableSO<GameEvent>
     {
 #if UE_Photon
+        /// <summary>
+        /// Settings for photon sync.
+        /// </summary>
         [SerializeField] private PhotonSync PhotonSync;
 
         public override PhotonSync PhotonSyncSettings => PhotonSync;
@@ -33,8 +40,12 @@ namespace UE.Events
         }
 #endif
 
+        /// <summary>
+        /// Settings for file logging.
+        /// </summary>
         [SerializeField] private LogToFile logging = new LogToFile();
 
+        [Tooltip("Should this event be logged to the console (not in Build)?")]
         [SerializeField] private bool logToConsole;
 
 #if UNITY_EDITOR
@@ -54,13 +65,15 @@ namespace UE.Events
         /// </summary>
         public void Raise()
         {
+            // Splitting functions to be able to call this from serialized functions calls.
+            // ReSharper disable once IntroduceOptionalParameters.Global
             Raise(null);
         }
 
         /// <summary>
         /// Fires an instanced event (or the main event if key == null) by the given instance key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">Key for instanced events.</param>
         public void Raise(Object key)
         {
             Logging.Log(this, name + " was raised!", logToConsole);
@@ -106,23 +119,43 @@ namespace UE.Events
             }
         }
 
+        /// <summary>
+        /// Register a listener to this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void AddListener(GameEventListener listener, Object key = null)
         {
             if (!Instance(key).eventListeners.Contains(listener))
                 Instance(key).eventListeners.Add(listener);
         }
 
+        /// <summary>
+        /// Register a listener to this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void AddListener(UnityAction listener, Object key = null)
         {
             Instance(key).OnEventTriggered.AddListener(listener);
         }
 
+        /// <summary>
+        /// Remove a listener from this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void RemoveListener(GameEventListener listener, Object key = null)
         {
             if (Instance(key).eventListeners.Contains(listener))
                 Instance(key).eventListeners.Remove(listener);
         }
 
+        /// <summary>
+        /// Remove a listener from this event.
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="key">Key for instanced events</param>
         public void RemoveListener(UnityAction listener, Object key = null)
         {
             Instance(key).OnEventTriggered.RemoveListener(listener);

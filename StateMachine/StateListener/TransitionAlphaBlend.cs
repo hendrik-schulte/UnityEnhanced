@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UE.StateMachine
 {
+    /// <inheritdoc />
     /// <summary>
     /// This component handles nice fade-in fade-out transitions for UI windows. Requires a canvas and
     /// canvas group component for blending.
@@ -57,7 +58,6 @@ namespace UE.StateMachine
             }
 
             canvasGroup.alpha = 1;
-//            Enable();
         }
 
         protected override void Deactivated(bool atStart = false)
@@ -74,8 +74,6 @@ namespace UE.StateMachine
 
         private IEnumerator FadeOut()
         {
-//            Enable();
-//            canvasGroup.alpha = 1;
             var time = 0f;
 
             while (time < transitionDuration)

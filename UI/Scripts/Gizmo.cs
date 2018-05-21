@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using UnityEngine;
 
 namespace UE.UI
 {
@@ -13,19 +16,19 @@ namespace UE.UI
         public static void DrawWorldSpaceString(string text, Vector3 worldPos, Color? color = null)
         {
 #if UNITY_EDITOR
-            UnityEditor.Handles.BeginGUI();
+            Handles.BeginGUI();
 
             var restoreColor = GUI.color;
 
             if (color.HasValue) GUI.color = color.Value;
-            var view = UnityEditor.SceneView.currentDrawingSceneView;
+            var view = SceneView.currentDrawingSceneView;
             var screenPos = view.camera.WorldToScreenPoint(worldPos);
 
             if (screenPos.y < 0 || screenPos.y > Screen.height || screenPos.x < 0 || screenPos.x > Screen.width ||
                 screenPos.z < 0)
             {
                 GUI.color = restoreColor;
-                UnityEditor.Handles.EndGUI();
+                Handles.EndGUI();
                 return;
             }
 
@@ -33,7 +36,7 @@ namespace UE.UI
             GUI.Label(new Rect(screenPos.x - (size.x / 2), -screenPos.y + view.position.height + 4, size.x, size.y),
                 text);
             GUI.color = restoreColor;
-            UnityEditor.Handles.EndGUI();
+            Handles.EndGUI();
 #endif
         }
     }

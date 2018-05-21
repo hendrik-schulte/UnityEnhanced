@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Image = UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 namespace UE.UI
 {

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 namespace UE.StateMachine
 {
     /// <summary>
-    /// A transition is used to automatically move to annother state when a condition is met.
+    /// A Transition is used to automatically move to annother state when a condition is met.
     /// </summary>
     public abstract class Transition : InstanceObserver
     {
