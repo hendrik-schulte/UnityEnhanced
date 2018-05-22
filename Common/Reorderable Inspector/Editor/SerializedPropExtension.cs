@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace UE.Common.SubjectNerd.Utilities
 {
@@ -203,6 +204,17 @@ namespace UE.Common.SubjectNerd.Utilities
 				}
 			}
 			return (T) obj;
+		}
+		
+		/// <summary>
+		/// Uses reflection to get the actual data instance of the parent of a SerializedProperty
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="prop"></param>
+		/// <returns></returns>
+		public static Object GetParent(this SerializedProperty prop)
+		{
+			return GetParent<Object>(prop);
 		}
 
 		private static object GetValue(object source, string name)

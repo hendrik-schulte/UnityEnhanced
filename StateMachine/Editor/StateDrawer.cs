@@ -28,7 +28,7 @@ namespace UE.StateMachine
             label = EditorGUI.BeginProperty(position, label, property);
             EditorGUI.BeginChangeCheck();
 
-            if (state && Application.isPlaying)
+            if (state && state.stateManager && Application.isPlaying)
             {
                 position = EditorGUI.PrefixLabel(position, label);
 
@@ -36,9 +36,12 @@ namespace UE.StateMachine
                 buttonRect.width = buttonStyle.fixedWidth + buttonStyle.margin.right;
                 position.xMin = buttonRect.xMax;
 
-                var parent = property.GetParent<InstanceObserver>();
+                var parent = property.GetParent();
 
-                var isActive = state.IsActive(parent?.key);
+                var observer = parent as InstanceObserver;
+
+                var isObserver = observer != null;
+                var isActive = isObserver && state.IsActive(observer.key);
 
                 if (isActive)
                 {
@@ -46,21 +49,19 @@ namespace UE.StateMachine
                 }
                 else
                 {
-//                    var previous = GUI.enabled;
-//                    GUI.enabled =  && (parent == null);
-                
                     if (GUI.Button(buttonRect, "Enter", buttonStyle))
                     {
-                        if (parent == null)
-                            state.Enter();
+                        var isInstanced = state.stateManager.Instanced;
+
+                        if (!isObserver)
+                            if (isInstanced)
+                                state.EnterAllInstances();
+                            else
+                                state.Enter();
                         else
-                            state.Enter(parent.key);
+                            state.Enter(observer.key);
                     }
-                
-//                    GUI.enabled = previous;
                 }
-                
-                
 
                 EditorGUI.PropertyField(position, property, GUIContent.none);
             }
