@@ -1,6 +1,9 @@
 # UnityEnhanced
 A set of useful tools aimed at easy and powerful architecture in Unity3D.
 
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+
 ### Most notably
 - A [State Machine](https://github.com/hendrik-schulte/UnityEnhanced/tree/master/StateMachine)
   + Utilize the power of ScriptableObjects
