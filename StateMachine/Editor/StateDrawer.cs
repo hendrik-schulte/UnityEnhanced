@@ -41,7 +41,8 @@ namespace UE.StateMachine
                 var observer = parent as InstanceObserver;
 
                 var isObserver = observer != null;
-                var isActive = isObserver && state.IsActive(observer.key);
+                
+                var isActive = isObserver ? state.IsActive(observer.key) : state.IsActive();
 
                 if (isActive)
                 {
