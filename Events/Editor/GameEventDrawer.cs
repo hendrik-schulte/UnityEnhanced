@@ -28,7 +28,7 @@ namespace UE.Events
             label = EditorGUI.BeginProperty(position, label, property);
             EditorGUI.BeginChangeCheck();
 
-            if (gameEvent)
+            if (gameEvent && Application.isPlaying)
             {
                 position = EditorGUI.PrefixLabel(position, label);
 
@@ -36,9 +36,9 @@ namespace UE.Events
                 buttonRect.width = buttonStyle.fixedWidth + buttonStyle.margin.right;
                 position.xMin = buttonRect.xMax;
 
-                var previous = GUI.enabled;
-                GUI.enabled = Application.isPlaying;
-                
+//                var previous = GUI.enabled;
+//                GUI.enabled = Application.isPlaying;
+
                 if (GUI.Button(buttonRect, "Raise", buttonStyle))
                 {
                     var parent = property.GetParent<InstanceObserver>();
@@ -48,8 +48,8 @@ namespace UE.Events
                     else
                         gameEvent.Raise(parent.key);
                 }
-                
-                GUI.enabled = previous;
+
+//                GUI.enabled = previous;
 
                 EditorGUI.PropertyField(position, property, GUIContent.none);
             }
