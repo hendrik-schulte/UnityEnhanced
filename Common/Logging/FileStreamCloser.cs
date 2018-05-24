@@ -12,7 +12,7 @@ namespace UE.Common
         
         private void OnDestroy()
         {
-            Logging.Log(this, "Closing all FileStreams", debugLog);
+            Logging.Log(this, "Closing all StreamWriters", debugLog);
             
             FileLogger.Close();
         }

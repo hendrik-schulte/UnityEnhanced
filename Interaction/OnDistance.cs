@@ -61,20 +61,21 @@ namespace UE.Interaction
 
             while (!target.Value)
             {
-                Logging.Log(this, "'" + gameObject.name +"': Target for proximity check is null!", Logging.Level.Warning, loggingLevel);
+                Logging.Log(this, "Target for proximity check is null!",
+                    Logging.Level.Warning, loggingLevel);
                 yield return new WaitForSeconds(.2f);
             }
-            
+
 #if UNITY_EDITOR
             Logging.Log(this, "Target found.", Logging.Level.Verbose, loggingLevel);
 #endif
-            
+
             if (DelayedStart > 0)
             {
                 Logging.Log(this, "Start is delayed by " + DelayedStart + " seconds", Logging.Level.Info, loggingLevel);
 
                 yield return new WaitForSeconds(DelayedStart);
-                
+
                 Logging.Log(this, "Starting distance check.", Logging.Level.Info, loggingLevel);
             }
 
@@ -87,15 +88,21 @@ namespace UE.Interaction
                 Logging.Log(this, "Performing distance check.", Logging.Level.Verbose, loggingLevel);
 #endif
 
-                var distance = Vector3.Distance(transform.position, target.Value.position);
-
-                if ((Mode == EnterMode.IsCloserThan && distance < Threshold) ||
-                    (Mode == EnterMode.IsFurtherThan && distance > Threshold))
+                if (target.Value)
                 {
-                    Logging.Log(this, "Distance reached!", Logging.Level.Info, loggingLevel);
+                    var distance = Vector3.Distance(transform.position, target.Value.position);
 
-                    Triggered();
+                    if ((Mode == EnterMode.IsCloserThan && distance < Threshold) ||
+                        (Mode == EnterMode.IsFurtherThan && distance > Threshold))
+                    {
+                        Logging.Log(this, "Distance reached!", Logging.Level.Info, loggingLevel);
+
+                        Triggered();
+                    }
                 }
+                else
+                    Logging.Log(this, "Target for proximity check is null!",
+                        Logging.Level.Warning, loggingLevel);
 
                 if (UpdateInterval == 0) yield return null;
                 else yield return new WaitForSeconds(UpdateInterval);

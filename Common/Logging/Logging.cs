@@ -27,6 +27,11 @@ namespace UE.Common
         {
             if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + msg);
         }
+        
+        public static void Warning(GameObject sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + Apostrophe(sender.name) + msg);
+        }
 
         public static void Warning(string sender, string msg, bool debugLog = true)
         {
@@ -37,7 +42,12 @@ namespace UE.Common
         {
             if (debugLog) Debug.LogError(TypeIdentifier(sender) + msg);
         }
-
+        
+        public static void Error(GameObject sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogError(TypeIdentifier(sender) + Apostrophe(sender.name) + msg);
+        }
+        
         public static void Error(string sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.LogError(Brackets(sender) + msg);

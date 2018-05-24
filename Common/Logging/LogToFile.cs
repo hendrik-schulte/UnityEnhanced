@@ -17,7 +17,7 @@ namespace UE.Common
                  "this by adding a FileStreamCloser component anywhere in your scene.")]
         public bool logToFile;
 
-        [Tooltip("Name of the log file.")] public string FileName = "main.log";
+        [Tooltip("Name of the log file.")] public string FileName = "Logs/main.log";
     }
 
 #if UNITY_EDITOR

@@ -39,7 +39,18 @@ namespace UE.Common
             var directory = Path.GetDirectoryName(fileName);
             if (directory.Any()) Directory.CreateDirectory(directory);
 
-            var stream = new StreamWriter(fileName, true);
+            StreamWriter stream;
+            
+            try
+            {
+                stream = new StreamWriter(fileName, true);
+            }
+            catch (IOException)
+            {
+                Logging.Warning("FileLogger", "Cought IOException after accessing " + fileName +".");
+                return null;
+            }
+            
             streams.Add(fileName, stream);
             stream.WriteLine("#### Started Logging on " + $"{DateTime.Now:F}" + " ####");
             return stream;
@@ -81,6 +92,9 @@ namespace UE.Common
             message = $"[{now:H:mm:ss}] {message}";
 
             var stream = GetStreamWriter(fileName);
+           
+            if(stream == null) return;
+            
             stream.WriteLine(message);
             stream.Flush();
         }
