@@ -29,6 +29,8 @@ namespace UE.Events
 #endif
 
             paramEvent.RemoveListener(Triggered, key);
+            
+            FileLogger.Close(fileName);
         }
 
         private void Triggered(T value)

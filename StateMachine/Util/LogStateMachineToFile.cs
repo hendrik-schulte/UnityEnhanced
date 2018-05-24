@@ -24,10 +24,12 @@ namespace UE.StateMachine
         protected virtual void OnDestroy()
         {
 #if UNITY_EDITOR
-            Logging.Log(this, "'" + gameObject.name + "' Removing Listener", Logging.Level.Verbose, loggingLevel);
+            Logging.Log(this, "'" + gameObject.name + "' Removing Listener and closing stream.", Logging.Level.Verbose, loggingLevel);
 #endif
 
             stateManager.RemoveStateEnterListener(OnStateEnter, key);
+            
+            FileLogger.Close(fileName);
         }
         
         private void OnStateEnter(State state)

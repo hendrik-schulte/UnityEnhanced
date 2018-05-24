@@ -13,23 +13,11 @@ namespace UE.Common
     [Serializable]
     public class LogToFile
     {
-        [Tooltip("Enables automatic logging to a file.")]
+        [Tooltip("Enables automatic logging to a file. You need to take care of closing the FileStreams created by" +
+                 "this by adding a FileStreamCloser component anywhere in your scene.")]
         public bool logToFile;
 
         [Tooltip("Name of the log file.")] public string FileName = "main.log";
-
-//        [Tooltip("When logToFile, a separate log file is created for every instance.")]
-//        public bool UniqueForEachInstance = true;
-
-//        [SerializeField] internal bool Instanciable;
-//
-//        public LogToFile(Object parent = null)
-//        {
-//            if (parent == null)
-//                Instanciable = false;
-//            else
-//                Instanciable = parent is IInstanciable;
-//        }
     }
 
 #if UNITY_EDITOR

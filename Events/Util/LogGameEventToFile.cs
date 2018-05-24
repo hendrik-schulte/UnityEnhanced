@@ -28,6 +28,8 @@ namespace UE.Events
 #endif
 
             gameEvent.RemoveListener(Triggered, key);
+            
+            FileLogger.Close(fileName);
         }
 
         private void Triggered()

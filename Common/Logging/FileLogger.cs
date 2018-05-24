@@ -46,7 +46,7 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Closes the streams and clears the stream cache.
+        /// Closes all streams and clears the stream cache.
         /// </summary>
         public static void Close()
         {
@@ -56,6 +56,18 @@ namespace UE.Common
             }
 
             streams.Clear();
+        }
+
+        /// <summary>
+        /// Closes the stream to the given file (if existing) and removes it from the cache.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public static void Close(string fileName)
+        {
+            if(!streams.ContainsKey(fileName)) return;
+            
+            streams[fileName].Close();
+            streams.Remove(fileName);
         }
 
         /// <summary>

@@ -36,20 +36,16 @@ namespace UE.Events
                 buttonRect.width = buttonStyle.fixedWidth + buttonStyle.margin.right;
                 position.xMin = buttonRect.xMax;
 
-//                var previous = GUI.enabled;
-//                GUI.enabled = Application.isPlaying;
-
                 if (GUI.Button(buttonRect, "Raise", buttonStyle))
                 {
-                    var parent = property.GetParent<InstanceObserver>();
+                    var parent = property.GetParent();
+                    var observer = parent as InstanceObserver;
 
-                    if (parent == null)
+                    if (observer == null)
                         gameEvent.Raise();
                     else
-                        gameEvent.Raise(parent.key);
+                        gameEvent.Raise(observer.key);
                 }
-
-//                GUI.enabled = previous;
 
                 EditorGUI.PropertyField(position, property, GUIContent.none);
             }

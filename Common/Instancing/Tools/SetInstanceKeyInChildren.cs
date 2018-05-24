@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace UE.Instancing
@@ -10,20 +11,23 @@ namespace UE.Instancing
     public class SetInstanceKeyInChildren : MonoBehaviour
     {
         public Object instanceKey;
-
+        
+#if UNITY_EDITOR
         public void Apply()
         {
             var instanceObservers = GetComponentsInChildren<InstanceObserver>(true);
 
-            Undo.RecordObjects(instanceObservers, "Batch-Applying Instance Key for InstanceObservers in Hierachy.");
+            Undo.RecordObjects(instanceObservers, "Batch-Applying Instance Key for InstanceObservers in hierachy.");
 
             foreach (var iO in instanceObservers)
             {
                 iO.SetKey(instanceKey);
             }
         }
+#endif
     }
 
+#if UNITY_EDITOR
     [CustomEditor(typeof(SetInstanceKeyInChildren), true)]
     public class SetInstanceInChidrenEditor : Editor
     {
@@ -39,5 +43,5 @@ namespace UE.Instancing
             }
         }
     }
-}
 #endif
+}
