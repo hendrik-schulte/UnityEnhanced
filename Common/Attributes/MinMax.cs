@@ -1,7 +1,6 @@
 ﻿// Adapted from https://gist.github.com/LotteMakesStuff/0de9be35044bab97cbe79b9ced695585
 
 #if UNITY_EDITOR
-using UnityEngine;
 using UnityEditor;
 #endif
 using UnityEngine;
