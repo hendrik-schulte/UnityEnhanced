@@ -110,7 +110,11 @@ namespace UE.Common
         /// <param name="levelSetting">LogLevel of this script</param>
         public static void Log(Component sender, string msg, Level messageLevel, Level levelSetting)
         {
-            Log(sender.gameObject, msg, messageLevel, levelSetting);
+            if (messageLevel < levelSetting) return;
+
+            var message = TypeIdentifier(sender) + Apostrophe(sender.gameObject.name) + msg;
+
+            Out(message, messageLevel);
         }
 
         /// <summary>

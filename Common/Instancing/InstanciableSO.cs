@@ -75,7 +75,7 @@ namespace UE.Instancing
         /// <summary>
         /// Removes references to all instances of this ScriptableObject.
         /// </summary>
-        public void Clear()
+        protected void Clear()
         {
 //            instances = instanced ? new Dictionary<Object, T> {{this, (T) this}} : null;
             instances = instanced ? new Dictionary<Object, T> { } : null;
