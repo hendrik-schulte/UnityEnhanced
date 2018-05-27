@@ -1,4 +1,6 @@
-﻿#if UNITY_EDITOR
+﻿
+using UE.Common;
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -22,6 +24,10 @@ namespace UE.UI
 
             if (color.HasValue) GUI.color = color.Value;
             var view = SceneView.currentDrawingSceneView;
+            
+            if (view == null)
+                return;
+            
             var screenPos = view.camera.WorldToScreenPoint(worldPos);
 
             if (screenPos.y < 0 || screenPos.y > Screen.height || screenPos.x < 0 || screenPos.x > Screen.width ||
