@@ -42,7 +42,10 @@ namespace UE.Events
                     var observer = parent as InstanceObserver;
 
                     if (observer == null)
-                        gameEvent.Raise();
+                        if (gameEvent.Instanced)
+                            gameEvent.RaiseAllInstances();
+                        else
+                            gameEvent.Raise();
                     else
                         gameEvent.Raise(observer.key);
                 }

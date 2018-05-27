@@ -41,8 +41,13 @@ namespace UE.StateMachine
                 var observer = parent as InstanceObserver;
 
                 var isObserver = observer != null;
+                var isInstanced = state.stateManager.Instanced;
                 
-                var isActive = isObserver ? state.IsActive(observer.key) : state.IsActive();
+                bool isActive;
+                if (isObserver)
+                    isActive = state.IsActive(observer.key);
+                else if (isInstanced) isActive = state.AllInstancesActive();
+                    else isActive = state.IsActive();
 
                 if (isActive)
                 {
@@ -52,8 +57,6 @@ namespace UE.StateMachine
                 {
                     if (GUI.Button(buttonRect, "Enter", buttonStyle))
                     {
-                        var isInstanced = state.stateManager.Instanced;
-
                         if (!isObserver)
                             if (isInstanced)
                                 state.EnterAllInstances();

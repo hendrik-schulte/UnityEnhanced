@@ -47,12 +47,12 @@ namespace UE.Instancing
         /// Returns true if instancing is enabled.
         /// </summary>
         public virtual bool Instanced => instanced;
-        
+
         /// <summary>
         /// Returns the amount of instances registered to this object or 0 is instancing .
         /// </summary>
         public int InstanceCount => instances?.Count ?? 0;
-        
+
 #if UE_Photon
         /// <summary>
         /// Returns the Photon Sync settings or null if this object is not syncable.
@@ -102,7 +102,7 @@ namespace UE.Instancing
         public Object[] Keys => instances?.Keys.ToArray();
 
         /// <summary>
-        /// Returns an instance of this scriptable object based on the given key object.
+        /// Returns an instance of this ScriptableObject based on the given key object.
         /// Returns the main object if it is null or instancing is not enabled. Should be
         /// used to access all instanced properties of this ScriptableObject.
         /// </summary>
@@ -125,6 +125,7 @@ namespace UE.Instancing
             }
 
             if (!instances.ContainsKey(key))
+//            if (!keys.ContainsKey(key.))
             {
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
@@ -156,7 +157,7 @@ namespace UE.Instancing
         private void AddKey(Object key, T instance)
         {
             instance.keyID = key.GetInstanceID();
-                
+
 #if UE_Photon
             //When using photon sync, use a photon viewID as key to guarantee matching network instances.
             if (PhotonSyncSettings.PUNSync)
@@ -168,6 +169,21 @@ namespace UE.Instancing
                 }
             }
 #endif
+
+            if (keys.ContainsKey(instance.keyID))
+            {
+                //If the taret key object is null (which might be the case by a scene reload),
+                //we remove that entry from the dictionary
+                if (keys[instance.keyID] == null) keys.Remove(instance.keyID);
+                else
+                {
+                    Logging.Error(this,
+                        "Failed adding key '" + instance.keyID + "' -> '" + key.name + "' because it already exists! " +
+                        "Existing: '" + instance.keyID + "' -> '" + keys[instance.keyID] + "'");
+                    return;
+                }
+            }
+
             keys.Add(instance.keyID, key);
         }
 
@@ -188,7 +204,7 @@ namespace UE.Instancing
                 if (view) return view;
             }
 
-            Logging.Error(this, "'" + name +  "': Syncable intanced objects need to have a PhotonView " +
+            Logging.Error(this, "'" + name + "': Syncable intanced objects need to have a PhotonView " +
                                 "or a parenting GameObject as key object!");
             return null;
         }
@@ -214,8 +230,8 @@ namespace UE.Instancing
         /// Returns a collection of instance keys.
         /// </summary>
         Object[] Keys { get; }
-        
-#if UE_Photon    
+
+#if UE_Photon
         /// <summary>
         /// Returns the Photon Sync settings or null if this object is not syncable.
         /// </summary>
@@ -234,9 +250,9 @@ namespace UE.Instancing
         protected override void InitInspector()
         {
             base.InitInspector();
-		
+
             alwaysDrawInspector = true;
-            
+
             m_Script = serializedObject.FindProperty("m_Script");
             instanced = serializedObject.FindProperty("instanced");
         }
@@ -273,7 +289,7 @@ namespace UE.Instancing
 
                     foreach (var key in keys)
                     {
-                        if(key != null) DrawInstance(key);
+                        if (key != null) DrawInstance(key);
                     }
 
                     EditorGUILayout.Space();
@@ -288,7 +304,7 @@ namespace UE.Instancing
             OnInspectorGUITop();
 
             serializedObject.Update();
-            DrawPropertiesExcept(new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
+            DrawPropertiesExcept(new[] {"m_Script"}.Concat(ExcludeProperties()).ToArray());
             serializedObject.ApplyModifiedProperties();
         }
 
