@@ -13,11 +13,11 @@ namespace UE.Common
             if (debugLog) Debug.Log(TypeIdentifier(sender) + msg);
         }
         
-        public static void Log(GameObject sender, string msg, bool debugLog = true)
+        public static void Log(Object sender, string msg, bool debugLog = true)
         {
-            if (debugLog) Debug.Log(TypeIdentifier(sender) + Apostrophe(sender.name) + msg);
+            if (debugLog) Debug.Log(TypeIdentifier(sender) + Apostrophe(sender.name) + msg, sender);
         }
-
+        
         public static void Log(string sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.Log(Brackets(sender) + msg);
@@ -28,9 +28,9 @@ namespace UE.Common
             if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + msg);
         }
         
-        public static void Warning(GameObject sender, string msg, bool debugLog = true)
+        public static void Warning(Object sender, string msg, bool debugLog = true)
         {
-            if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + Apostrophe(sender.name) + msg);
+            if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + Apostrophe(sender.name) + msg, sender);
         }
 
         public static void Warning(string sender, string msg, bool debugLog = true)
@@ -43,9 +43,9 @@ namespace UE.Common
             if (debugLog) Debug.LogError(TypeIdentifier(sender) + msg);
         }
         
-        public static void Error(GameObject sender, string msg, bool debugLog = true)
+        public static void Error(Object sender, string msg, bool debugLog = true)
         {
-            if (debugLog) Debug.LogError(TypeIdentifier(sender) + Apostrophe(sender.name) + msg);
+            if (debugLog) Debug.LogError(TypeIdentifier(sender) + Apostrophe(sender.name) + msg, sender);
         }
         
         public static void Error(string sender, string msg, bool debugLog = true)
@@ -54,7 +54,8 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Formats and logs the given message to the unity log.
+        /// Formats and logs the given message to the console using the sender as an identifier.
+        /// When the messegeLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
@@ -70,39 +71,25 @@ namespace UE.Common
         }
         
         /// <summary>
-        /// Formats and logs the given message to the unity log.
+        /// Formats and logs the given message to the console using the sender as an identifier.
+        /// When the messegeLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
         /// <param name="messageLevel">LogLevel of this message.</param>
         /// <param name="levelSetting">LogLevel of this script</param>
-        public static void Log(ScriptableObject sender, string msg, Level messageLevel, Level levelSetting)
+        public static void Log(Object sender, string msg, Level messageLevel, Level levelSetting)
         {
             if (messageLevel < levelSetting) return;
 
             var message = TypeIdentifier(sender) + Apostrophe(sender.name) + msg;
 
-            Out(message, messageLevel);
+            Out(message, messageLevel, sender);
         }
         
         /// <summary>
-        /// Formats and logs the given message to the unity log.
-        /// </summary>
-        /// <param name="sender">reference to the sender</param>
-        /// <param name="msg">the message</param>
-        /// <param name="messageLevel">LogLevel of this message.</param>
-        /// <param name="levelSetting">LogLevel of this script</param>
-        public static void Log(GameObject sender, string msg, Level messageLevel, Level levelSetting)
-        {
-            if (messageLevel < levelSetting) return;
-
-            var message = TypeIdentifier(sender) + Apostrophe(sender.name) + msg;
-
-            Out(message, messageLevel);
-        }
-        
-        /// <summary>
-        /// Formats and logs the given message to the unity log.
+        /// Formats and logs the given message to the console using the sender as an identifier.
+        /// When the messegeLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
@@ -114,7 +101,7 @@ namespace UE.Common
 
             var message = TypeIdentifier(sender) + Apostrophe(sender.gameObject.name) + msg;
 
-            Out(message, messageLevel);
+            Out(message, messageLevel, sender);
         }
 
         /// <summary>
@@ -138,7 +125,30 @@ namespace UE.Common
                     break;
             }
         }
-
+        
+        /// <summary>
+        /// Prints the given message based on the given message level.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="messageLevel"></param>
+        /// <param name="sender"></param>
+        private static void Out(string message, Level messageLevel, Object sender)
+        {
+            switch (messageLevel)
+            {
+                case Level.Verbose:
+                case Level.Info:
+                    Debug.Log(message, sender);
+                    break;
+                case Level.Warning:
+                    Debug.LogWarning(message, sender);
+                    break;
+                case Level.Error:
+                    Debug.LogWarning(message, sender);
+                    break;
+            }
+        }
+        
         #region Formating
 
         private static string TypeIdentifier(object sender)
