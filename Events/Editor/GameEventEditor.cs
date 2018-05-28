@@ -28,6 +28,14 @@ namespace UE.Events
                     gameEvent.Raise();
             }
         }
+
+        protected override string[] ExcludeProperties()
+        {
+            if ((target as GameEvent).DrawUnityEventInspector)
+                return base.ExcludeProperties();
+            else
+                return new[] {"OnEventTriggered"};
+        }
     }
 }
 #endif

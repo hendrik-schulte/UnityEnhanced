@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace UE.StateMachine
@@ -24,7 +25,12 @@ namespace UE.StateMachine
 
         [SerializeField] protected UnityEvent OnActivated;
         [SerializeField] protected UnityEvent OnDeactivated;
-
+        
+        /// <summary>
+        /// Override this to disable the UnityEvents in the inspector.
+        /// </summary>
+        public virtual bool DrawUnityEventInspector => true;
+        
         /// <summary>
         /// Returns true if this is currently activated.
         /// </summary>
@@ -202,7 +208,6 @@ namespace UE.StateMachine
             return true;
         }
 
-
 #if UNITY_EDITOR
         protected virtual void OnDrawGizmos()
         {
@@ -243,6 +248,14 @@ namespace UE.StateMachine
 
 
             base.DrawInspector();
+        }
+
+        protected override IEnumerable<string> ExcludeProperties()
+        {
+            if ((target as StateListener).DrawUnityEventInspector)
+                return base.ExcludeProperties();
+            else
+                return new[] {"OnActivated", "OnDeactivated"};
         }
     }
 

@@ -53,6 +53,11 @@ namespace UE.Events
 #endif
 
         [SerializeField] private UnityEvent OnEventTriggered = new UnityEvent();
+        
+        /// <summary>
+        /// Override this to disable the UnityEvents in the inspector.
+        /// </summary>
+        public virtual bool DrawUnityEventInspector => true;
 
         /// <summary>
         /// The list of listeners that this event will notify if it is raised.
