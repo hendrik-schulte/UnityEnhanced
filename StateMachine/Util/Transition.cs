@@ -44,6 +44,8 @@ namespace UE.StateMachine
 
         private void OnStateEnter(State state)
         {
+            StopAllCoroutines();
+            
             if (state != transitState) return;
 
             Logging.Log(this, "'" + gameObject.name + "' Starting transition ...", Logging.Level.Info, loggingLevel);

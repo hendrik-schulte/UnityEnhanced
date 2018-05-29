@@ -42,7 +42,7 @@ namespace UE.StateMachine
             if (!HasStates())
             {
                 enabled = false;
-                Logging.Warning(this, "'" + gameObject.name + "': There are no active states defined!");
+                Logging.Warning(this, "There are no active states defined!");
                 return;
             }
 
