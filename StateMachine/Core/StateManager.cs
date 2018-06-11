@@ -47,8 +47,7 @@ namespace UE.StateMachine
         /// <summary>
         /// Settings for file logging.
         /// </summary>
-        [SerializeField] 
-        private LogToFile fileLogging = new LogToFile();
+        [SerializeField] private LogToFile fileLogging = new LogToFile();
 
         /// <summary>
         /// Returns true if file logging is enabled.
@@ -63,15 +62,14 @@ namespace UE.StateMachine
         /// <summary>
         /// Logging to console enabled.
         /// </summary>
-        [SerializeField] 
-        private bool logToConsole;
+        [SerializeField] private bool logToConsole;
 
         /// <summary>
         /// This event is triggered when a state is entered.
         /// Provides the new state as parameter.
         /// </summary>
         private StateEvent OnStateEnter = new StateEvent();
-        
+
         /// <summary>
         /// This event is triggered when a state is left.
         /// Provides the left and upcoming state as parameter.
@@ -133,27 +131,47 @@ namespace UE.StateMachine
             if (state.stateManager != this)
             {
                 Logging.Error(this, "The state " + state.name + " you want to enter " +
-                                    "is not controlled by this state manager '"+ name +"'!");
+                                    "is not controlled by this state manager '" + name + "'!");
                 return;
             }
-            
+
 #if UNITY_EDITOR
             Logging.Log(this, "Change State to: " + state, logToConsole);
 #endif
-      
+
             instance.OnStateLeave.Invoke(instance._state, state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
 
-            if(Instanced) FileLogger.Write(fileLogging, 
-                state.name + " was entered.", 
-                instance.KeyID.ToString());
+            if (Instanced)
+                FileLogger.Write(fileLogging,
+                    state.name + " was entered.",
+                    instance.KeyID.ToString());
             else FileLogger.Write(fileLogging, state.name + " was entered.");
 
 #if UE_Photon
             PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange, state.name, instance.KeyID);
 #endif
         }
+
+#if UE_Photon
+        /// <summary>
+        /// Sends a state change message to all clients. This is called
+        /// when a new client joins so it has all states synchronized.
+        /// </summary>
+        public void PropagateStatePhoton()
+        {
+            foreach (var instance in GetInstances())
+            {
+                var state = instance._state;
+
+                if (!state) return;
+
+                PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange,
+                    instance._state.name, instance.KeyID);
+            }
+        }
+#endif
 
         /// <summary>
         /// Sets the given state for all instances.
@@ -210,7 +228,7 @@ namespace UE.StateMachine
         {
             Instance(key).OnStateLeave.AddListener(action);
         }
-        
+
         /// <summary>
         /// Remove a listener from the OnStateLeave event.
         /// </summary>
@@ -236,7 +254,16 @@ namespace UE.StateMachine
             if (InitialState) Logging.Log(this, "Initializing with " + InitialState.name, logToConsole);
             else Logging.Log(this, "Initializing with null", logToConsole);
 #endif
-            
+
+#if UE_Photon
+            //Register main instance to sync manager to automatically propagate state changes to new players.
+            if (PhotonSync.PUNSync)
+                if (Instanced && original)
+                    PhotonSyncManager.RegisterStateManager(original);
+                else
+                    PhotonSyncManager.RegisterStateManager(this);
+#endif
+
             SetState(InitialState, key);
         }
 

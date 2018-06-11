@@ -39,6 +39,11 @@ namespace UE.Instancing
         private int keyID = -1;
 
         /// <summary>
+        /// This is a reference of the original instance. Is null for the original.
+        /// </summary>
+        protected T original;
+        
+        /// <summary>
         /// This is to access this instance in the instances dictionary (of the main instance). 
         /// </summary>
         protected int KeyID => keyID;
@@ -129,6 +134,7 @@ namespace UE.Instancing
             {
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
+                instance.original = this as T;
                 instances.Add(key, instance);
                 AddKey(key, instance);
                 OnInstancesChanged.Invoke(this as T);

@@ -1,6 +1,7 @@
 ﻿#if UE_Photon
 
 using System;
+using System.Collections.Generic;
 using Photon;
 using UE.Common;
 using UE.Events;
@@ -26,6 +27,40 @@ namespace UE.PUNNetworking
         private const byte EventRaiseUEIntEvent = 107;
         private const byte EventRaiseUEVector2Event = 108;
         private const byte EventRaiseUEVector3Event = 109;
+
+        #region StateMachineCache
+
+        private static List<StateManager> syncedStateManager;
+
+        public static void RegisterStateManager(StateManager stateManager)
+        {
+            if (syncedStateManager == null)
+                syncedStateManager = new List<StateManager>();
+
+            if (syncedStateManager.Contains(stateManager))
+            {
+//                Logging.Warning(typeof(PhotonSyncManager), "The state manager registered does already exist.");
+                return;
+            }
+            
+            Logging.Log(typeof(PhotonSyncManager), "Adding " + stateManager.name);
+            syncedStateManager.Add(stateManager);
+        }
+
+        public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+        {
+            if (!PhotonNetwork.isMasterClient) return;
+
+            if(syncedStateManager == null) return;
+            
+            foreach (var sm in syncedStateManager)
+            {
+                sm.PropagateStatePhoton();
+//                SendEvent(sm.PhotonSyncSettings, EventStateChange, sm.GetState(), sm.KeyID);
+            }
+        }
+
+        #endregion
 
         void OnEnable()
         {
