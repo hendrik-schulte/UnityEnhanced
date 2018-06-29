@@ -121,7 +121,6 @@ namespace UE.Instancing
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var instanciable = Instanciable(property);
-//            var instanceReference = GetIInstanceReference(property);
 
             var key = GetKeyProperty(property);
 
@@ -130,6 +129,7 @@ namespace UE.Instancing
             if (key.objectReferenceValue == null)
                 return EditorUtil.PropertyHeight(4);
 #if UE_Photon
+            var instanceReference = GetIInstanceReference(property);
             if (instanceReference != null && !instanceReference.HasValidNetworkingKey)
                 return EditorUtil.PropertyHeight(5);
 #endif
