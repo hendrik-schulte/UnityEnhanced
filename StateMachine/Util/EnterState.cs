@@ -9,13 +9,10 @@ namespace UE.StateMachine
 
         public void Enter(bool enter)
         {
-            if (enter) state.Enter(key);
-            else back.Enter(key);
+            if (enter) state.Enter(Key);
+            else back.Enter(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !state ? null : state.stateManager;
-        }
+        public override IInstanciable Target => !state ? null : state.stateManager;
     }
 }

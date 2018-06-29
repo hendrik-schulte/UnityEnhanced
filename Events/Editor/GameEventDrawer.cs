@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UE.Instancing;
 using UnityEditor;
@@ -10,51 +11,27 @@ namespace UE.Events
     /// This adds a property drawer for GameEvent fields that allows you to fire that event directly.
     /// </summary>
     [CustomPropertyDrawer(typeof(GameEvent))]
-    public class GameEventDrawer : PropertyDrawer
+    public class GameEventDrawer : ButtonPropertyDrawer<GameEvent>
     {
-        private GUIStyle buttonStyle;
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected override bool EnableButton(GameEvent gameEvent)
         {
-            if (buttonStyle == null)
-            {
-                buttonStyle = new GUIStyle(GUI.skin.button);
-                buttonStyle.fixedWidth = 45;
-                buttonStyle.fixedHeight = GetPropertyHeight(property, label);
-            }
+            return gameEvent && Application.isPlaying;
+        }
 
-            var gameEvent = property.objectReferenceValue as GameEvent;
+        protected override void DrawButton(Rect buttonRect, SerializedProperty property, GameEvent gameEvent)
+        {
+            if (!GUI.Button(buttonRect, "Raise", buttonStyle)) return;
+            
+            var parent = property.GetParent<object>();
+            var observer = parent as IInstanceReference;
 
-            label = EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.BeginChangeCheck();
-
-            if (gameEvent && Application.isPlaying)
-            {
-                position = EditorGUI.PrefixLabel(position, label);
-
-                var buttonRect = new Rect(position);
-                buttonRect.width = buttonStyle.fixedWidth + buttonStyle.margin.right;
-                position.xMin = buttonRect.xMax;
-
-                if (GUI.Button(buttonRect, "Raise", buttonStyle))
-                {
-                    var parent = property.GetParent();
-                    var observer = parent as InstanceObserver;
-
-                    if (observer == null)
-                        if (gameEvent.Instanced)
-                            gameEvent.RaiseAllInstances();
-                        else
-                            gameEvent.Raise();
-                    else
-                        gameEvent.Raise(observer.key);
-                }
-
-                EditorGUI.PropertyField(position, property, GUIContent.none);
-            }
-            else EditorGUI.PropertyField(position, property);
-
-            EditorGUI.EndProperty();
+            if (observer == null)
+                if (gameEvent.Instanced)
+                    gameEvent.RaiseAllInstances();
+                else
+                    gameEvent.Raise();
+            else
+                gameEvent.Raise(observer.Key);
         }
     }
 }

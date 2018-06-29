@@ -32,22 +32,22 @@ namespace UE.Events
 
         protected virtual void OnEnable()
         {
-            if (!persistent) Event.AddListener(this, key);
+            if (!persistent) Event.AddListener(this, Key);
         }
 
         protected virtual void OnDisable()
         {
-            if (!persistent) Event.RemoveListener(this, key);
+            if (!persistent) Event.RemoveListener(this, Key);
         }
 
         protected virtual void Awake()
         {
-            if (persistent) Event.AddListener(this, key);
+            if (persistent) Event.AddListener(this, Key);
         }
 
         protected virtual void OnDestroy()
         {
-            if (persistent) Event.RemoveListener(this, key);
+            if (persistent) Event.RemoveListener(this, Key);
         }
 
         /// <summary>
@@ -58,10 +58,8 @@ namespace UE.Events
             Response.Invoke();
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return Event;
-        }
+        public override IInstanciable Target => Event;
+
         
 #if UNITY_EDITOR
         [CustomEditor(typeof(GameEventListener), true)]

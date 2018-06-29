@@ -39,7 +39,7 @@ namespace UE.StateMachine
             
             while (true)
             {
-                if (!targetState.IsActive(key))
+                if (!targetState.IsActive(Key))
                 {
                     var currentChance = chance + bonusChance;
                 
@@ -47,7 +47,7 @@ namespace UE.StateMachine
                     {
                         Logging.Log(this,"Roulette positive", debugLog);
                         bonusChance = 0;
-                        targetState.Enter(key);
+                        targetState.Enter(Key);
                     }
 
                     bonusChance += increaseOverTime;
@@ -58,9 +58,6 @@ namespace UE.StateMachine
             }
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !targetState ? null : targetState.stateManager;
-        }
+        public override IInstanciable Target => !targetState ? null : targetState.stateManager;
     }
 }

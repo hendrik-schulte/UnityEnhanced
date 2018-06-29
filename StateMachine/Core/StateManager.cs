@@ -109,7 +109,16 @@ namespace UE.StateMachine
         /// <param name="key">Key for instanced StateMachine.</param>
         public void SetState(State state, Object key = null)
         {
-            SetStateInstance(Instance(key), state, key);
+            SetStateInstance(Instance(key), state);
+        }
+
+        /// <summary>
+        /// Enters the given state.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetState(InstancedState state)
+        {
+            SetStateInstance(Instance(state.Key), state.state);
         }
 
         /// <summary>
@@ -118,7 +127,7 @@ namespace UE.StateMachine
         /// <param name="instance"></param>
         /// <param name="state"></param>
         /// <param name="key">Key for instanced StateMachine.</param>
-        private void SetStateInstance(StateManager instance, State state, Object key = null)
+        private void SetStateInstance(StateManager instance, State state)
         {
             if (instance._state == state) return; //The state to enter is already active.
 

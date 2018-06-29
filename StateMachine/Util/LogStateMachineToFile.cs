@@ -22,7 +22,7 @@ namespace UE.StateMachine
             Logging.Log(this, "'" + gameObject.name + "' Adding Listener", Logging.Level.Verbose, loggingLevel);
 #endif
 
-            stateManager.AddStateEnterListener(OnStateEnter, key);
+            stateManager.AddStateEnterListener(OnStateEnter, Key);
         }
 
         protected virtual void OnDestroy()
@@ -32,7 +32,7 @@ namespace UE.StateMachine
                 loggingLevel);
 #endif
 
-            stateManager.RemoveStateEnterListener(OnStateEnter, key);
+            stateManager.RemoveStateEnterListener(OnStateEnter, Key);
 
             FileLogger.Close(fileName);
         }
@@ -45,17 +45,16 @@ namespace UE.StateMachine
 
             if (logPassedTime)
             {
-                FileLogger.Write(fileName, ", " + timePassed.ToString("F2", CultureInfo.InvariantCulture) + ", " + state.name + " was entered.");
-                
+                FileLogger.Write(fileName,
+                    ", " + timePassed.ToString("F2", CultureInfo.InvariantCulture) + ", " + state.name +
+                    " was entered.");
+
                 timePassed = 0;
             }
             else FileLogger.Write(fileName, state.name + " was entered.");
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return stateManager;
-        }
+        public override IInstanciable Target => stateManager;
 
         private void Update()
         {

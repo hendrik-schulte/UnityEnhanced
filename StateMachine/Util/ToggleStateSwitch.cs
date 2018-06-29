@@ -17,9 +17,9 @@ namespace UE.StateMachine
         {
             var toggle = GetComponent<Toggle>();
 
-            enabledState.stateManager.Init(key);
+            enabledState.stateManager.Init(Key);
             
-            toggle.isOn = enabledState.IsActive(key);
+            toggle.isOn = enabledState.IsActive(Key);
             
             toggle.onValueChanged.AddListener(OnToggleChanged);
         }
@@ -33,13 +33,10 @@ namespace UE.StateMachine
 
         private void OnToggleChanged(bool value)
         {
-            if(value) enabledState.Enter(key);
-            else disabledState.Enter(key);
+            if(value) enabledState.Enter(Key);
+            else disabledState.Enter(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return enabledState?.stateManager;
-        }
+        public override IInstanciable Target => enabledState?.stateManager;
     }
 }

@@ -8,12 +8,10 @@ namespace UE.Events
 
         public void Raise()
         {
-            gameEvent.Raise(key);
+            gameEvent.Raise(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return gameEvent;
-        }
+        public override IInstanciable Target => gameEvent;
     }
 }
+

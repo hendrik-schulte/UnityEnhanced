@@ -14,12 +14,9 @@ namespace UE.Interaction
         {
             base.Triggered(other);
             
-            gameEvent.Raise(key);
+            gameEvent.Raise(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return gameEvent;
-        }
+        public override IInstanciable Target => gameEvent;
     }
 }

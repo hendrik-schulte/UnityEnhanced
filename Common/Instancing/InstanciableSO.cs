@@ -23,7 +23,7 @@ namespace UE.Instancing
     /// </summary>
     /// <typeparam name="T">Derived type</typeparam>
     public abstract class InstanciableSO<T> : ScriptableObject, IInstanciable where T : InstanciableSO<T>
-    {
+    {        
         [SerializeField, HideInInspector] private bool instanced;
 
         /// <summary>
@@ -38,11 +38,6 @@ namespace UE.Instancing
 
         private int keyID = -1;
 
-        /// <summary>
-        /// This is a reference of the original instance. Is null for the original.
-        /// </summary>
-        protected T original;
-        
         /// <summary>
         /// This is to access this instance in the instances dictionary (of the main instance). 
         /// </summary>
@@ -60,7 +55,12 @@ namespace UE.Instancing
 
 #if UE_Photon
         /// <summary>
-        /// Returns the Photon Sync settings or null if this object is not syncable.
+        /// This is a reference of the original instance. Is null for the original.
+        /// </summary>
+        protected T original;
+        
+        /// <summary>
+        /// Returns the Photon Sync settings of this object.
         /// </summary>
         public abstract PhotonSync PhotonSyncSettings { get; }
 #endif
@@ -134,7 +134,9 @@ namespace UE.Instancing
             {
                 var instance = CreateInstance<T>();
                 instance.name += "_" + key.GetInstanceID();
+#if UE_Photon
                 instance.original = this as T;
+#endif
                 instances.Add(key, instance);
                 AddKey(key, instance);
                 OnInstancesChanged.Invoke(this as T);
@@ -165,7 +167,7 @@ namespace UE.Instancing
             instance.keyID = key.GetInstanceID();
 
 #if UE_Photon
-            //When using photon sync, use a photon viewID as key to guarantee matching network instances.
+//When using photon sync, use a photon viewID as key to guarantee matching network instances.
             if (PhotonSyncSettings.PUNSync)
             {
                 var photonView = KeyToPhotonView(key);
@@ -248,7 +250,7 @@ namespace UE.Instancing
 #if UNITY_EDITOR
     [CustomEditor(typeof(InstanciableSO<>), true)]
     [CanEditMultipleObjects]
-    public class InstanciableSOEditor : ReorderableArrayInspector
+    public abstract class InstanciableSOEditor : ReorderableArrayInspector
     {
         private SerializedProperty m_Script;
         private SerializedProperty instanced;

@@ -14,15 +14,15 @@ namespace UE.Interaction
 
         protected override void Triggered(Component other)
         {
-            if (stateB.IsActive(key))
+            if (stateB.IsActive(Key))
             {
                 base.Triggered(other);
-                stateA.Enter(key);
+                stateA.Enter(Key);
             }
-            else if (stateA.IsActive(key))
+            else if (stateA.IsActive(Key))
             {
                 base.Triggered(other);
-                stateB.Enter(key);
+                stateB.Enter(Key);
             }
             else
             {
@@ -32,9 +32,6 @@ namespace UE.Interaction
             }
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !stateA ? null : stateA.stateManager;
-        }
+        public override IInstanciable Target => !stateA ? null : stateA.stateManager;
     }
 }

@@ -12,12 +12,9 @@ namespace UE.Interaction
         protected override void Triggered()
         {
             base.Triggered();
-            state.Enter(key);
+            state.Enter(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !state ? null : state.stateManager;
-        }
+        public override IInstanciable Target => !state ? null : state.stateManager;
     }
 }

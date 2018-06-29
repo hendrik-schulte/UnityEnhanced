@@ -20,9 +20,9 @@ namespace UE.StateMachine
         {            
             if(!gameObject.activeInHierarchy) return;
             
-            if (!transitState.IsActive(key))
+            if (!transitState.IsActive(Key))
             {
-                transitState.Enter(key);
+                transitState.Enter(Key);
                 return;
             }
             

@@ -1,7 +1,9 @@
 ﻿#if UE_Photon
 using System;
 using UE.Common;
+using UE.Instancing;
 using UnityEngine;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -24,6 +26,29 @@ namespace UE.PUNNetworking
         public EventCaching cachingOptions;
 
         [NonSerialized] public bool MuteNetworkBroadcasting;
+
+#if UNITY_EDITOR
+        public static string WARNING_INSTANCE_KEY_WRONG = 
+            "Photon Sync is enabled for your target asset, but your Instance Key Object has no " +
+            "PhotonView attached. You need to assign a PhotonView component or a parenting GameObject!";
+
+        /// <summary>
+        /// Returns true when the given key meets the requirements for networking.
+        /// </summary>
+        /// <param name="instanciable"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool ValidNetworkingKey(IInstanciable instanciable, Object key)
+        {
+            if (!instanciable.PhotonSyncSettings.PUNSync) return true;
+
+            var keyGO = (key as GameObject)?.GetPhotonView();
+
+            if (keyGO == null) (key as Component)?.GetComponent<PhotonView>();
+
+            return keyGO != null;
+        }
+#endif
     }
 
 #if UNITY_EDITOR

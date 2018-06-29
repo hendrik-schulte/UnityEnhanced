@@ -21,7 +21,7 @@ namespace UE.Instancing
 
             foreach (var iO in instanceObservers)
             {
-                iO.SetKey(instanceKey);
+                iO.Key = instanceKey;
             }
         }
 #endif

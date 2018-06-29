@@ -40,11 +40,12 @@ namespace UE.Common
         public static void DestroyGOs(this List<GameObject> list)
         {
 //            if(list == null) Debug.LogError("ist is null");
-            
+
             foreach (var go in list)
             {
                 GameObject.Destroy(go);
             }
+
             list.Clear();
         }
 
@@ -78,9 +79,10 @@ namespace UE.Common
 
                 if (e is T)
                 {
-                    return (T)e;
+                    return (T) e;
                 }
             }
+
             return null;
         }
 
@@ -103,7 +105,7 @@ namespace UE.Common
         {
             return new Vector3(vec4.x, vec4.y, 0);
         }
-        
+
         /// <summary>
         /// Projects the given Vector2 onto the XZ-Plane thus y = 0.
         /// </summary>
@@ -205,7 +207,7 @@ namespace UE.Common
 
             try
             {
-                result = (int)Convert.ChangeType(value, typeof(int), CultureInfo.InvariantCulture.NumberFormat);
+                result = (int) Convert.ChangeType(value, typeof(int), CultureInfo.InvariantCulture.NumberFormat);
             }
             catch (FormatException)
             {
@@ -226,7 +228,7 @@ namespace UE.Common
 
             try
             {
-                result = (float)Convert.ChangeType(value, typeof(float), CultureInfo.InvariantCulture.NumberFormat);
+                result = (float) Convert.ChangeType(value, typeof(float), CultureInfo.InvariantCulture.NumberFormat);
             }
             catch (FormatException)
             {
@@ -300,10 +302,14 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToReadableString(this Matrix4x4 m, string format, string padding = " ")
         {
-            return m[0, 0].ToString(format) + padding + m[0, 1].ToString(format) + padding + m[0, 2].ToString(format) + padding + m[0, 3].ToString(format) + "\n"
-                   + m[1, 0].ToString(format) + padding + m[1, 1].ToString(format) + padding + m[1, 2].ToString(format) + padding + m[1, 3].ToString(format) + "\n"
-                   + m[2, 0].ToString(format) + padding + m[2, 1].ToString(format) + padding + m[2, 2].ToString(format) + padding + m[2, 3].ToString(format) + "\n"
-                   + m[3, 0].ToString(format) + padding + m[3, 1].ToString(format) + padding + m[3, 2].ToString(format) + padding + m[3, 3].ToString(format) + "\n";
+            return m[0, 0].ToString(format) + padding + m[0, 1].ToString(format) + padding + m[0, 2].ToString(format) +
+                   padding + m[0, 3].ToString(format) + "\n"
+                   + m[1, 0].ToString(format) + padding + m[1, 1].ToString(format) + padding +
+                   m[1, 2].ToString(format) + padding + m[1, 3].ToString(format) + "\n"
+                   + m[2, 0].ToString(format) + padding + m[2, 1].ToString(format) + padding +
+                   m[2, 2].ToString(format) + padding + m[2, 3].ToString(format) + "\n"
+                   + m[3, 0].ToString(format) + padding + m[3, 1].ToString(format) + padding +
+                   m[3, 2].ToString(format) + padding + m[3, 3].ToString(format) + "\n";
         }
 
         /// <summary>
@@ -314,36 +320,37 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToStringElements<T>(this List<T> list)
         {
-            var result = list +  ": { ";
-            
+            var result = list + ": { ";
+
             foreach (var item in list)
             {
-                result += item+ ", ";
+                result += item + ", ";
             }
 
             return result + "}";
         }
-        
+
         /// <summary>
         /// Recursively sets the layers of all children of this game object to the given layer.
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="_layer"></param>
-        public static void SetLayerRecursively(this GameObject obj, int _layer )
+        public static void SetLayerRecursively(this GameObject obj, int _layer)
         {
             if (!obj)
                 return;
- 
+
             obj.layer = _layer;
- 
-            foreach (Transform child in obj.transform )
+
+            foreach (Transform child in obj.transform)
             {
-                if (child) {
+                if (child)
+                {
                     SetLayerRecursively(child.gameObject, _layer);
                 }
             }
         }
-        
+
         /// <summary>
         /// Returns the hierachy above this transform as a string.
         /// </summary>
@@ -357,6 +364,7 @@ namespace UE.Common
                 transform = transform.parent;
                 path = transform.name + "/" + path;
             }
+
             return path;
         }
     }

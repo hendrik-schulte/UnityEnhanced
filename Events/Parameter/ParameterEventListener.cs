@@ -18,22 +18,22 @@ namespace UE.Events
 
         protected virtual void OnEnable()
         {
-            if (!persistent) GenericEvent.AddListener(this, key);
+            if (!persistent) GenericEvent.AddListener(this, Key);
         }
 
         protected virtual void OnDisable()
         {
-            if (!persistent) GenericEvent.RemoveListener(this, key);
+            if (!persistent) GenericEvent.RemoveListener(this, Key);
         }
 
         protected virtual void Awake()
         {
-            if (persistent) GenericEvent.AddListener(this, key);
+            if (persistent) GenericEvent.AddListener(this, Key);
         }
 
         protected virtual void OnDestroy()
         {
-            if (persistent) GenericEvent.RemoveListener(this, key);
+            if (persistent) GenericEvent.RemoveListener(this, Key);
         }
 
         /// <summary>
@@ -44,9 +44,6 @@ namespace UE.Events
             GenericResponse.Invoke(value);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return GenericEvent;
-        }
+        public override IInstanciable Target =>  GenericEvent;
     }
 }

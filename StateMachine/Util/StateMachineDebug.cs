@@ -14,10 +14,7 @@ namespace UE.StateMachine
         
         [SerializeField] private Color color = Color.white;
 
-        public override IInstanciable GetTarget()
-        {
-            return stateManager;
-        }
+        public override IInstanciable Target => stateManager;
 
         private void Start()
         {
@@ -38,7 +35,7 @@ namespace UE.StateMachine
         {
             if (!stateManager || !enabled || !Application.isPlaying) return;
 
-            stateManager.DrawWorldSpaceGizmo(transform.position, color, key);
+            stateManager.DrawWorldSpaceGizmo(transform.position, color, Key);
         }
     }
 }

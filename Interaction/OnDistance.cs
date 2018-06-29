@@ -117,9 +117,6 @@ namespace UE.Interaction
             OnTriggered.Invoke();
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return null;
-        }
+        public override IInstanciable Target => null;
     }
 }

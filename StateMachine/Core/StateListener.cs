@@ -25,12 +25,12 @@ namespace UE.StateMachine
 
         [SerializeField] protected UnityEvent OnActivated;
         [SerializeField] protected UnityEvent OnDeactivated;
-        
+
         /// <summary>
         /// Override this to disable the UnityEvents in the inspector.
         /// </summary>
         public virtual bool DrawUnityEventInspector => true;
-        
+
         /// <summary>
         /// Returns true if this is currently activated.
         /// </summary>
@@ -60,18 +60,18 @@ namespace UE.StateMachine
             }
 
             //check if instance key is assigned
-            if (stateManager.Instanced && key == null)
+            if (stateManager.Instanced && Key == null)
             {
                 Logging.Warning(this, "'" + transform.GetTransformHierachy() + "': The instance key is not defined!");
             }
 #endif
 
-            stateManager.Init(key);
+            stateManager.Init(Key);
 
-            stateManager.AddStateEnterListener(OnStateEnter, key);
-            stateManager.AddStateLeaveListener(OnStateLeft, key);
+            stateManager.AddStateEnterListener(OnStateEnter, Key);
+            stateManager.AddStateLeaveListener(OnStateLeft, Key);
 
-            if (IsActiveState(stateManager.GetState(key)))
+            if (IsActiveState(stateManager.GetState(Key)))
             {
 #if UNITY_EDITOR
                 Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Activated", debug);
@@ -165,19 +165,20 @@ namespace UE.StateMachine
 
             //when leaving play mode, the key object may already be destroyed
             //so we avoid using the wrong key and return.
-            if (activeStates[0].stateManager.Instanced && key == null) return;
+            if (activeStates[0].stateManager.Instanced && Key == null) return;
 
-            activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, key);
-            activeStates[0].stateManager.RemoveStateLeaveListener(OnStateLeft, key);
+            activeStates[0].stateManager.RemoveStateEnterListener(OnStateEnter, Key);
+            activeStates[0].stateManager.RemoveStateLeaveListener(OnStateLeft, Key);
         }
 
-        public override IInstanciable GetTarget()
+        public override IInstanciable Target
         {
-            if (!activeStates.Any()) return null;
+            get
+            {
+                if (!activeStates.Any()) return null;
 
-            if (activeStates[0] == null) return null;
-
-            return activeStates[0].stateManager;
+                return activeStates[0] == null ? null : activeStates[0].stateManager;
+            }
         }
 
         /// <summary>
@@ -213,7 +214,7 @@ namespace UE.StateMachine
         {
             if (!debug || !HasStates() || !Application.isPlaying) return;
 
-            activeStates[0].stateManager?.DrawWorldSpaceGizmo(transform.position, key);
+            activeStates[0].stateManager?.DrawWorldSpaceGizmo(transform.position, Key);
         }
 #endif
     }

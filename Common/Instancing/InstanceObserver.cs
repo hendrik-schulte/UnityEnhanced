@@ -2,6 +2,10 @@
 using System.Linq;
 using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
+#if UE_Photon
+using UE.PUNNetworking;
+#endif
+using UE.StateMachine;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,36 +18,38 @@ namespace UE.Instancing
     /// <summary>
     /// This class can be inherited to utilize the ScriptableObject instancing feature.
     /// By defining a key object, you access a specific instance of the referenced
-    /// InstanciableSO.
+    /// InstanciableSO. The key is used within the entire class. Is is recommended to
+    /// use the respective InstancedX wrappers (e.g. <see cref="InstancedState"/>) to
+    /// access objects instead of this class, to be more flexible.
     /// </summary>
-    public abstract class InstanceObserver : MonoBehaviour
+    public abstract class InstanceObserver : MonoBehaviour, IInstanceReference
     {
         [SerializeField, HideInInspector] private Object _key;
 
-        /// <summary>
-        /// The instance key defined in the inspector. Use this for all calls on the instanciated object.
-        /// </summary>
-        public Object key => _key;
+        public virtual Object Key
+        {
+            get { return _key; }
+            set
+            {
+#if UNITY_EDITOR
+                if (Application.isPlaying)
+                    Logging.Warning(this, "Setting instance key at runtime. This is not recommended " +
+                                          "and might cause undefined behaviour.");
+#endif
+                _key = value;
+            }
+        }
 
         /// <summary>
         /// Returns the instanciated object. It is used to display the instance key property in the inspector
         /// only when instancing is enabled for the returned object.
         /// </summary>
         /// <returns></returns>
-        public abstract IInstanciable GetTarget();
+        public abstract IInstanciable Target { get; }
 
-        /// <summary>
-        /// Sets the instance key.
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        public virtual void SetKey(Object instanceKey)
-        {
-            if (Application.isPlaying)
-                Logging.Warning(this, "Setting instance key at runtime. This is not recommended " +
-                                      "and might cause undefined behaviour.");
-
-            _key = instanceKey;
-        }
+#if UNITY_EDITOR && UE_Photon
+        public bool HasValidNetworkingKey => PhotonSync.ValidNetworkingKey(Target, Key);
+#endif
     }
 
 #if UNITY_EDITOR
@@ -56,9 +62,9 @@ namespace UE.Instancing
         protected override void InitInspector()
         {
             base.InitInspector();
-            
+
             alwaysDrawInspector = true;
-            
+
             key = serializedObject.FindProperty("_key");
         }
 
@@ -67,29 +73,28 @@ namespace UE.Instancing
             var listener = target as InstanceObserver;
             serializedObject.Update();
 
-            if (listener.GetTarget() != null)
+            if (listener.Target != null)
             {
-                if (listener.GetTarget().Instanced)
+                if (listener.Target.Instanced)
                 {
-                    if (key.objectReferenceValue == null) EditorGUILayout.HelpBox(
-                        "Your target asset has instancing enabled but you did not assign an Instance Key.", 
-                        MessageType.Error);    
-                    
+                    if (key.objectReferenceValue == null)
+                        EditorGUILayout.HelpBox(
+                            InstanceReference.WARNING_INSTANCE_KEY_EMPTY,
+                            MessageType.Error);
+
 #if UE_Photon
-                    else if (listener.GetTarget().PhotonSyncSettings.PUNSync)
+                    else if (listener.Target.PhotonSyncSettings.PUNSync)
                     {
                         var keyGO = (key.objectReferenceValue as GameObject)?.GetPhotonView();
 
                         if (keyGO == null) (key.objectReferenceValue as Component)?.GetComponent<PhotonView>();
                         
                         if (keyGO == null) EditorGUILayout.HelpBox(
-                            "Photon Sync is enabled for your target asset, but your Instance Key Object has no " +
-                            "PhotonView attached. You need to assign a PhotonView component or a parenting " +
-                            "GameObject!", 
+                            PhotonSync.WARNING_INSTANCE_KEY_WRONG, 
                             MessageType.Error);                            
                     }
 #endif
-                    
+
                     EditorGUILayout.ObjectField(
                         key, new GUIContent("Instance Key",
                             "This is the key to an instance of the ScriptableObject below. Allows to reference " +
@@ -98,11 +103,11 @@ namespace UE.Instancing
                 }
             }
 
-            DrawPropertiesExcept(new[]{"m_Script"}.Concat(ExcludeProperties()).ToArray());
+            DrawPropertiesExcept(new[] {"m_Script"}.Concat(ExcludeProperties()).ToArray());
 
             serializedObject.ApplyModifiedProperties();
         }
-        
+
         /// <summary>
         /// This can be overridden to exclude the given properties from being displayed in the inspector.
         /// </summary>

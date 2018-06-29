@@ -19,7 +19,7 @@ namespace UE.Events
             Logging.Log(this, "'" + gameObject.name + "' Adding Listener", Logging.Level.Verbose, loggingLevel);
 #endif
 
-            paramEvent.AddListener(Triggered, key);
+            paramEvent.AddListener(Triggered, Key);
         }
 
         protected virtual void OnDestroy()
@@ -28,7 +28,7 @@ namespace UE.Events
             Logging.Log(this, "'" + gameObject.name + "' Removing Listener", Logging.Level.Verbose, loggingLevel);
 #endif
 
-            paramEvent.RemoveListener(Triggered, key);
+            paramEvent.RemoveListener(Triggered, Key);
             
             FileLogger.Close(fileName);
         }
@@ -43,9 +43,6 @@ namespace UE.Events
             FileLogger.Write(fileName, paramEvent.name + " triggered with " + value + ".");
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return paramEvent;
-        }
+        public override IInstanciable Target => paramEvent;
     }
 }

@@ -32,14 +32,14 @@ namespace UE.StateMachine
             }
 
             Logging.Log(this, "'" + gameObject.name + "' Adding Listener", Logging.Level.Verbose, loggingLevel);
-            transitState.stateManager.AddStateEnterListener(OnStateEnter, key);
+            transitState.stateManager.AddStateEnterListener(OnStateEnter, Key);
         }
 
         protected virtual void OnDestroy()
         {
             Logging.Log(this, "'" + gameObject.name + "' Removing Listener", Logging.Level.Verbose, loggingLevel);
 
-            transitState.stateManager.RemoveStateEnterListener(OnStateEnter, key);
+            transitState.stateManager.RemoveStateEnterListener(OnStateEnter, Key);
         }
 
         private void OnStateEnter(State state)
@@ -66,7 +66,7 @@ namespace UE.StateMachine
 
         protected void TransitionComplete()
         {
-            if (!transitState.IsActive(key))
+            if (!transitState.IsActive(Key))
             {
                 Logging.Log(this,
                     "'" + gameObject.name + "' Transition completed but transit state is not active anymore!",
@@ -78,20 +78,17 @@ namespace UE.StateMachine
             Logging.Log(this, "'" + gameObject.name + "' Transition completed!", Logging.Level.Info, loggingLevel);
 
             OnTransitionComplete.Invoke();
-            followingState.Enter(key);
+            followingState.Enter(Key);
         }
 
         protected virtual void OnDisable()
         {
             if (EnterFollowingStateOnDisable)
             {
-                followingState.Enter(key);
+                followingState.Enter(Key);
             }
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !transitState ? null : transitState.stateManager;
-        }
+        public override IInstanciable Target => !transitState ? null : transitState.stateManager;
     }
 }

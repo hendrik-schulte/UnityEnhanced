@@ -1,7 +1,11 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using UE.Common.SubjectNerd.Utilities;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UE.Common
 {
@@ -28,7 +32,6 @@ namespace UE.Common
             return numLines * EditorGUIUtility.singleLineHeight + spacing;
         }
 
-
         /// <summary>
         /// Returns a new child rectangle that lives inside this rectangle.
         /// </summary>
@@ -43,6 +46,18 @@ namespace UE.Common
                 y = position.y + yPos,
                 height = height
             };
+        }
+        
+        public static Rect Offset(this Rect rect, int left, int right, int top, int bottom)
+        {
+            var result = new Rect(rect);
+
+            result.xMin -= left;
+            result.xMax += right;
+            result.yMin -= top;
+            result.yMax += bottom;
+
+            return result;
         }
 
         /// <summary>
@@ -62,6 +77,44 @@ namespace UE.Common
             }
 
             return position.GetSubRect(y, EditorGUIUtility.singleLineHeight);
+        }
+        
+        public static Rect GetLines(this Rect position, int line, int num)
+        {
+            var rect = position.GetLine(line);
+
+            if (num > 1)
+                rect.yMax += (num - 1) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+            
+            return rect;
+        }
+
+//        public static float GetTotalHeight(int lines)
+//        {
+//            var height = EditorGUIUtility.singleLineHeight;
+//            
+//            if (lines > 1)
+//            {
+//                height += (lines - 1) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+//            }
+//            
+//            return height;
+//        }
+        
+        /// <summary>
+        /// Returns the first occourence of the given attribute
+        /// on this property or null if there is none.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <typeparam name="T">The attribute type.</typeparam>
+        /// <returns></returns>
+        public static T GetAttribute<T>(this SerializedProperty property) where T : Attribute
+        {
+            var attributes = property.GetAttributes<T>();
+
+            if (!attributes.Any()) return null;
+            
+            return attributes[0] as T;
         }
 
         /// <summary>
@@ -97,6 +150,13 @@ namespace UE.Common
 
             return values;
         }
+
+        /// <summary>
+        /// Returns the color of the Editor.
+        /// </summary>
+        public static Color EditorBackgroundColor => EditorGUIUtility.isProSkin
+            ? new Color32(56, 56, 56, 255)
+            : new Color32(194, 194, 194, 255);
     }
 }
 #endif

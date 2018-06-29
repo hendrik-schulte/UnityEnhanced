@@ -14,12 +14,9 @@ namespace UE.StateMachine
 
         private void Start()
         {
-            state.Enter(key);
+            state.Enter(Key);
         }
 
-        public override IInstanciable GetTarget()
-        {
-            return !state ? null : state.stateManager;
-        }
+        public override IInstanciable Target => !state ? null : state.stateManager;
     }
 }

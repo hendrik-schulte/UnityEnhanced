@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Name: InstManager
   m_EditorClassIdentifier: 
   instanced: 1
-  PhotonSync:
-    PUNSync: 0
-    cachingOptions: 0
   fileLogging:
     logToFile: 0
     FileName: main.log
-  debugLog: 0
+  logToConsole: 0
   DeveloperDescription: 
   InitialState: {fileID: 11400000, guid: be952ab6d4bb26d49b9fe7c8c54ff04b, type: 2}

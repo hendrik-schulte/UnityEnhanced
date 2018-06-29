@@ -131,8 +131,9 @@ namespace UE.Events
         /// <param name="key">Key for instanced events</param>
         public void AddListener(GameEventListener listener, Object key = null)
         {
-            if (!Instance(key).eventListeners.Contains(listener))
-                Instance(key).eventListeners.Add(listener);
+            var listeners = Instance(key).eventListeners;
+            if (!listeners.Contains(listener))
+                listeners.Add(listener);
         }
 
         /// <summary>
@@ -152,8 +153,9 @@ namespace UE.Events
         /// <param name="key">Key for instanced events</param>
         public void RemoveListener(GameEventListener listener, Object key = null)
         {
-            if (Instance(key).eventListeners.Contains(listener))
-                Instance(key).eventListeners.Remove(listener);
+            var listeners = Instance(key).eventListeners;
+            if (listeners.Contains(listener))
+                listeners.Remove(listener);
         }
 
         /// <summary>
