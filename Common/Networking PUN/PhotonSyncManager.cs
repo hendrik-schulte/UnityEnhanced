@@ -43,7 +43,7 @@ namespace UE.PUNNetworking
                 return;
             }
             
-            Logging.Log(typeof(PhotonSyncManager), "Adding " + stateManager.name);
+//            Logging.Log(typeof(PhotonSyncManager), "Adding " + stateManager.name);
             syncedStateManager.Add(stateManager);
         }
 
