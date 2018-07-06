@@ -7,17 +7,20 @@ namespace UE.StateMachine
 {
     /// <inheritdoc />
     /// <summary>
-    /// This component handles nice fade-in fade-out transitions for UI windows. Requires a canvas and
+    /// This component handles nice fade-in fade-out transitions for UI windows. Requires a
     /// canvas group component for blending.
     /// </summary>
     [AddComponentMenu("Unity Enhanced/State Machine/Transition Alpha Blend", 3)]
-    [RequireComponent(typeof(CanvasGroup), typeof(Canvas))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class TransitionAlphaBlend : StateListener
     {
         [SerializeField] private FloatReference transitionDuration = new FloatReference(1f);
 
         [Tooltip("When set, this deactivates the the GameObject and not only the canvas.")] [SerializeField]
         private bool disableGameObject;
+        
+        [Tooltip("Wait for fading in until other UI has faded out.")] [SerializeField]
+        private bool delayedFadeIn;
 
         private CanvasGroup canvasGroup;
         private Canvas canvas;
@@ -39,7 +42,7 @@ namespace UE.StateMachine
         {
             StopRunning();
          
-            canvas.enabled = true;
+            if(canvas) canvas.enabled = true;
             if (disableGameObject) gameObject.SetActive(true);
             
             fadeIn = StartCoroutine(FadeIn());
@@ -47,6 +50,10 @@ namespace UE.StateMachine
 
         private IEnumerator FadeIn()
         {
+            if(canvasGroup.alpha > 0.99) yield break;
+         
+            if(delayedFadeIn) yield return new WaitForSeconds(transitionDuration);
+            
             var time = 0f;
 
             while (time < transitionDuration)
@@ -91,7 +98,7 @@ namespace UE.StateMachine
         {
             canvasGroup.alpha = 0f;
 
-            canvas.enabled = false;
+            if(canvas) canvas.enabled = false;
             if (disableGameObject) gameObject.SetActive(false);
         }
 

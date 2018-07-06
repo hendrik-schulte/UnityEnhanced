@@ -29,6 +29,10 @@ namespace UE.StateMachine
 
             if (stateManager.GetState()) GUILayout.Label("Current State: " + stateManager.GetState().name);
             else GUILayout.Label("Current State: None");
+            
+            if (stateManager.HasPreviousState() && GUILayout.Button("Back"))
+                    stateManager.Back();
+                
         }
 
         protected override void DrawInstanceListHeader()

@@ -1,8 +1,8 @@
 {
     "name": "UnityEnhanced",
-    "references": [
-        "Photon"
-    ],
+    "references": [],
+    "optionalUnityReferences": [],
     "includePlatforms": [],
-    "excludePlatforms": []
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
 }

@@ -21,7 +21,7 @@ namespace UE.StateMachine
 #if UNITY_EDITOR
         [SerializeField] protected bool debug;
 #endif
-        [SerializeField] [Reorderable] protected List<State> activeStates = new List<State>() {null};
+        [SerializeField] [Reorderable] protected List<State> activeStates = new List<State>();
 
         [SerializeField] protected UnityEvent OnActivated;
         [SerializeField] protected UnityEvent OnDeactivated;

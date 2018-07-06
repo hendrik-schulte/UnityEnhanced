@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UE.Common;
 using UE.Instancing;
@@ -102,6 +103,14 @@ namespace UE.StateMachine
         /// </summary>
         [NonSerialized] private State _state;
 
+        
+        /// <summary>
+        /// The history of the previously entered states. Used to go back to the previous state.
+        /// </summary>
+        [NonSerialized] private List<State> history;
+
+        private const int MAX_HISTORY_DEPTH = 10;
+        
         /// <summary>
         /// Enters the given state.
         /// </summary>
@@ -151,7 +160,9 @@ namespace UE.StateMachine
             instance.OnStateLeave.Invoke(instance._state, state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
-
+            
+            instance.WriteHistory();
+            
             if (Instanced)
                 FileLogger.Write(fileLogging,
                     state.name + " was entered.",
@@ -163,6 +174,21 @@ namespace UE.StateMachine
 #endif
         }
 
+        private void WriteHistory()
+        {
+            if (history == null)
+            {
+                history = new List<State>(){_state};
+                return;
+            }
+
+            if (history.Last() == _state) return;
+
+            history.Add(_state);
+
+            while(history.Count > MAX_HISTORY_DEPTH) history.RemoveAt(0);
+        }
+        
 #if UE_Photon
         /// <summary>
         /// Sends a state change message to all clients. This is called
@@ -320,6 +346,58 @@ namespace UE.StateMachine
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Returns true if there is a state to go back to.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool HasPreviousState(Object key = null)
+        {
+            var instance = Instance(key);
+            
+            return instance.history != null && instance.history.Count >= 2;
+        }
+
+        /// <summary>
+        /// Returns the previous state or null if there is none.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public State GetPreviousState(Object key = null)
+        {
+            if (!HasPreviousState(key)) return null;
+
+            var instance = Instance(key);
+            return instance.history[instance.history.Count - 2];
+        }
+
+        /// <summary>
+        /// Go back to the previously entered state.
+        /// </summary>
+        public void Back()
+        {
+            Back(null);
+        }
+        
+        /// <summary>
+        /// Go back to the previously entered state.
+        /// </summary>
+        /// <param name="key">Key for instanced StateMachine.</param>
+        public void Back(Object key)
+        {
+            var instance = Instance(key);
+
+            if (!HasPreviousState(key))
+            {
+                Logging.Warning(this, "Back was clicked but there is no state left in the history to go back to.");
+                return;
+            }
+            
+            instance.history.RemoveAt(instance.history.Count - 1);
+
+            instance.SetState(instance.history.Last());
         }
 
         /// <summary>
