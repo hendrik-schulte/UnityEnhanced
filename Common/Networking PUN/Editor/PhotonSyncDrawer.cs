@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && UE_Photon
 using UE.Common;
 using UnityEditor;
 using UnityEngine;
