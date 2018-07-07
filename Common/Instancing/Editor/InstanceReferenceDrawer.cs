@@ -1,6 +1,9 @@
 ﻿#if UNITY_EDITOR
 using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
+#if UE_Photon
+using UE.PUNNetworking;
+#endif
 using UnityEditor;
 using UnityEngine;
 
