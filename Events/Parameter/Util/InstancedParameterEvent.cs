@@ -69,11 +69,4 @@ namespace UE.Events
             paramEvent.RemoveListener(listener, Key);
         }
     }
-
-#if UNITY_EDITOR
-    public abstract class InstancedParameterEventDrawer<T, TS> : InstanceReferenceDrawer where TS : ParameterEvent<T, TS>
-    {
-        protected override string InstanciablePropertyName => "paramEvent";
-    }
-#endif
 }

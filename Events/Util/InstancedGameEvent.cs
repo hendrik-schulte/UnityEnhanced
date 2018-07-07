@@ -2,9 +2,6 @@
 using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace UE.Events
 {
@@ -15,11 +12,6 @@ namespace UE.Events
         [SerializeField] private GameEvent gameEvent;
 
         public override IInstanciable Target => gameEvent;
-
-//        public static implicit operator GameEvent(InstancedGameEvent reference)
-//        {
-//            return reference.gameEvent;
-//        }
 
         /// <summary>
         /// Raises the event.
@@ -77,12 +69,4 @@ namespace UE.Events
             gameEvent.RemoveListener(listener, Key);
         }
     }
-
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(InstancedGameEvent))]
-    public class InstancedGameEventDrawer : InstanceReferenceDrawer
-    {
-        protected override string InstanciablePropertyName => "gameEvent";
-    }
-#endif
 }

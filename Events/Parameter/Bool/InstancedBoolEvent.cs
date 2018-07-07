@@ -1,7 +1,4 @@
 ﻿using System;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace UE.Events
 {
@@ -24,11 +21,4 @@ namespace UE.Events
             paramEvent.Raise(false);
         }
     }
-    
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(InstancedBoolEvent))]
-    public class InstancedBoolEventDrawer : InstancedParameterEventDrawer<bool, BoolEvent>
-    {
-    }
-#endif
 }

@@ -2,7 +2,6 @@
 // Based on Work from Ryan Hipple, Unite 2017 - Game Architecture with Scriptable Objects
 // ----------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using UE.Instancing;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -59,22 +58,5 @@ namespace UE.Events
         }
 
         public override IInstanciable Target => Event;
-
-        
-#if UNITY_EDITOR
-        [CustomEditor(typeof(GameEventListener), true)]
-        [CanEditMultipleObjects]
-        public class GameEventListenerEditor : InstanceObserverEditor
-        {
-            protected override IEnumerable<string> ExcludeProperties()
-            {
-                if ((target as GameEventListener).DrawUnityEventInspector)
-                    return base.ExcludeProperties();
-                else
-                    return new[] {"Response"};
-            }
-        }
-
-#endif
     }
 }
