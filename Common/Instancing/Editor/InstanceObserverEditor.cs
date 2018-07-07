@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UE.Common.SubjectNerd.Utilities;
+#if UE_Photon
+using UE.PUNNetworking;
+#endif
 using UnityEditor;
 using UnityEngine;
 
