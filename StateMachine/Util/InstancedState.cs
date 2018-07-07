@@ -42,18 +42,4 @@ namespace UE.StateMachine
             return state.IsActive(Key);
         }
     }
-    
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(InstancedState))]
-    public class InstancedStateDrawer : InstanceReferenceDrawer
-    {
-        protected override string InstanciablePropertyName => "state";
-
-        protected override IInstanciable Instanciable(SerializedProperty property)
-        {
-            //Overiding this to access the statemanager rather than the state itself
-            return (GetInstanciableProperty(property).objectReferenceValue as State)?.stateManager;
-        }
-    }
-#endif
 }

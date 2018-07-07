@@ -51,7 +51,7 @@ namespace UE.StateMachine
 #if UNITY_EDITOR
 
             //check if all states are in the same state system
-            if (!StatesShareStateManager(activeStates))
+            if (!activeStates.StatesShareStateManager())
             {
                 enabled = false;
                 Logging.Warning(this,
@@ -190,25 +190,6 @@ namespace UE.StateMachine
             return activeStates.Any() && activeStates[0] != null;
         }
 
-        /// <summary>
-        /// Returns true if all given states share the same StateManager.
-        /// </summary>
-        /// <param name="states"></param>
-        /// <returns></returns>
-        internal static bool StatesShareStateManager(List<State> states)
-        {
-            if (!states.Any()) return true;
-
-            foreach (var state in states)
-            {
-                if (state == null || state.stateManager == states[0].stateManager) continue;
-
-                return false;
-            }
-
-            return true;
-        }
-
 #if UNITY_EDITOR
         protected virtual void OnDrawGizmos()
         {
@@ -218,47 +199,4 @@ namespace UE.StateMachine
         }
 #endif
     }
-
-#if UNITY_EDITOR
-    [CustomEditor(typeof(StateListener), true)]
-    [CanEditMultipleObjects]
-    public class StateListenerEditor : InstanceObserverEditor
-    {
-        private SerializedProperty activeStates;
-
-        protected override void InitInspector()
-        {
-            base.InitInspector();
-
-            activeStates = serializedObject.FindProperty("activeStates");
-        }
-
-        protected override void DrawInspector()
-        {
-            var activeStatesList = activeStates.ToList<State>();
-
-            if (!(activeStatesList.Any() && activeStatesList[0] != null))
-
-                EditorGUILayout.HelpBox("You need to define at least one active state for this listener to work.",
-                    MessageType.Error);
-
-            else if (!StateListener.StatesShareStateManager(activeStatesList))
-
-                EditorGUILayout.HelpBox("Your states do not share the same StateManager. This is not supported.",
-                    MessageType.Error);
-
-
-            base.DrawInspector();
-        }
-
-        protected override IEnumerable<string> ExcludeProperties()
-        {
-            if ((target as StateListener).DrawUnityEventInspector)
-                return base.ExcludeProperties();
-            else
-                return new[] {"OnActivated", "OnDeactivated"};
-        }
-    }
-
-#endif
 }

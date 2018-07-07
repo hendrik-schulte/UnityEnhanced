@@ -1,8 +1,5 @@
 ﻿using System;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace UE.Events
 {
@@ -10,11 +7,4 @@ namespace UE.Events
     public class InstancedGameObjectEvent : InstancedParameterEvent<GameObject, GameObjectEvent>
     {
     }
-    
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(InstancedGameObjectEvent))]
-    public class InstancedGameObjectEventDrawer : InstancedParameterEventDrawer<GameObject, GameObjectEvent>
-    {
-    }
-#endif
 }

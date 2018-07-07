@@ -174,6 +174,9 @@ namespace UE.StateMachine
 #endif
         }
 
+        /// <summary>
+        /// Writes the current state to the state history.
+        /// </summary>
         private void WriteHistory()
         {
             if (history == null)
