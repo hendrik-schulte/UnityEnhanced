@@ -42,19 +42,19 @@ namespace UE.Common
                         break;
                     default:
 //                        valueStr = "(not supported)";
-                        DrawDisabledProperty(position, prop);
+                        DrawDisabledProperty(position, prop, label);
                         return;
                 }
 
                 EditorGUI.LabelField(position, label.text, valueStr);
             }
 
-            private void DrawDisabledProperty(Rect position, SerializedProperty prop)
+            private void DrawDisabledProperty(Rect position, SerializedProperty prop, GUIContent label)
             {
                 var previous = GUI.enabled;
                 
                 GUI.enabled = false;
-                EditorGUI.PropertyField(position, prop);
+                EditorGUI.PropertyField(position, prop, label);
                 GUI.enabled = previous;
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace UE.Common
 {
@@ -84,6 +85,17 @@ namespace UE.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns a random element from this list based on UnityEngine.Random.Range(int,int).
+        /// </summary>
+        /// <param name="list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T RandomElement<T>(this List<T> list)
+        {
+            return list[Random.Range(0, list.Count)];
         }
 
         /// <summary>
