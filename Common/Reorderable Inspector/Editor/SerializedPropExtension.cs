@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace UE.Common.SubjectNerd.Utilities
@@ -71,6 +72,35 @@ namespace UE.Common.SubjectNerd.Utilities
 			SerializedProperty parent = GetParentProp(prop);
 			if (parent != null)
 				ExpandHierarchy(parent);
+		}
+
+		/// <summary>
+		/// Returns true if the property is referencing a ScriptableObject.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public static bool IsScriptableObject(this SerializedProperty property)
+		{
+			var parent = property.GetParent<object>();
+
+			var so = parent as ScriptableObject;
+
+			return so != null;
+		}
+		
+		/// <summary>
+		/// Returns true if the given property is either not refrerencing a ScriptableObject
+		/// or if the SO resides within the root of a resources folder.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public static bool IsInResourcesFolder(this SerializedProperty property)
+		{
+			if (!property.IsScriptableObject()) return true;
+			
+			var parent = property.GetParent<object>();
+			
+			return (Resources.Load<Object>((parent as ScriptableObject).name) != null);
 		}
 
 		/*public static void CopyValues(this SerializedProperty destination, SerializedProperty source)

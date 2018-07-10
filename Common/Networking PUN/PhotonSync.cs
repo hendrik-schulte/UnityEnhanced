@@ -25,10 +25,14 @@ namespace UE.PUNNetworking
         [NonSerialized] public bool MuteNetworkBroadcasting;
 
 #if UNITY_EDITOR
-        public static string WARNING_INSTANCE_KEY_WRONG = 
+        public static string WARNING_INSTANCE_KEY_NO_PHOTONVIEW => 
             "Photon Sync is enabled for your target asset, but your Instance Key Object has no " +
             "PhotonView attached. You need to assign a PhotonView component or a parenting GameObject!";
-
+        
+        public static string WARNING_ASSET_NOT_IN_RESOURCES_FOLDER => 
+            "Photon Sync is enabled for this asset, but it is not located at the root of a " +
+            "resources folder! This is required for sync to work.";
+        
         /// <summary>
         /// Returns true when the given key meets the requirements for networking.
         /// </summary>

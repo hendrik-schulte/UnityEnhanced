@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR && UE_Photon
 using UE.Common;
+using UE.Common.SubjectNerd.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,8 +21,12 @@ namespace UE.PUNNetworking
             {
                 EditorGUI.indentLevel++;
 
+                var line = 2;
+                
+                DrawResourcesWarning(position, property, ref line);
+                
                 EditorGUI.PropertyField(
-                    position.GetLine(2),
+                    position.GetLine(line),
                     property.FindPropertyRelative("cachingOptions"));
 
                 EditorGUI.indentLevel--;
@@ -36,10 +41,22 @@ namespace UE.PUNNetworking
             var lines = 1;
 
             if (property.FindPropertyRelative("PUNSync").boolValue)
+            {
                 lines++;
+
+                if (!property.IsInResourcesFolder())
+                    lines += 2;
+            }
             
-                
             return EditorUtil.PropertyHeight(lines);
+        }
+
+        private static void DrawResourcesWarning(Rect position, SerializedProperty property, ref int line)
+        {
+            if(property.IsInResourcesFolder()) return;
+
+            EditorGUI.HelpBox(position.GetLines(line, 2), PhotonSync.WARNING_ASSET_NOT_IN_RESOURCES_FOLDER, MessageType.Error);
+            line += 2;
         }
     }
 }

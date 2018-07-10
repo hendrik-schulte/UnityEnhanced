@@ -71,7 +71,7 @@ namespace UE.Instancing
             {
                 keyLine = 5;
                 EditorGUI.HelpBox(position.GetLines(2, 3),
-                    PhotonSync.WARNING_INSTANCE_KEY_WRONG,
+                    PhotonSync.WARNING_INSTANCE_KEY_NO_PHOTONVIEW,
                     MessageType.Error);
             }
 #endif

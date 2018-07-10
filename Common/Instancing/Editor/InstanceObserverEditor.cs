@@ -47,7 +47,7 @@ namespace UE.Instancing
                         if (keyGO == null) (key.objectReferenceValue as Component)?.GetComponent<PhotonView>();
                         
                         if (keyGO == null) EditorGUILayout.HelpBox(
-                            PhotonSync.WARNING_INSTANCE_KEY_WRONG, 
+                            PhotonSync.WARNING_INSTANCE_KEY_NO_PHOTONVIEW, 
                             MessageType.Error);                            
                     }
 #endif
