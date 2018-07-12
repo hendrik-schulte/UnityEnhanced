@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UE.Common;
+using UE.Variables;
 using UnityEngine;
 
 namespace UE.StateMachine
@@ -10,8 +11,8 @@ namespace UE.StateMachine
     /// </summary>
     public class TimedTransition : Transition
     {
-        [Range(0, 60)]
-        public float delay;
+        [Variables.Range(0, 60)]
+        public FloatReference delay;
         
         /// <summary>
         /// Rewinds this transitions progress.
@@ -26,8 +27,10 @@ namespace UE.StateMachine
                 return;
             }
             
-            Logging.Log(this, "'" + gameObject.name + "' Restarting transition ...", Logging.Level.Info, loggingLevel);
-
+#if UNITY_EDITOR
+            Logging.Log(this, "Restarting transition ...", Logging.Level.Info, loggingLevel);
+#endif
+            
             StartTransition(false);
         }
         

@@ -24,6 +24,7 @@ namespace UE.StateMachine
 
         protected virtual void Awake()
         {
+#if UNITY_EDITOR
             if (transitState.stateManager != followingState.stateManager)
             {
                 Logging.Log(this, "The states do not belong to the same state machine!",
@@ -31,13 +32,19 @@ namespace UE.StateMachine
                 return;
             }
 
-            Logging.Log(this, "'" + gameObject.name + "' Adding Listener", Logging.Level.Verbose, loggingLevel);
+            Logging.Log(this, "Adding Listener", Logging.Level.Verbose, loggingLevel);
+#endif
+
             transitState.stateManager.AddStateEnterListener(OnStateEnter, Key);
+            
+            transitState.stateManager.Init(Key);
         }
 
         protected virtual void OnDestroy()
         {
-            Logging.Log(this, "'" + gameObject.name + "' Removing Listener", Logging.Level.Verbose, loggingLevel);
+#if UNITY_EDITOR
+            Logging.Log(this, "Removing Listener", Logging.Level.Verbose, loggingLevel);
+#endif
 
             transitState.stateManager.RemoveStateEnterListener(OnStateEnter, Key);
         }
@@ -45,19 +52,19 @@ namespace UE.StateMachine
         private void OnStateEnter(State state)
         {
             StopAllCoroutines();
-            
+
             if (state != transitState) return;
 
-            Logging.Log(this, "'" + gameObject.name + "' Starting transition ...", Logging.Level.Info, loggingLevel);
+            Logging.Log(this, "Starting transition ...", Logging.Level.Info, loggingLevel);
 
             StartTransition(true);
         }
 
         protected void StartTransition(bool triggerEvent)
         {
-            if(!gameObject.activeInHierarchy) return;
+            if (!gameObject.activeInHierarchy || !enabled) return;
 
-            if(triggerEvent) OnTransitionStart.Invoke();
+            if (triggerEvent) OnTransitionStart.Invoke();
             StopAllCoroutines();
             StartCoroutine(TransitionStart());
         }
@@ -68,14 +75,18 @@ namespace UE.StateMachine
         {
             if (!transitState.IsActive(Key))
             {
+#if UNITY_EDITOR
                 Logging.Log(this,
-                    "'" + gameObject.name + "' Transition completed but transit state is not active anymore!",
+                    "Transition completed but transit state is not active anymore!",
                     Logging.Level.Warning, loggingLevel);
+#endif
 
                 return;
             }
 
-            Logging.Log(this, "'" + gameObject.name + "' Transition completed!", Logging.Level.Info, loggingLevel);
+#if UNITY_EDITOR
+            Logging.Log(this, "Transition completed!", Logging.Level.Info, loggingLevel);
+#endif
 
             OnTransitionComplete.Invoke();
             followingState.Enter(Key);
