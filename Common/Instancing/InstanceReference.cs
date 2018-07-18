@@ -34,6 +34,8 @@ namespace UE.Instancing
 
         public abstract IInstanciable Target { get; }
 
+        public bool IsNull => Target == null;
+
 #if UNITY_EDITOR && UE_Photon
         public bool HasValidNetworkingKey => PhotonSync.ValidNetworkingKey(Target, Key);
 #endif

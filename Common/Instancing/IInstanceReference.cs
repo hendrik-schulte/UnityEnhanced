@@ -15,8 +15,12 @@ namespace UE.Instancing
         /// </summary>
         /// <returns></returns>
         IInstanciable Target { get; }
-        
-        
+
+        /// <summary>
+        /// Returns true, if the reference is null;
+        /// </summary>
+        bool IsNull { get; }
+
 #if UNITY_EDITOR && UE_Photon
         /// <summary>
         /// Returns true if the assigned key fulfills the requirements for Photon sync.

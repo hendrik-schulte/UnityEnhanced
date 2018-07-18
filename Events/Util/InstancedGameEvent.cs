@@ -9,7 +9,7 @@ namespace UE.Events
     [Serializable]
     public class InstancedGameEvent : InstanceReference
     {
-        [SerializeField] private GameEvent gameEvent;
+        public GameEvent gameEvent;
 
         public override IInstanciable Target => gameEvent;
 

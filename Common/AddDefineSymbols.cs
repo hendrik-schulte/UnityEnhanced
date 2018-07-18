@@ -1,9 +1,11 @@
 ﻿//This is adapted from https://github.com/UnityCommunity/UnityLibrary/blob/master/Assets/Scripts/Editor/AddDefineSymbols.cs
 
 #if UNITY_EDITOR
+using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace UE.Common
@@ -11,25 +13,16 @@ namespace UE.Common
 
     /// <summary>
     /// Adds the given define symbols to PlayerSettings define symbols.
-    /// Just add your own define symbols to the Symbols property at the below.
     /// </summary>
-    [InitializeOnLoad]
     public class AddDefineSymbols : Editor
     {
-//        /// <summary>
-//        /// Symbols that will be added to the editor
-//        /// </summary>
-//        public static readonly string [] Symbols = new string[] {
-//            "MYCOMPANY",
-//            "MYCOMPANY_MYPACKAGE"
-//        };
-
         public static readonly string Photon = "UE_Photon";
         
         /// <summary>
         /// Add define symbols as soon as Unity gets done compiling.
         /// </summary>
-        static AddDefineSymbols ()
+        [DidReloadScripts]
+        private static void CheckDependencies ()
         {
 //            Logging.Log("AddDefineSymbols", "[Unity Enhanced] Adding Define Symbols.");
             
@@ -42,7 +35,10 @@ namespace UE.Common
                 allDefines.Remove(Photon);
             }
             
-            if(IsPhotonAvailable()) allDefines.Add(Photon);
+//            if(IsPhotonAvailable()) allDefines.Add(Photon);
+            if(TypeExists("PhotonNetwork")) allDefines.Add(Photon);
+            
+//            Logging.Log(typeof(AddDefineSymbols), "photon available: " + TypeExists("PhotonNetwork"));
             
 //            allDefines.AddRange ( Symbols.Except ( allDefines ) );
             
@@ -54,6 +50,21 @@ namespace UE.Common
         private static bool IsPhotonAvailable() {
             var path = Application.dataPath + "/Plugins/Photon3Unity3D.dll";
             return File.Exists(path);
+        }
+        
+        /// <summary>
+        /// Checks for existance of the given type.
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        public static bool TypeExists(string typeName)
+        {
+            var foundType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                from type in assembly.GetTypes()
+                where type.Name == typeName
+                select type).FirstOrDefault();
+
+            return foundType != null;
         }
     }
 }

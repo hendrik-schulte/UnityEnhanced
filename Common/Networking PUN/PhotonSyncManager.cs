@@ -27,6 +27,7 @@ namespace UE.PUNNetworking
         private const byte EventRaiseUEIntEvent = 107;
         private const byte EventRaiseUEVector2Event = 108;
         private const byte EventRaiseUEVector3Event = 109;
+        private const byte EventRaiseUEQuaternionEvent = 110;
 
         #region StateMachineCache
 
@@ -206,7 +207,10 @@ namespace UE.PUNNetworking
                 return EventRaiseUEVector2Event;
 
             if (type == typeof(Vector3))
-                return EventRaiseUEVector3Event;
+                return EventRaiseUEVector3Event;            
+            
+            if (type == typeof(Quaternion))
+                return EventRaiseUEQuaternionEvent;
 
             Logging.Error("Phyton Sync", "Trying to send a parameter event that cannot be serialized.");
             return 0;
@@ -272,6 +276,12 @@ namespace UE.PUNNetworking
 
                     RemoteParameterEvent<Vector3, Vector3Event>(
                         contentAr[0] as string, ParseID(contentAr), (Vector3) contentAr[2]);
+                    break;
+                
+                case EventRaiseUEQuaternionEvent:
+
+                    RemoteParameterEvent<Quaternion, QuaternionEvent>(
+                        contentAr[0] as string, ParseID(contentAr), (Quaternion) contentAr[2]);
                     break;
             }
         }
