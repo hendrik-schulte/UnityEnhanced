@@ -18,6 +18,14 @@ namespace UE.StateMachine
         public override IInstanciable Target => state?.stateManager;
 
         /// <summary>
+        /// Enters the initial state of this state machine if no other state has been set.
+        /// </summary>
+        public void Init()
+        {
+            state.stateManager.Init(Key);
+        }
+        
+        /// <summary>
         /// Enters this state.
         /// </summary>
         public void Enter()
