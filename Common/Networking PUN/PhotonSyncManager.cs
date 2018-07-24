@@ -33,6 +33,10 @@ namespace UE.PUNNetworking
 
         private static List<StateManager> syncedStateManager;
 
+        /// <summary>
+        /// Registeres the given StateMachine so that it is synced towards new players.
+        /// </summary>
+        /// <param name="stateManager"></param>
         public static void RegisterStateManager(StateManager stateManager)
         {
             if (syncedStateManager == null)
@@ -48,6 +52,11 @@ namespace UE.PUNNetworking
             syncedStateManager.Add(stateManager);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// When a new player connects, send him the current state.
+        /// </summary>
+        /// <param name="newPlayer"></param>
         public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
         {
             if (!PhotonNetwork.isMasterClient) return;
