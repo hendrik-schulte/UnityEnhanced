@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace UE.StateMachine
 {
@@ -22,6 +23,27 @@ namespace UE.StateMachine
             }
 
             return true;
+        }
+        
+        /// <summary>
+        /// Returns true if at least one state of the given collection is currently active.
+        /// </summary>
+        /// <param name="states"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool ContainsActiveState(this IEnumerable<State> states, Object key)
+        {
+            return states.Any(state => state.IsActive(key));
+        }
+        
+        /// <summary>
+        /// Returns true if at least one state of the given collection is currently active.
+        /// </summary>
+        /// <param name="states"></param>
+        /// <returns></returns>
+        public static bool ContainsActiveState(this IEnumerable<State> states)
+        {
+            return states.Any(state => state.IsActive());
         }
     }
 }

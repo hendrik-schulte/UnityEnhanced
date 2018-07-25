@@ -2,56 +2,70 @@
 
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace UE.Common
 {
-
     /// <summary>
     /// Adds the given define symbols to PlayerSettings define symbols.
     /// </summary>
     public class AddDefineSymbols : Editor
     {
-        public static readonly string Photon = "UE_Photon";
-        
+        private static string Photon => "UE_Photon";
+        private static string SharpConfig => "UE_SharpConfig";
+
         /// <summary>
         /// Add define symbols as soon as Unity gets done compiling.
         /// </summary>
         [DidReloadScripts]
-        private static void CheckDependencies ()
+        private static void CheckDependencies()
         {
-//            Logging.Log("AddDefineSymbols", "[Unity Enhanced] Adding Define Symbols.");
-            
-            var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup ( EditorUserBuildSettings.selectedBuildTargetGroup );
-            var allDefines = definesString.Split ( ';' ).ToList ();
+            var definesString =
+                PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            var allDefines = definesString.Split(';').ToList();
 
-            if (allDefines.Contains(Photon))
-            {
-//                Debug.Log("Rmeoving photon directive.");
-                allDefines.Remove(Photon);
-            }
+            ManageDefine(ref allDefines, Photon, TypeExists("PhotonNetwork"));
+            ManageDefine(ref allDefines, SharpConfig, NamespaceExists("SharpConfig"));
             
-//            if(IsPhotonAvailable()) allDefines.Add(Photon);
-            if(TypeExists("PhotonNetwork")) allDefines.Add(Photon);
-            
-//            Logging.Log(typeof(AddDefineSymbols), "photon available: " + TypeExists("PhotonNetwork"));
-            
-//            allDefines.AddRange ( Symbols.Except ( allDefines ) );
-            
-            PlayerSettings.SetScriptingDefineSymbolsForGroup (
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
                 EditorUserBuildSettings.selectedBuildTargetGroup,
-                string.Join ( ";", allDefines.ToArray () ) );
+                string.Join(";", allDefines.ToArray()));
         }
 
-        private static bool IsPhotonAvailable() {
+        private static void Check(string ns)
+        {
+            Logging.Log(typeof(AddDefineSymbols), "Checking for '" + ns + "' " + NamespaceExists(ns));
+        }
+
+        /// <summary>
+        /// Adds or removes the given define symbol.
+        /// </summary>
+        /// <param name="allDefines"></param>
+        /// <param name="defineName"></param>
+        /// <param name="exists"></param>
+        private static void ManageDefine(ref List<string> allDefines, string defineName, bool exists)
+        {
+            var alreadyDefined = allDefines.Contains(defineName);
+
+            if (exists && !alreadyDefined)
+                allDefines.Add(defineName);
+                    
+            if (!exists && alreadyDefined)
+                allDefines.Remove(defineName);
+        }
+
+        private static bool IsPhotonAvailable()
+        {
             var path = Application.dataPath + "/Plugins/Photon3Unity3D.dll";
             return File.Exists(path);
         }
-        
+
         /// <summary>
         /// Checks for existance of the given type.
         /// </summary>
@@ -65,6 +79,19 @@ namespace UE.Common
                 select type).FirstOrDefault();
 
             return foundType != null;
+        }
+        
+        /// <summary>
+        /// Checks for existance of the given namespace.
+        /// </summary>
+        /// <param name="namespaceName"></param>
+        /// <returns></returns>
+        public static bool NamespaceExists(string namespaceName)
+        {
+            return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                from type in assembly.GetTypes()
+                where type.Namespace == namespaceName
+                select type).Any();
         }
     }
 }

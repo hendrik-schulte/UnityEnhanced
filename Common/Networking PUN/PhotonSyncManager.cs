@@ -66,7 +66,6 @@ namespace UE.PUNNetworking
             foreach (var sm in syncedStateManager)
             {
                 sm.PropagateStatePhoton();
-//                SendEvent(sm.PhotonSyncSettings, EventStateChange, sm.GetState(), sm.KeyID);
             }
         }
 
