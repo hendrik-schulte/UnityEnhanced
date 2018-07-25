@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UE.Common;
 using UE.Common.SubjectNerd.Utilities;
 using UnityEngine;
 
@@ -99,7 +100,9 @@ namespace UE.StateMachine
         /// <param name="position"></param>
         public void DrawWorldSpaceGizmo(Vector3 position, Color? color = null)
         {
+#if UNITY_EDITOR
             Gizmo.DrawWorldSpaceString("Current: " + name, position, color);
+#endif
         }
     }
 }

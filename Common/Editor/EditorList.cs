@@ -1,5 +1,6 @@
 ﻿//This is taken from https://catlikecoding.com/unity/tutorials/editor/custom-list/
 
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using System;
@@ -130,3 +131,4 @@ namespace UE.Common
         }
     }
 }
+#endif

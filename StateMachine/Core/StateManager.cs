@@ -102,14 +102,14 @@ namespace UE.StateMachine
         /// </summary>
         [NonSerialized] private State _state;
 
-        
+
         /// <summary>
         /// The history of the previously entered states. Used to go back to the previous state.
         /// </summary>
         [NonSerialized] private List<State> history;
 
         private const int MAX_HISTORY_DEPTH = 10;
-        
+
         /// <summary>
         /// Enters the given state.
         /// </summary>
@@ -159,9 +159,9 @@ namespace UE.StateMachine
             instance.OnStateLeave.Invoke(instance._state, state);
             instance._state = state;
             instance.OnStateEnter.Invoke(state);
-            
+
             instance.WriteHistory();
-            
+
             if (Instanced)
                 FileLogger.Write(fileLogging,
                     state.name + " was entered.",
@@ -180,7 +180,7 @@ namespace UE.StateMachine
         {
             if (history == null)
             {
-                history = new List<State>(){_state};
+                history = new List<State>() {_state};
                 return;
             }
 
@@ -188,9 +188,9 @@ namespace UE.StateMachine
 
             history.Add(_state);
 
-            while(history.Count > MAX_HISTORY_DEPTH) history.RemoveAt(0);
+            while (history.Count > MAX_HISTORY_DEPTH) history.RemoveAt(0);
         }
-        
+
 #if UE_Photon
         /// <summary>
         /// Sends a state change message to all clients. This is called
@@ -358,7 +358,7 @@ namespace UE.StateMachine
         public bool HasPreviousState(Object key = null)
         {
             var instance = Instance(key);
-            
+
             return instance.history != null && instance.history.Count >= 2;
         }
 
@@ -382,7 +382,7 @@ namespace UE.StateMachine
         {
             Back(null);
         }
-        
+
         /// <summary>
         /// Go back to the previously entered state.
         /// </summary>
@@ -396,7 +396,7 @@ namespace UE.StateMachine
                 Logging.Warning(this, "Back was clicked but there is no state left in the history to go back to.");
                 return;
             }
-            
+
             instance.history.RemoveAt(instance.history.Count - 1);
 
             instance.SetState(instance.history.Last());
@@ -429,6 +429,7 @@ namespace UE.StateMachine
         /// <param name="key">Key for instanced StateMachine.</param>
         public void DrawWorldSpaceGizmo(Vector3 position, Color? color = null, Object key = null)
         {
+#if UNITY_EDITOR
             var state = GetState(key);
 
             if (!Application.isPlaying)
@@ -443,6 +444,7 @@ namespace UE.StateMachine
 
             if (!state) Gizmo.DrawWorldSpaceString("Current: Null", position, color);
             else state.DrawWorldSpaceGizmo(position, color);
+#endif
         }
     }
 }
