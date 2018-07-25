@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UE.Common;
 using UE.Instancing;
-using UE.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
