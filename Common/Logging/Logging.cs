@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UE.Common
 {
@@ -8,6 +10,11 @@ namespace UE.Common
     /// </summary>
     public static class Logging
     {
+        public static void Log(Type sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.Log(TypeIdentifier(sender) + msg);
+        }
+        
         public static void Log(object sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.Log(TypeIdentifier(sender) + msg);
@@ -21,6 +28,11 @@ namespace UE.Common
         public static void Log(string sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.Log(Brackets(sender) + msg);
+        }
+        
+        public static void Warning(Type sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + msg);
         }
 
         public static void Warning(object sender, string msg, bool debugLog = true)
@@ -37,6 +49,11 @@ namespace UE.Common
         {
             if (debugLog) Debug.LogWarning(Brackets(sender) + msg);
         }
+        
+        public static void Error(Type sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogError(TypeIdentifier(sender) + msg);
+        }
 
         public static void Error(object sender, string msg, bool debugLog = true)
         {
@@ -51,6 +68,23 @@ namespace UE.Common
         public static void Error(string sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.LogError(Brackets(sender) + msg);
+        }
+        
+        /// <summary>
+        /// Formats and logs the given message to the console using the sender as an identifier.
+        /// When the messegeLevel is equal or higher than the levelSetting.
+        /// </summary>
+        /// <param name="sender">reference to the sender type</param>
+        /// <param name="msg">the message</param>
+        /// <param name="messageLevel">LogLevel of this message.</param>
+        /// <param name="levelSetting">LogLevel of this script</param>
+        public static void Log(Type sender, string msg, Level messageLevel, Level levelSetting)
+        {
+            if (messageLevel < levelSetting) return;
+
+            var message = TypeIdentifier(sender) + msg;
+
+            Out(message, messageLevel);
         }
 
         /// <summary>
@@ -151,6 +185,11 @@ namespace UE.Common
         
         #region Formating
 
+        private static string TypeIdentifier(Type sender)
+        {
+            return Brackets(sender.Name);
+        }
+        
         private static string TypeIdentifier(object sender)
         {
             return Brackets(sender.GetType().Name);
