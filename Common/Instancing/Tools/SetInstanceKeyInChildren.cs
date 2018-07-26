@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using UE.Common.SubjectNerd.Utilities;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -11,37 +12,19 @@ namespace UE.Instancing
     public class SetInstanceKeyInChildren : MonoBehaviour
     {
         public Object instanceKey;
-        
-#if UNITY_EDITOR
+
+        [ContextMenu("Apply")]
         public void Apply()
         {
-            var instanceObservers = GetComponentsInChildren<InstanceObserver>(true);
-
-            Undo.RecordObjects(instanceObservers, "Batch-Applying Instance Key for InstanceObservers in hierachy.");
-
-            foreach (var iO in instanceObservers)
-            {
-                iO.Key = instanceKey;
-            }
+            InstancingTools.ApplyToHierachy(gameObject, instanceKey);
         }
-#endif
     }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(SetInstanceKeyInChildren), true)]
-    public class SetInstanceInChidrenEditor : Editor
+    [CanEditMultipleObjects]
+    public class SetInstanceInChidrenEditor : ReorderableArrayInspector
     {
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-
-            var setInstanceKeyInChildren = target as SetInstanceKeyInChildren;
-
-            if (GUILayout.Button("Apply"))
-            {
-                setInstanceKeyInChildren.Apply();
-            }
-        }
     }
 #endif
 }

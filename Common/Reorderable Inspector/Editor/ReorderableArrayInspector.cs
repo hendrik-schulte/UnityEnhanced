@@ -38,7 +38,7 @@ using Object = UnityEngine.Object;
 
 namespace UE.Common.SubjectNerd.Utilities
 {
-	[CustomEditor(typeof(Object), true, isFallback = true)]
+//	[CustomEditor(typeof(Object), true, isFallback = true)]
 	[CanEditMultipleObjects]
 	public class ReorderableArrayInspector : Editor
 	{

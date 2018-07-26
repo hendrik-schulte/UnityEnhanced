@@ -38,6 +38,8 @@ namespace UE.StateMachine
 
         protected virtual void Start()
         {
+#if UNITY_EDITOR //Removing these checks from build to reduce performace overhead.
+            
             //check if there are any states defined
             if (!HasStates())
             {
@@ -45,11 +47,12 @@ namespace UE.StateMachine
                 Logging.Warning(this, "There are no active states defined!");
                 return;
             }
+#endif
 
             var stateManager = activeStates[0].stateManager;
 
 #if UNITY_EDITOR
-
+            
             //check if all states are in the same state system
             if (!activeStates.StatesShareStateManager())
             {

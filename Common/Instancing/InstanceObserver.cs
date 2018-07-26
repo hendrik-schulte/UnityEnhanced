@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace UE.Instancing
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="IInstanceReference" />
     /// <summary>
     /// This class can be inherited to utilize the ScriptableObject instancing feature.
     /// By defining a key object, you access a specific instance of the referenced
     /// InstanciableSO. The key is used within the entire class. Is is recommended to
-    /// use the respective InstancedX wrappers (e.g. <see cref="InstancedState"/>) to
+    /// use the respective InstancedX wrappers (e.g. <see cref="T:UE.StateMachine.InstancedState" />) to
     /// access objects instead of this class, to be more flexible.
     /// </summary>
     public abstract class InstanceObserver : MonoBehaviour, IInstanceReference
@@ -24,8 +24,8 @@ namespace UE.Instancing
             get { return _key; }
             set
             {
-#if UNITY_EDITOR
-                if (Application.isPlaying)
+#if UNITY_EDITOR //Remove checks in build
+                if (Application.isPlaying && gameObject.activeInHierarchy && enabled)
                     Logging.Warning(this, "Setting instance key at runtime. This is not recommended " +
                                           "and might cause undefined behaviour.");
 #endif
@@ -33,6 +33,7 @@ namespace UE.Instancing
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Returns the instanciated object. It is used to display the instance key property in the inspector
         /// only when instancing is enabled for the returned object.

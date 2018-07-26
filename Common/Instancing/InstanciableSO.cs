@@ -48,12 +48,14 @@ namespace UE.Instancing
         /// </summary>
         public int InstanceCount => instances?.Count ?? 0;
 
+        public string Name => name;
+        
 #if UE_Photon
         /// <summary>
         /// This is a reference of the original instance. Is null for the original.
         /// </summary>
         protected T original;
-        
+
         /// <summary>
         /// Returns the Photon Sync settings of this object.
         /// </summary>
@@ -231,6 +233,11 @@ namespace UE.Instancing
         /// Returns a collection of instance keys.
         /// </summary>
         Object[] Keys { get; }
+        
+        /// <summary>
+        /// Returns the name of the ScriptableObject.
+        /// </summary>
+        string Name { get; }
 
 #if UE_Photon
         /// <summary>
