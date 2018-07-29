@@ -6,6 +6,7 @@ using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
+
 #if UE_Photon
 using UE.PUNNetworking;
 
@@ -22,9 +23,9 @@ namespace UE.StateMachine
     public class StateManager : InstanciableSO<StateManager>
     {
 #if UE_Photon
-        /// <summary>
-        /// Settings for photon sync.
-        /// </summary>
+/// <summary>
+/// Settings for photon sync.
+/// </summary>
         [SerializeField] private PhotonSync PhotonSync;
 
         public override PhotonSync PhotonSyncSettings => PhotonSync;
@@ -90,11 +91,16 @@ namespace UE.StateMachine
 
         private void Awake()
         {
+            //Take care of the asset not being unloaded within scene changes.
+            hideFlags = HideFlags.DontUnloadUnusedAsset;
+
+#if UNITY_EDITOR
             //When copying a state manager, check for initial state not 
             //to reference a state of the original state machine.
             if (InitialState == null || InitialState.stateManager == this) return;
 
             InitialState = null;
+#endif
         }
 
         /// <summary>
@@ -192,10 +198,10 @@ namespace UE.StateMachine
         }
 
 #if UE_Photon
-        /// <summary>
-        /// Sends a state change message to all clients. This is called
-        /// when a new client joins so it has all states synchronized.
-        /// </summary>
+/// <summary>
+/// Sends a state change message to all clients. This is called
+/// when a new client joins so it has all states synchronized.
+/// </summary>
         public void PropagateStatePhoton()
         {
             foreach (var instance in GetInstances())
@@ -293,7 +299,7 @@ namespace UE.StateMachine
 #endif
 
 #if UE_Photon
-            //Register main instance to sync manager to automatically propagate state changes to new players.
+//Register main instance to sync manager to automatically propagate state changes to new players.
             if (PhotonSync.PUNSync)
                 if (Instanced && original)
                     PhotonSyncManager.RegisterStateManager(original);
