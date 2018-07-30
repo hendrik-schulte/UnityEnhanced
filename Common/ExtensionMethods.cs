@@ -379,5 +379,16 @@ namespace UE.Common
 
             return path;
         }
+
+        /// <summary>
+        /// Returns true if the layer is contained in this layermask.
+        /// </summary>
+        /// <param name="layerMask"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public static bool Contains(this LayerMask layerMask, int layer)
+        {
+            return layerMask == (layerMask | (1 << layer));
+        }
     }
 }

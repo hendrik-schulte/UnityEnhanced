@@ -11,9 +11,9 @@ namespace UE.Interaction
     [RequireComponent(typeof(Collider))]
     public class OnTrigger : InstanceObserver
     {
-        [SerializeField] private TriggerStateEvent Mode;
+        [SerializeField] protected TriggerStateEvent Mode;
 
-        private enum TriggerStateEvent
+        protected enum TriggerStateEvent
         {
             OnTriggerEnter,
             OnTriggerExit,
@@ -37,11 +37,14 @@ namespace UE.Interaction
 
 #pragma warning disable 0108
         [Tooltip("The event only triggers when this is the other collider or null.")] [SerializeField]
-        private Collider collider;
+        protected Collider collider;
 #pragma warning restore 0108
         
         [Tooltip("The event only triggers when the colliding GameObject has the given name.")] [SerializeField]
-        private string colliderNameContains;
+        protected string colliderNameContains;
+        
+        [SerializeField]
+        private LayerMask colliderOnLayer = ~0;
 
         [Tooltip("Disable this trigger for given seconds after it was triggered.")] [SerializeField] [Range(0, 5)]
         private float cooldown;
@@ -89,7 +92,10 @@ namespace UE.Interaction
         {
             Logging.Log(this, "Entered by " + other.gameObject.name, Logging.Level.Verbose, loggingLevel);
 
-            if (!enabled || !gameObject.activeInHierarchy || coolingDown) return;
+            if (!enabled 
+                || !gameObject.activeInHierarchy 
+                || coolingDown 
+                || !colliderOnLayer.Contains(other.gameObject.layer)) return;
 
             if (!MeetsStateRestriction()) return;
 
