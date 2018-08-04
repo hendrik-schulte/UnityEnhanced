@@ -6,8 +6,11 @@ This package allows abstraction of Events to global asset files to reduce depend
 - bool
 - int
 - float
+- Transform
 - GameObject
+- Vector2
 - Vector3
+- Quaternion
 
 It is easily extendable to new types.
 
