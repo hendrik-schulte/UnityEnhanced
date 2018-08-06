@@ -43,12 +43,8 @@ namespace UE.PUNNetworking
                 syncedStateManager = new List<StateManager>();
 
             if (syncedStateManager.Contains(stateManager))
-            {
-//                Logging.Warning(typeof(PhotonSyncManager), "The state manager registered does already exist.");
                 return;
-            }
             
-//            Logging.Log(typeof(PhotonSyncManager), "Adding " + stateManager.name);
             syncedStateManager.Add(stateManager);
         }
 
@@ -61,7 +57,13 @@ namespace UE.PUNNetworking
         {
             if (!PhotonNetwork.isMasterClient) return;
 
-            if(syncedStateManager == null) return;
+            if (syncedStateManager == null)
+            {
+                if(debugLog) Logging.Warning(this, "syncedStateManager is null.");
+                return;
+            }
+
+            if(debugLog) Logging.Log(this, "Master Client: Propagating current states to new players.");
             
             foreach (var sm in syncedStateManager)
             {
@@ -120,7 +122,7 @@ namespace UE.PUNNetworking
         public static void SendEvent(PhotonSync settings, byte eventCode, string name, int keyID)
         {
             if (!settings.PUNSync || !PhotonNetwork.inRoom || settings.MuteNetworkBroadcasting) return;
-
+           
             var raiseEventOptions = new RaiseEventOptions()
             {
                 CachingOption = settings.cachingOptions,
@@ -350,11 +352,15 @@ namespace UE.PUNNetworking
         /// <param name="key"></param>
         private void RemoteEnterState(string stateName, int key)
         {
-            Logging.Log(this, stateName + " instanced Enter event received!", debugLog);
+            Logging.Log(this, stateName + " instanced state enter event received! key: " + key, debugLog);
 
             bool success;
             var state = CachedResources.Load<State>(stateName, out success);
-            if (!success) return;
+            if (!success)
+            {
+                Logging.Error(this, stateName + " could not be found in a resources folder!");
+                return;
+            }
 
             state.stateManager.MuteNetworkBroadcasting = true;
             if (key == -1) state.Enter(); //non-instanced

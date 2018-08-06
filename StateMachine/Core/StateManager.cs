@@ -186,7 +186,7 @@ namespace UE.StateMachine
         {
             if (history == null)
             {
-                history = new List<State>() {_state};
+                history = new List<State>{_state};
                 return;
             }
 
@@ -198,21 +198,27 @@ namespace UE.StateMachine
         }
 
 #if UE_Photon
-/// <summary>
-/// Sends a state change message to all clients. This is called
-/// when a new client joins so it has all states synchronized.
-/// </summary>
+        /// <summary>
+        /// Sends a state change message to all clients. This is called
+        /// when a new client joins so it has all states synchronized.
+        /// </summary>
         public void PropagateStatePhoton()
         {
-            foreach (var instance in GetInstances())
-            {
-                var state = instance._state;
+            if (Instanced)
+                foreach (var instance in GetInstances())
+                    instance.PropagateStatePhotonInstance();
 
-                if (!state) return;
-
-                PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange,
-                    instance._state.name, instance.KeyID);
-            }
+            else if (_state != null)
+                PhotonSyncManager.SendEvent(PhotonSync, PhotonSyncManager.EventStateChange, _state.name, KeyID);
+        }
+        
+        /// <summary>
+        /// Propagates the current state of this instance towards all other clients.
+        /// </summary>
+        private void PropagateStatePhotonInstance()
+        {
+            if (_state != null)
+                PhotonSyncManager.SendEvent(original.PhotonSync, PhotonSyncManager.EventStateChange, _state.name, KeyID);
         }
 #endif
 
