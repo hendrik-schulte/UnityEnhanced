@@ -293,6 +293,29 @@ namespace UE.Common.SubjectNerd.Utilities
 				return styleEditBox;
 			}
 		}
+		
+		private GUIStyle styleBtnCreate;
+
+		private GUIStyle StyleBtnCreate
+		{
+			get
+			{
+				if (styleBtnCreate == null)
+				{
+					styleBtnCreate = new GUIStyle(EditorStyles.miniButton);
+					
+					var margin = styleBtnCreate.margin;
+
+//					margin.top += 2;
+					
+					styleBtnCreate.margin = margin;
+				}
+
+				return styleBtnCreate;
+			}
+		}
+		
+
 
 		private readonly List<SortableListData> listIndex = new List<SortableListData>();
 		private readonly Dictionary<string, Editor> editableIndex = new Dictionary<string, Editor>();
@@ -732,7 +755,7 @@ namespace UE.Common.SubjectNerd.Utilities
 						using (new EditorGUILayout.VerticalScope(uiWidth50))
 						{
 							if (hasSpace) GUILayout.Space(10);
-							doCreate = GUILayout.Button(labelBtnCreate, EditorStyles.miniButton);
+							doCreate = GUILayout.Button(labelBtnCreate, StyleBtnCreate);
 						}
 					}
 

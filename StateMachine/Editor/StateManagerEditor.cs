@@ -18,6 +18,10 @@ namespace UE.StateMachine
 
             var stateManager = target as StateManager;
 
+            if (stateManager.InitialState && stateManager.InitialState.stateManager != stateManager)
+            {
+                EditorGUILayout.HelpBox("The initial state does not belong to this State Manager!", MessageType.Error);
+            }
             
             if (stateManager.InitialState && GUILayout.Button("Set No Initial State"))
             {
