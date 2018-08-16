@@ -19,7 +19,7 @@ namespace UE.Events
     /// A global event that can be observed by a <see cref="T:UE.Events.GameEventListener"/>.
     /// It is created as an asset file and can be raised from anywhere in you project.
     /// </summary>
-    [CreateAssetMenu(menuName = "Events/Event()")]
+    [CreateAssetMenu(menuName = "Events/Event()", order = -1)]
     public class GameEvent : InstanciableSO<GameEvent>
     {
 #if UE_Photon

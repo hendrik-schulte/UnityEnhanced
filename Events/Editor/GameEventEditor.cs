@@ -9,9 +9,9 @@ namespace UE.Events
     [CanEditMultipleObjects]
     public class GameEventEditor : InstanciableSOEditor
     {
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
-            base.OnInspectorGUI();
+            base.DrawInspector();
 
             var gameEvent = target as GameEvent;
 

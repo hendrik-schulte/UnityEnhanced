@@ -19,7 +19,7 @@ namespace UE.StateMachine
     /// The StateManager is the core of every state machine. It manages which <see cref="State"/> is
     /// currently active in this system. Can be observed by <see cref="StateListener"/>s.
     /// </summary>
-    [CreateAssetMenu(menuName = "State Machine/State Manager")]
+    [CreateAssetMenu(menuName = "State Machine/State Manager", order = -1)]
     public class StateManager : InstanciableSO<StateManager>
     {
 #if UE_Photon

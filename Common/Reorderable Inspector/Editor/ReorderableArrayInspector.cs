@@ -649,7 +649,7 @@ namespace UE.Common.SubjectNerd.Utilities
 			DrawPropertiesAll();
 		}
 
-		public override void OnInspectorGUI()
+		public sealed override void OnInspectorGUI()
 		{
 			if (InspectorGUIStart(alwaysDrawInspector) == false)
 				return;

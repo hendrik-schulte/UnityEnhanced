@@ -19,12 +19,4 @@ namespace UE.Instancing
             InstancingTools.ApplyToHierachy(gameObject, instanceKey);
         }
     }
-
-#if UNITY_EDITOR
-    [CustomEditor(typeof(SetInstanceKeyInChildren), true)]
-    [CanEditMultipleObjects]
-    public class SetInstanceInChidrenEditor : ReorderableArrayInspector
-    {
-    }
-#endif
 }

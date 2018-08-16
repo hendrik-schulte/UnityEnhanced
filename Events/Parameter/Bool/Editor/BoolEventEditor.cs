@@ -9,9 +9,9 @@ namespace UE.Events
     [CanEditMultipleObjects]
     public class BoolEventEditor : ParameterEventEditor<bool, BoolEvent>
     {
-        public override void OnInspectorGUI()
+        protected override void DrawInspector()
         {
-            base.OnInspectorGUI();
+            base.DrawInspector();
 
             var boolEvent = target as BoolEvent;
 
