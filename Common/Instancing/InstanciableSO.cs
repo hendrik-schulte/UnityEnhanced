@@ -11,8 +11,8 @@ using UE.PUNNetworking;
 namespace UE.Instancing
 {
     /// <summary>
-    /// This class enables Instancing for ScriptableObjects.  This needs to be inherited.
-    /// After that, all instanced properties must be accesses via Instance(key). The key
+    /// This class enables Instancing for ScriptableObjects. This needs to be inherited.
+    /// After that, all instanced properties must be accessed via Instance(key). The key
     /// is used for a lookup in a dictionary. It is defined in an InstanceObserver to keep
     /// track of the different instaces of this SO. 
     /// </summary>

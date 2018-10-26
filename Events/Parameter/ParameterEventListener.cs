@@ -1,13 +1,14 @@
-﻿// ----------------------------------------------------------------------------
-// Based on Work from Ryan Hipple, Unite 2017 - Game Architecture with Scriptable Objects
-// ----------------------------------------------------------------------------
-
-using UE.Instancing;
+﻿using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace UE.Events
 {
+    /// <summary>
+    /// Gerenric base class for listeners of events that pass a parameter.
+    /// </summary>
+    /// <typeparam name="T">Type of the parameter.</typeparam>
+    /// <typeparam name="TS">Type of the base class.</typeparam>
     public abstract class ParameterEventListener<T, TS> : InstanceObserver where TS : ParameterEvent<T, TS>
     {
         protected abstract ParameterEvent<T, TS> GenericEvent { get; }
@@ -43,6 +44,21 @@ namespace UE.Events
         {
             GenericResponse.Invoke(value);
         }
+        
+//        /// <summary>
+//        /// Replaces the current event by the given one.
+//        /// </summary>
+//        /// <param name="paramEvent"></param>
+//        public virtual void SetEvent(TS paramEvent)
+//        {
+//            if (Application.isPlaying)
+//            {
+//                if(GenericEvent != null) GenericEvent.RemoveListener(this);
+//                paramEvent.AddListener(this);                
+//            }
+//            
+//            GenericEvent = paramEvent;
+//        }
 
         public override IInstanciable Target =>  GenericEvent;
     }

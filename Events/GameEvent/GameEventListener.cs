@@ -1,20 +1,17 @@
-﻿// ----------------------------------------------------------------------------
-// Based on Work from Ryan Hipple, Unite 2017 - Game Architecture with Scriptable Objects
-// ----------------------------------------------------------------------------
-
-using UE.Instancing;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+﻿using UE.Instancing;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace UE.Events
 {
+    /// <summary>
+    /// A component that observes a given event and forwards it to a UnityEvent.
+    /// </summary>
     [AddComponentMenu("Unity Enhanced/Events/Game Event Listener", 0)]
     public class GameEventListener : InstanceObserver
     {
-        [Tooltip("When this is checked, the listener will still work when the game object is disabled.")]
+        [Tooltip("When this is checked, the listener will still work when the game object is disabled. However the " +
+                 "GameObject needs to be activated at least once for the Awake or OnEnable hooks to be invoked.")]
         [SerializeField]
         private bool persistent;
         
@@ -55,6 +52,21 @@ namespace UE.Events
         public virtual void OnEventRaised()
         {
             Response.Invoke();
+        }
+        
+        /// <summary>
+        /// Replaces the current event by the given one.
+        /// </summary>
+        /// <param name="gameEvent"></param>
+        public virtual void SetEvent(GameEvent gameEvent)
+        {
+            if (Application.isPlaying)
+            {
+                if(Event != null) Event.RemoveListener(this);
+                gameEvent.AddListener(this);                
+            }
+            
+            Event = gameEvent;
         }
 
         public override IInstanciable Target => Event;
