@@ -28,9 +28,17 @@ namespace UE.Variables
         }
 
         /// <summary>
-        /// Returns the value of this reference (either constant or reference).
+        /// Returns the runtime value of this reference (either constant or reference).
         /// </summary>
         public T Value
+        {
+            get { return UseConstant ? ConstantValue : GetVariable().RuntimeValue; }
+        }
+        
+        /// <summary>
+        /// Returns the editor value of this reference (either constant or reference).
+        /// </summary>
+        public T StaticValue
         {
             get { return UseConstant ? ConstantValue : GetVariable().Value; }
         }
