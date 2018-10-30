@@ -44,7 +44,7 @@ namespace UE.PUNNetworking
             {
                 lines++;
 
-                if (!property.IsInResourcesFolder())
+                if (!property.IsInResourcesFolder(PhotonSyncManager.GetResourcesSubfolder(property.GetParent().GetType())))
                     lines += 2;
             }
             
@@ -53,9 +53,11 @@ namespace UE.PUNNetworking
 
         private static void DrawResourcesWarning(Rect position, SerializedProperty property, ref int line)
         {
-            if(property.IsInResourcesFolder()) return;
+            var subfolder = PhotonSyncManager.GetResourcesSubfolder(property.GetParent().GetType());
+            
+            if(property.IsInResourcesFolder(subfolder)) return;
 
-            EditorGUI.HelpBox(position.GetLines(line, 2), PhotonSync.WARNING_ASSET_NOT_IN_RESOURCES_FOLDER, MessageType.Error);
+            EditorGUI.HelpBox(position.GetLines(line, 2), PhotonSync.WARNING_ASSET_NOT_IN_RESOURCES_FOLDER(subfolder), MessageType.Error);
             line += 2;
         }
     }

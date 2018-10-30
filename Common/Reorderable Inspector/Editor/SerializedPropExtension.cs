@@ -87,20 +87,25 @@ namespace UE.Common.SubjectNerd.Utilities
 
 			return so != null;
 		}
-		
+
 		/// <summary>
 		/// Returns true if the given property is either not refrerencing a ScriptableObject
 		/// or if the SO resides within the root of a resources folder.
 		/// </summary>
 		/// <param name="property"></param>
+		/// <param name="subfolder"></param>
 		/// <returns></returns>
-		public static bool IsInResourcesFolder(this SerializedProperty property)
+		public static bool IsInResourcesFolder(this SerializedProperty property, string subfolder = "")
 		{
 			if (!property.IsScriptableObject()) return true;
 			
 			var parent = property.GetParent<object>();
+
+			var so = Resources.Load<Object>((parent as ScriptableObject).name);
+			if (subfolder.Any() && so == null) 
+				so = Resources.Load<Object>(subfolder + "/" +(parent as ScriptableObject).name);
 			
-			return (Resources.Load<Object>((parent as ScriptableObject).name) != null);
+			return (so != null);
 		}
 
 		/*public static void CopyValues(this SerializedProperty destination, SerializedProperty source)
