@@ -1,18 +1,18 @@
 ﻿#if UE_Photon
-
 using System;
 using System.Collections.Generic;
-using ExitGames.Client.Photon;
+using UE.Common;
+using UE.Events;
+using UE.StateMachine;
+using UnityEngine;
+
 #if PUN_2_OR_NEWER
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 #else
 using Photon;
 #endif
-using UE.Common;
-using UE.Events;
-using UE.StateMachine;
-using UnityEngine;
 
 namespace UE.PUNNetworking
 {
