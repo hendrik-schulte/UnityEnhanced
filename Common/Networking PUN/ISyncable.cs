@@ -1,6 +1,8 @@
-﻿using System;
-
-#if UE_Photon
+﻿#if UE_Photon
+using System;
+#if PUN_2_OR_NEWER
+using Photon.Realtime;
+#endif
 
 namespace UE.PUNNetworking
 {

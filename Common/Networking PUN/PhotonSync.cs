@@ -5,6 +5,10 @@ using UE.Common;
 using UE.Instancing;
 using UnityEngine;
 using Object = UnityEngine.Object;
+#if PUN_2_OR_NEWER
+using Photon.Realtime;
+using Photon.Pun;
+#endif
 
 namespace UE.PUNNetworking
 {

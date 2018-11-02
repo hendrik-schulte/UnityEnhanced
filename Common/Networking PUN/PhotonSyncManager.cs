@@ -2,7 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
+#if PUN_2_OR_NEWER
+using Photon.Pun;
+using Photon.Realtime;
+#else
 using Photon;
+#endif
 using UE.Common;
 using UE.Events;
 using UE.StateMachine;
@@ -15,7 +21,12 @@ namespace UE.PUNNetworking
     /// within a Photon Networking system.
     /// </summary>
     [AddComponentMenu("Unity Enhanced/Networking Photon/PhotonSyncManager")]
-    public class PhotonSyncManager : PunBehaviour
+    public class PhotonSyncManager : 
+#if PUN_2_OR_NEWER
+        MonoBehaviourPunCallbacks, IOnEventCallback
+#else
+        PunBehaviour
+#endif
     {
         [SerializeField] private bool debugLog;
 
@@ -77,9 +88,15 @@ namespace UE.PUNNetworking
         /// When a new player connects, send him the current state.
         /// </summary>
         /// <param name="newPlayer"></param>
-        public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+#if PUN_2_OR_NEWER
+        public override void OnPlayerEnteredRoom(Player newPlayer)  
         {
+            if (!PhotonNetwork.IsMasterClient) return;
+#else
+        public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)  
+            {
             if (!PhotonNetwork.isMasterClient) return;
+#endif
 
             if (syncedStateManager == null)
             {
@@ -97,16 +114,6 @@ namespace UE.PUNNetworking
 
         #endregion
 
-        void OnEnable()
-        {
-            PhotonNetwork.OnEventCall += OnEvent;
-        }
-
-        void OnDisable()
-        {
-            PhotonNetwork.OnEventCall -= OnEvent;
-        }
-
         #region Sending
 
         /// <summary>
@@ -119,7 +126,7 @@ namespace UE.PUNNetworking
         [Obsolete]
         public static void SendEvent(ISyncable syncable, byte eventCode, string name, int keyID)
         {
-            if (!syncable.PUNSyncEnabled || !PhotonNetwork.inRoom || syncable.MuteNetworkBroadcasting) return;
+            if (!syncable.PUNSyncEnabled || !InRoom() || syncable.MuteNetworkBroadcasting) return;
 
             var raiseEventOptions = new RaiseEventOptions()
             {
@@ -133,7 +140,7 @@ namespace UE.PUNNetworking
                 keyID,
             };
 
-            PhotonNetwork.RaiseEvent(eventCode, content, true, raiseEventOptions);
+            RaiseEvent(eventCode, content, raiseEventOptions);
         }
 
         /// <summary>
@@ -145,7 +152,7 @@ namespace UE.PUNNetworking
         /// <param name="keyID">This is used to identify instanced Objects.</param>
         public static void SendEvent(PhotonSync settings, byte eventCode, string name, int keyID)
         {
-            if (!settings.PUNSync || !PhotonNetwork.inRoom || settings.MuteNetworkBroadcasting) return;
+            if (!settings.PUNSync || !InRoom() || settings.MuteNetworkBroadcasting) return;
 
             var raiseEventOptions = new RaiseEventOptions()
             {
@@ -159,7 +166,7 @@ namespace UE.PUNNetworking
                 keyID,
             };
 
-            PhotonNetwork.RaiseEvent(eventCode, content, true, raiseEventOptions);
+            RaiseEvent(eventCode, content, raiseEventOptions);
         }
 
         /// <summary>
@@ -172,7 +179,7 @@ namespace UE.PUNNetworking
         [Obsolete]
         public static void SendEventParam<T>(ISyncable syncable, string name, int keyID, T parameter)
         {
-            if (!syncable.PUNSyncEnabled || !PhotonNetwork.inRoom || syncable.MuteNetworkBroadcasting) return;
+            if (!syncable.PUNSyncEnabled || !InRoom() || syncable.MuteNetworkBroadcasting) return;
 
             var raiseEventOptions = new RaiseEventOptions()
             {
@@ -187,7 +194,7 @@ namespace UE.PUNNetworking
                 parameter
             };
 
-            PhotonNetwork.RaiseEvent(TypeToCode(typeof(T)), content, true, raiseEventOptions);
+            RaiseEvent(TypeToCode(typeof(T)), content, raiseEventOptions);
         }
 
         /// <summary>
@@ -200,7 +207,7 @@ namespace UE.PUNNetworking
         /// <typeparam name="T"></typeparam>
         public static void SendEventParam<T>(PhotonSync settings, string name, int keyID, T parameter)
         {
-            if (!settings.PUNSync || !PhotonNetwork.inRoom || settings.MuteNetworkBroadcasting) return;
+            if (!settings.PUNSync || !InRoom() || settings.MuteNetworkBroadcasting) return;
 
             var raiseEventOptions = new RaiseEventOptions()
             {
@@ -215,7 +222,35 @@ namespace UE.PUNNetworking
                 parameter
             };
 
-            PhotonNetwork.RaiseEvent(TypeToCode(typeof(T)), content, true, raiseEventOptions);
+            RaiseEvent(TypeToCode(typeof(T)), content, raiseEventOptions);
+        }
+
+        /// <summary>
+        /// API-neutral call to PhotonNetwork.RaiseEvent.
+        /// </summary>
+        /// <param name="eventCode"></param>
+        /// <param name="content"></param>
+        /// <param name="raiseEventOptions"></param>
+        private static void RaiseEvent(byte eventCode, object content, RaiseEventOptions raiseEventOptions)
+        {
+#if PUN_2_OR_NEWER
+            PhotonNetwork.RaiseEvent(eventCode, content, raiseEventOptions, SendOptions.SendReliable);
+#else
+            PhotonNetwork.RaiseEvent(eventCode, content, true, raiseEventOptions);
+#endif
+        }
+
+        /// <summary>
+        /// API-neutral call to PhotonNetwork.InRoom
+        /// </summary>
+        /// <returns></returns>
+        private static bool InRoom()
+        {
+#if PUN_2_OR_NEWER
+            return PhotonNetwork.InRoom;
+#else
+            return PhotonNetwork.inRoom;
+#endif
         }
 
         /// <summary>
@@ -246,7 +281,7 @@ namespace UE.PUNNetworking
             if (type == typeof(Quaternion))
                 return EventRaiseUEQuaternionEvent;
 
-            Logging.Error("Phyton Sync", "Trying to send a parameter event that cannot be serialized.");
+            Logging.Error("Photon Sync", "Trying to send a parameter event that cannot be serialized.");
             return 0;
         }
 
@@ -254,6 +289,27 @@ namespace UE.PUNNetworking
 
         #region Receiving
 
+#if PUN_2_OR_NEWER
+        /// <summary>
+        /// Receives a photon event in PUN 2.
+        /// </summary>
+        /// <param name="photonEvent"></param>
+        public void OnEvent(EventData photonEvent)
+        {
+            OnEvent(photonEvent.Code, photonEvent.CustomData, photonEvent.Sender);
+        }
+#else
+        void OnEnable()
+        {
+            PhotonNetwork.OnEventCall += OnEvent;
+        }
+
+        void OnDisable()
+        {
+            PhotonNetwork.OnEventCall -= OnEvent;
+        }
+#endif
+    
         /// <summary>
         /// Receives a photon event and calls the corresponding remote function.
         /// </summary>

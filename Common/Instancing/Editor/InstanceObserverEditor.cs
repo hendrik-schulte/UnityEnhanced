@@ -4,6 +4,9 @@ using System.Linq;
 using UE.Common.SubjectNerd.Utilities;
 #if UE_Photon
 using UE.PUNNetworking;
+#if PUN_2_OR_NEWER
+using Photon.Pun;
+#endif
 #endif
 using UnityEditor;
 using UnityEngine;

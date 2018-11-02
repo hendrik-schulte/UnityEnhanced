@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.Events;
 #if UE_Photon
 using UE.PUNNetworking;
+#if PUN_2_OR_NEWER
+using Photon.Pun;
+#endif
 #endif
 
 namespace UE.Instancing
@@ -168,7 +171,11 @@ namespace UE.Instancing
                 var photonView = KeyToPhotonView(key);
                 if (photonView)
                 {
+#if PUN_2_OR_NEWER
+                    instance.keyID = photonView.ViewID;
+#else
                     instance.keyID = photonView.viewID;
+#endif
                 }
             }
 #endif
