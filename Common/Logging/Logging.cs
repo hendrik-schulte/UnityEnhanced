@@ -197,7 +197,7 @@ namespace UE.Common
         
         private static string Apostrophe(string value)
         {
-            return "'" + value + "' ";
+            return "<i>'" + value + "'</i> ";
         }
         
         private static string Asterix(string value)
@@ -207,7 +207,7 @@ namespace UE.Common
 
         private static string Brackets(string value)
         {
-            return "[" + value + "] ";
+            return "<b>[" + value + "]</b> ";
         }
         
         #endregion
