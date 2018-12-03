@@ -5,6 +5,10 @@
 using System.Collections.Generic;
 using UE.Common;
 using UE.Instancing;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.Callbacks;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 #if UE_Photon
@@ -167,5 +171,29 @@ namespace UE.Events
         {
             Instance(key).OnEventTriggered.RemoveListener(listener);
         }
+        
+#if UNITY_EDITOR
+        /// <summary>
+        /// Raise the event when clicking it.
+        /// </summary>
+        /// <param name="instanceID"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        [OnOpenAsset(1)]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            var instance = EditorUtility.InstanceIDToObject(instanceID) as GameEvent;
+
+            if (instance == null) return false;
+
+            if (Application.isPlaying)
+            {
+                EditorGUIUtility.PingObject(instance);
+                instance.RaiseAllInstances();
+            }
+            
+            return false;                
+        }
+#endif
     }
 }

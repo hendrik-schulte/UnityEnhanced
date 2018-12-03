@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UE.Common.SubjectNerd.Utilities;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -157,6 +158,52 @@ namespace UE.Common
         public static Color EditorBackgroundColor => EditorGUIUtility.isProSkin
             ? new Color32(56, 56, 56, 255)
             : new Color32(194, 194, 194, 255);
+
+
+        /// <summary>
+        /// Instantiates a prefab asset when alt-clicking it.
+        /// </summary>
+        /// <see cref="https://www.reddit.com/r/Unity3D/comments/8upjn3/i_discovered_the_onopenasset_attribute_and_made_a/"/>
+        /// <param name="instanceID"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        [OnOpenAsset]
+        private static bool HandleOpenEvent(int instanceID, int line)
+        {
+            var asset = EditorUtility.InstanceIDToObject(instanceID);
+
+            var prefab = asset as GameObject;
+            if (prefab != null)
+                return OnOpenPrefab(prefab);
+
+            return false;
+        }
+
+        private static bool OnOpenPrefab(GameObject prefab)
+        {
+            var current = Event.current;
+
+            if (current.alt) // Alt to Instantiate.
+            {
+                var instance = PrefabUtility.InstantiatePrefab(prefab);
+                Undo.RegisterCreatedObjectUndo(instance, "Alt Instantiate");
+                (instance as GameObject).transform.SetAsLastSibling();
+                Selection.activeObject = instance;
+                EditorGUIUtility.PingObject(instance);
+
+                if (current.control) // Ctrl to frame the instance in the scene view.
+                {
+                    if (SceneView.lastActiveSceneView != null)
+                    {
+                        SceneView.lastActiveSceneView.FrameSelected();
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
 #endif

@@ -63,7 +63,7 @@ namespace UE.StateMachine
         /// <summary>
         /// Logging to console enabled.
         /// </summary>
-        [SerializeField] private bool logToConsole;
+        [SerializeField] internal bool logToConsole;
 
         /// <summary>
         /// This event is triggered when a state is entered.
@@ -84,7 +84,7 @@ namespace UE.StateMachine
 #endif
 
         /// <summary>
-        /// This state will be entered as soon as the <see cref="Init"/> function is called for the forst time.
+        /// This state will be entered as soon as the <see cref="Init"/> function is called for the first time.
         /// </summary>
         [Tooltip("The initial state of this system when the application is started.")]
         public State InitialState;
