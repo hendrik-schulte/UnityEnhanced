@@ -370,7 +370,7 @@ namespace UE.Common
         /// </summary>
         /// <param name="transform"></param>
         /// <returns></returns>
-        public static string GetTransformHierachy(this Transform transform)
+        public static string GetTransformHierarchy(this Transform transform)
         {
             string path = transform.name;
             while (transform.parent != null)
@@ -380,6 +380,16 @@ namespace UE.Common
             }
 
             return path;
+        }
+        
+        /// <summary>
+        /// Returns the hierachy above this transform as a string.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public static string GetTransformHierarchy(this GameObject gameObject)
+        {
+            return gameObject.transform.GetTransformHierarchy();
         }
 
         /// <summary>

@@ -58,14 +58,14 @@ namespace UE.StateMachine
             {
                 enabled = false;
                 Logging.Warning(this,
-                    "'" + transform.GetTransformHierachy() + "': Not all states belong to the same state machine!");
+                    "'" + transform.GetTransformHierarchy() + "': Not all states belong to the same state machine!");
                 return;
             }
 
             //check if instance key is assigned
             if (stateManager.Instanced && Key == null)
             {
-                Logging.Warning(this, "'" + transform.GetTransformHierachy() + "': The instance key is not defined!");
+                Logging.Warning(this, "'" + transform.GetTransformHierarchy() + "': The instance key is not defined!");
             }
 #endif
 
@@ -77,7 +77,7 @@ namespace UE.StateMachine
             if (IsActiveState(stateManager.GetState(Key)))
             {
 #if UNITY_EDITOR
-                Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Activated", debug);
+                Logging.Log(this, "'" + transform.GetTransformHierarchy() + "' Activated", debug);
 #endif
                 Active = true;
                 Activated();
@@ -86,7 +86,7 @@ namespace UE.StateMachine
             else
             {
 #if UNITY_EDITOR
-                Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Deactivated", debug);
+                Logging.Log(this, "'" + transform.GetTransformHierarchy() + "' Deactivated", debug);
 #endif
                 OnDeactivated.Invoke();
                 Deactivated(true);
@@ -115,7 +115,7 @@ namespace UE.StateMachine
             if (!previouslyActive && Active)
             {
 #if UNITY_EDITOR
-                Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Activated", debug);
+                Logging.Log(this, "'" + transform.GetTransformHierarchy() + "' Activated", debug);
 #endif
                 Activated();
                 OnActivated.Invoke();
@@ -132,7 +132,7 @@ namespace UE.StateMachine
             if (IsActiveState(leftState) && !IsActiveState(upcomingState))
             {
 #if UNITY_EDITOR
-                Logging.Log(this, "'" + transform.GetTransformHierachy() + "' Deactivated", debug);
+                Logging.Log(this, "'" + transform.GetTransformHierarchy() + "' Deactivated", debug);
 #endif
                 OnDeactivated.Invoke();
                 Deactivated();
