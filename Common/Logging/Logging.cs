@@ -72,7 +72,7 @@ namespace UE.Common
         
         /// <summary>
         /// Formats and logs the given message to the console using the sender as an identifier.
-        /// When the messegeLevel is equal or higher than the levelSetting.
+        /// When the messageLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender type</param>
         /// <param name="msg">the message</param>
@@ -89,7 +89,7 @@ namespace UE.Common
 
         /// <summary>
         /// Formats and logs the given message to the console using the sender as an identifier.
-        /// When the messegeLevel is equal or higher than the levelSetting.
+        /// When the messageLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
@@ -104,9 +104,18 @@ namespace UE.Common
             Out(message, messageLevel);
         }
         
+        public static void Log(string sender, string msg, Level messageLevel, Level levelSetting)
+        {
+            if (messageLevel < levelSetting) return;
+
+            var message = Brackets(sender) + msg;
+
+            Out(message, messageLevel);
+        }
+        
         /// <summary>
         /// Formats and logs the given message to the console using the sender as an identifier.
-        /// When the messegeLevel is equal or higher than the levelSetting.
+        /// When the messageLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
@@ -123,7 +132,7 @@ namespace UE.Common
         
         /// <summary>
         /// Formats and logs the given message to the console using the sender as an identifier.
-        /// When the messegeLevel is equal or higher than the levelSetting.
+        /// When the messageLevel is equal or higher than the levelSetting.
         /// </summary>
         /// <param name="sender">reference to the sender</param>
         /// <param name="msg">the message</param>
@@ -155,7 +164,7 @@ namespace UE.Common
                     Debug.LogWarning(message);
                     break;
                 case Level.Error:
-                    Debug.LogWarning(message);
+                    Debug.LogError(message);
                     break;
             }
         }
@@ -178,7 +187,7 @@ namespace UE.Common
                     Debug.LogWarning(message, sender);
                     break;
                 case Level.Error:
-                    Debug.LogWarning(message, sender);
+                    Debug.LogError(message, sender);
                     break;
             }
         }
@@ -197,7 +206,7 @@ namespace UE.Common
         
         private static string Apostrophe(string value)
         {
-            return "<i>'" + value + "'</i> ";
+            return "'<i>" + value + "</i>' ";
         }
         
         private static string Asterix(string value)

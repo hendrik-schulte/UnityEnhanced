@@ -370,6 +370,8 @@ namespace UE.Common.SubjectNerd.Utilities
 			
 			FindTargetProperties();
 			FindContextMenu();
+			
+			alwaysDrawInspector = true;
 		}
 
 		protected void FindTargetProperties()

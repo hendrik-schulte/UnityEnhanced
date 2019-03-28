@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace UE.Instancing
 {
-        [CustomEditor(typeof(InstanciableSO<>), true)]
+    [CustomEditor(typeof(InstanciableSO<>), true)]
     [CanEditMultipleObjects]
     public abstract class InstanciableSOEditor : ReorderableArrayInspector
     {

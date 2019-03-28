@@ -263,6 +263,20 @@ namespace UE.Common
         {
             return type.GetCustomAttributes(true).FirstElementOfType<T>();
         }
+        
+        /// <summary>
+        /// Maps this float to another range keeping the relative distance between the bounds.
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="fromMin"></param>
+        /// <param name="fromMax"></param>
+        /// <param name="toMin"></param>
+        /// <param name="toMax"></param>
+        /// <returns></returns>
+        public static float MapRange(this float val, float fromMin, float fromMax, float toMin, float toMax)
+        {
+            return toMin + (val - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+        }
 
         /// <summary>
         /// Returns a Quaternion based on this Matrix4x4.
@@ -332,16 +346,28 @@ namespace UE.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static string ToStringElements<T>(this List<T> list)
+        public static string ToStringElements<T>(this IList<T> list)
         {
             var result = list + ": { ";
 
-            foreach (var item in list)
-            {
-                result += item + ", ";
-            }
+            result = list.Aggregate(result, (current, item) => current + (item + ", "));
 
+            if (list.Count > 0)
+                result = result.TrimToSize(result.Length - 2) + " ";
+            
             return result + "}";
+        }
+        
+        /// <summary>
+        /// Allows inline execution over an enumeration similar to List.ForEach.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
+        {
+            foreach (var item in collection)
+                action.Invoke(item);
         }
 
         /// <summary>

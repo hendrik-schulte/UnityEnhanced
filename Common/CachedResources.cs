@@ -62,7 +62,6 @@ namespace UE.Common
 
             if (!asset)
             {
-                Logging.Error("CachedResources", "The desired asset named '" + path + "' does not exist.");
                 success = false;
                 return null;
             }

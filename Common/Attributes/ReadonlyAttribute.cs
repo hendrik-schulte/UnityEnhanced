@@ -16,8 +16,8 @@ namespace UE.Common
     }
     
 #if UNITY_EDITOR
-        [CustomPropertyDrawer(typeof(ReadonlyAttribute))]
-        public class ReadonlyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ReadonlyAttribute))]
+    public class ReadonlyDrawer : PropertyDrawer
         {
             public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
             {

@@ -67,7 +67,7 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Checks for existance of the given type.
+        /// Checks for existence of the given type.
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
@@ -82,7 +82,7 @@ namespace UE.Common
         }
         
         /// <summary>
-        /// Checks for existance of the given namespace.
+        /// Checks for existence of the given namespace.
         /// </summary>
         /// <param name="namespaceName"></param>
         /// <returns></returns>

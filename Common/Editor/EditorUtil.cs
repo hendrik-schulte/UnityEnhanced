@@ -48,7 +48,16 @@ namespace UE.Common
                 height = height
             };
         }
-        
+
+        /// <summary>
+        /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="left">Positive value enlarges the rectangle to the left.</param>
+        /// <param name="right">Positive value enlarges the rectangle to the right.</param>
+        /// <param name="top">Positive value enlarges the rectangle to the top.</param>
+        /// <param name="bottom">Positive value enlarges the rectangle to the bottom.</param>
+        /// <returns></returns>
         public static Rect Offset(this Rect rect, int left, int right, int top, int bottom)
         {
             var result = new Rect(rect);
@@ -62,8 +71,24 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// This splits the position Rect of a Property Drawer to single lines given the row number.
-        /// Works nicely when the Property height is calculated using EditorUtil.PropertyHeight().
+        /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="left">Positive value enlarges the rectangle to the left.</param>
+        /// <param name="right">Positive value enlarges the rectangle to the right.</param>
+        /// <param name="top">Positive value enlarges the rectangle to the top.</param>
+        /// <param name="bottom">Positive value enlarges the rectangle to the bottom.</param>
+        /// <returns></returns>
+        public static Rect Offset(this Rect rect, float left, float right, float top, float bottom)
+        {
+            return rect.Offset((int) left, (int) right, (int) top, (int) bottom);
+        }
+
+
+        /// <summary>
+        /// This splits the position Rect of a Property Drawer to single lines given the row number
+        /// (starting by 1). Works nicely when the Property height is calculated using
+        /// EditorUtil.PropertyHeight().
         /// </summary>
         /// <param name="position"></param>
         /// <param name="line"></param>
@@ -79,14 +104,55 @@ namespace UE.Common
 
             return position.GetSubRect(y, EditorGUIUtility.singleLineHeight);
         }
-        
+
+        /// <summary>
+        /// Splits this rectangle into a column based on the column number (from 1 to totalColumns)
+        /// and the total number of columns.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="column"></param>
+        /// <param name="totalColumns"></param>
+        /// <returns></returns>
+        public static Rect Column(this Rect position, int column, int totalColumns, int spacing = 1)
+        {
+            var columnsWidth = position.width / totalColumns;
+
+            return new Rect(position.x + ((column - 1) * columnsWidth),
+                    position.y, columnsWidth, position.height)
+                .Offset(-spacing, -spacing, 0, 0);
+        }
+
+        /// <summary>
+        /// Returns columns inside this rectangle.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="column"></param>
+        /// <param name="numColumns"></param>
+        /// <param name="totalColumns"></param>
+        /// <returns></returns>
+        public static Rect Columns(this Rect position, int column, int numColumns, int totalColumns, int spacing = 1)
+        {
+            var columnsWidth = position.width / totalColumns;
+
+            return new Rect(position.x + ((column - 1) * columnsWidth),
+                    position.y, columnsWidth * numColumns, position.height)
+                .Offset(-spacing, -spacing, 0, 0);
+        }
+
+        /// <summary>
+        /// Returns a number of lines from the given lineIndex.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="line"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public static Rect GetLines(this Rect position, int line, int num)
         {
             var rect = position.GetLine(line);
 
             if (num > 1)
                 rect.yMax += (num - 1) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
-            
+
             return rect;
         }
 
@@ -101,7 +167,7 @@ namespace UE.Common
 //            
 //            return height;
 //        }
-        
+
         /// <summary>
         /// Returns the first occourence of the given attribute
         /// on this property or null if there is none.
@@ -114,7 +180,7 @@ namespace UE.Common
             var attributes = property.GetAttributes<T>();
 
             if (!attributes.Any()) return null;
-            
+
             return attributes[0] as T;
         }
 
@@ -158,7 +224,6 @@ namespace UE.Common
         public static Color EditorBackgroundColor => EditorGUIUtility.isProSkin
             ? new Color32(56, 56, 56, 255)
             : new Color32(194, 194, 194, 255);
-
 
         /// <summary>
         /// Instantiates a prefab asset when alt-clicking it.

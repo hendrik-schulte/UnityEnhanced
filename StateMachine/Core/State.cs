@@ -130,8 +130,7 @@ namespace UE.StateMachine
             
             else if (instance.stateManager.logToConsole) 
             {
-                Logging.Log(instance, 
-                        "defined as initial state of " + instance.stateManager.name);
+                Logging.Log(instance,"defined as initial state of " + instance.stateManager.name);
                 
                 instance.stateManager.InitialState = instance;                
             }
