@@ -28,5 +28,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-UnityEnhanced.asmdef
-UnityEnhanced.asmdef.meta
+# UnityEnhanced.asmdef
+# UnityEnhanced.asmdef.meta
