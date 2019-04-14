@@ -1,6 +1,8 @@
 {
     "name": "UnityEnhanced",
-    "references": [],
+    "references": [
+        "SharpConfig"
+    ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
