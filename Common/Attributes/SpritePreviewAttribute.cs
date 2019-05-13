@@ -44,7 +44,7 @@ namespace UE.Attributes
 
                  
                  prop.objectReferenceValue = 
-                     EditorGUI.ObjectField(position, prop.objectReferenceValue, typeof(Sprite));
+                     EditorGUI.ObjectField(position, prop.objectReferenceValue, typeof(Sprite), false);
              }
              else
              {

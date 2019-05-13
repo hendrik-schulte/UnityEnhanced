@@ -35,14 +35,24 @@ Open particular folders for detailed description.
 
 ## Requirements
 
-- Unity 2017.1 or later
+- Unity 2017.1+
 - .NET 4.6 or above
 
 ## Setup
 
+### Installation using UPM (only in Unity 2018.3+)
+
+1. Edit \Packages\manifest.json in your project folder
+2. Add the following line to the list of *dependencies*:
+```json
+"com.unityenhanced": "https://github.com/hendrik-schulte/UnityEnhanced",
+```
+3. UPM should now install UnityEnhanced
+4. *Optional:* Select the right version for Photon / SharpConfig integration 
+
 ### Installation as Git submodule
 
-It is recommended to install the package as a git submodule in your project.
+Alternatively, add the package as a git submodule in your project.
 
 In Sourcetree:
 - Click Repository > Add Submodule ...
