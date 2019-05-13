@@ -913,6 +913,15 @@ namespace UE.Common.SubjectNerd.Utilities
 		}
 
 		/// <summary>
+		/// Draws the given properties.
+		/// </summary>
+		/// <param name="properties"></param>
+		protected void DrawProperties(params string[] properties)
+		{
+			properties.ForEach(DrawProperty);
+		}
+
+		/// <summary>
 		/// Draws the given property.
 		/// </summary>
 		/// <param name="property"></param>

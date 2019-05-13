@@ -55,7 +55,7 @@ namespace UE.PUNNetworking
             if (type == typeof(StateManager))
                 return StateMachineSubfolder;
             if (type == typeof(GameEvent)
-                || type.IsSubClassOfGeneric(typeof(ParameterEvent<,>))
+                || type.IsSubclassOfGeneric(typeof(ParameterEvent<,>))
             )
                 return EventSubfolder;
 

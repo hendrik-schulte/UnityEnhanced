@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace UE.Common
@@ -42,11 +43,9 @@ namespace UE.Common
         /// <param name="list"></param>
         public static void DestroyGOs(this List<GameObject> list)
         {
-//            if(list == null) Debug.LogError("ist is null");
-
             foreach (var go in list)
             {
-                GameObject.Destroy(go);
+                Object.Destroy(go);
             }
 
             list.Clear();
@@ -182,7 +181,7 @@ namespace UE.Common
         {
             while (transform.childCount > 0)
             {
-                GameObject.Destroy(transform.GetChild(0).gameObject);
+                Object.Destroy(transform.GetChild(0).gameObject);
                 transform.GetChild(0).SetParent(null);
             }
         }
@@ -348,7 +347,7 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToStringElements<T>(this IList<T> list)
         {
-            var result = list + ": { ";
+            var result = list.GetType().Name + ": { ";
 
             result = list.Aggregate(result, (current, item) => current + (item + ", "));
 
@@ -448,43 +447,43 @@ namespace UE.Common
         /// <summary>
         /// Returns true if this type is a subclass of the given generic type. 
         /// </summary>
-        /// <param name="child"></param>
-        /// <param name="parent"></param>
+        /// <param name="derived"></param>
+        /// <param name="generic"></param>
         /// <returns></returns>
-        public static bool IsSubClassOfGeneric(this Type child, Type parent)
+        public static bool IsSubclassOfGeneric(this Type derived, Type generic)
         {
-            if (child == parent)
+            if (derived == generic)
                 return false;
 
-            if (child.IsSubclassOf(parent))
+            if (derived.IsSubclassOf(generic))
                 return true;
 
-            var parameters = parent.GetGenericArguments();
+            var parameters = generic.GetGenericArguments();
             var isParameterLessGeneric = !(parameters != null && parameters.Length > 0 &&
                                            ((parameters[0].Attributes & TypeAttributes.BeforeFieldInit) ==
                                             TypeAttributes.BeforeFieldInit));
 
-            while (child != null && child != typeof(object))
+            while (derived != null && derived != typeof(object))
             {
-                var cur = GetFullTypeDefinition(child);
-                if (parent == cur || (isParameterLessGeneric && cur.GetInterfaces()
-                                          .Select(i => GetFullTypeDefinition(i))
-                                          .Contains(GetFullTypeDefinition(parent))))
+                var cur = GetFullTypeDefinition(derived);
+                if (generic == cur || (isParameterLessGeneric && cur.GetInterfaces()
+                                           .Select(i => GetFullTypeDefinition(i))
+                                           .Contains(GetFullTypeDefinition(generic))))
                     return true;
                 else if (!isParameterLessGeneric)
-                    if (GetFullTypeDefinition(parent) == cur && !cur.IsInterface)
+                    if (GetFullTypeDefinition(generic) == cur && !cur.IsInterface)
                     {
-                        if (VerifyGenericArguments(GetFullTypeDefinition(parent), cur))
-                            if (VerifyGenericArguments(parent, child))
+                        if (VerifyGenericArguments(GetFullTypeDefinition(generic), cur))
+                            if (VerifyGenericArguments(generic, derived))
                                 return true;
                     }
                     else
-                        foreach (var item in child.GetInterfaces()
-                            .Where(i => GetFullTypeDefinition(parent) == GetFullTypeDefinition(i)))
-                            if (VerifyGenericArguments(parent, item))
+                        foreach (var item in derived.GetInterfaces()
+                            .Where(i => GetFullTypeDefinition(generic) == GetFullTypeDefinition(i)))
+                            if (VerifyGenericArguments(generic, item))
                                 return true;
 
-                child = child.BaseType;
+                derived = derived.BaseType;
             }
 
             return false;
