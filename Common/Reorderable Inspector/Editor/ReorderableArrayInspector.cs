@@ -648,7 +648,9 @@ namespace UE.Common.SubjectNerd.Utilities
 
 		protected virtual void DrawInspector()
 		{
+
 			DrawPropertiesAll();
+
 		}
 
 		public sealed override void OnInspectorGUI()
@@ -658,7 +660,9 @@ namespace UE.Common.SubjectNerd.Utilities
 
 			EditorGUI.BeginChangeCheck();
 
+			serializedObject.Update();
 			DrawInspector();
+			serializedObject.ApplyModifiedProperties();
 
 			if (EditorGUI.EndChangeCheck())
 			{
@@ -856,35 +860,87 @@ namespace UE.Common.SubjectNerd.Utilities
 		/// Draw the default inspector, starting from a given property
 		/// </summary>
 		/// <param name="propertyStart">Property name to start from</param>
-		public void DrawPropertiesFrom(string propertyStart)
+		/// <param name="include">Include the given property or not.</param>
+		public void DrawPropertiesFrom(string propertyStart, bool include = true)
 		{
 			bool canDraw = false;
 			SerializedProperty iterProp = serializedObject.GetIterator();
-			IterateDrawProperty(iterProp,
-				filter: () =>
-				{
-					if (iterProp.name.Equals(propertyStart))
-						canDraw = true;
-					if (canDraw)
-						return IterControl.Draw;
-					return IterControl.Continue;
-				});
+
+			if (include)
+			{
+				IterateDrawProperty(iterProp,
+					filter: () =>
+					{
+						if (iterProp.name.Equals(propertyStart))
+							canDraw = true;
+						if (canDraw)
+							return IterControl.Draw;
+						return IterControl.Continue;
+					});
+			}
+			else
+			{
+				bool elementReached = false;
+
+				IterateDrawProperty(iterProp,
+					filter: () =>
+					{
+						if (iterProp.name.Equals(propertyStart))
+						{
+							canDraw = true;
+						}
+
+						if (canDraw)
+						{
+							if (elementReached)
+								return IterControl.Draw;
+
+							elementReached = true;
+						}
+
+						return IterControl.Continue;
+					});
+			}
 		}
 
 		/// <summary>
 		/// Draw the default inspector, up to a given property
 		/// </summary>
 		/// <param name="propertyStop">Property name to stop at</param>
-		public void DrawPropertiesUpTo(string propertyStop)
+		/// <param name="include">Include the given property or not.</param>
+		public void DrawPropertiesUpTo(string propertyStop, bool include = false)
 		{
 			SerializedProperty iterProp = serializedObject.GetIterator();
-			IterateDrawProperty(iterProp,
-				filter: () =>
-				{
-					if (iterProp.name.Equals(propertyStop))
-						return IterControl.Break;
-					return IterControl.Draw;
-				});
+
+			if (include)
+			{
+				bool breakNext = false;
+				
+				IterateDrawProperty(iterProp,
+					filter: () =>
+					{
+						if (breakNext)
+							return IterControl.Break;
+						
+						if (iterProp.name.Equals(propertyStop))
+						{
+							breakNext = true;
+							return IterControl.Draw;
+						}
+						
+						return IterControl.Draw;
+					});
+			}
+			else
+			{
+				IterateDrawProperty(iterProp,
+					filter: () =>
+					{
+						if (iterProp.name.Equals(propertyStop))
+							return IterControl.Break;
+						return IterControl.Draw;
+					});
+			}
 		}
 
 		/// <summary>

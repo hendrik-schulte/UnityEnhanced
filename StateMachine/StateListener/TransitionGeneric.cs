@@ -3,6 +3,7 @@ using UE.Common;
 using UE.Events;
 using UE.Variables;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UE.StateMachine
 {
@@ -26,7 +27,9 @@ namespace UE.StateMachine
         [Tooltip("Allows to define a custom mapping of the animation progress (from 0 to 1) to the actual.")]
         [SerializeField] private AnimationCurve curveMapping = AnimationCurve.Linear(0,0,1,1);
         [SerializeField] private FloatUnityEvent OnAnimate;
-        
+        [SerializeField] protected UnityEvent OnFadedOut;
+        [SerializeField] protected UnityEvent OnFadedIn;
+
         private Coroutine fadeIn, fadeOut;
 
         protected virtual void Awake()
@@ -63,6 +66,7 @@ namespace UE.StateMachine
             }
 
             ValueInternal = 1;
+            OnFadedIn.Invoke();
         }
 
         protected override void Deactivated(bool atStart = false)
@@ -90,6 +94,7 @@ namespace UE.StateMachine
             }
             
             Disable();
+            OnFadedOut.Invoke();
         }
 
         protected virtual void Disable()

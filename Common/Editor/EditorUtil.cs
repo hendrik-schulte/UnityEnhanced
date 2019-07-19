@@ -106,6 +106,20 @@ namespace UE.Common
         }
 
         /// <summary>
+        /// This splits the position Rect of a Property Drawer to single lines given the row number
+        /// (starting by 1). Works nicely when the Property height is calculated using
+        /// EditorUtil.PropertyHeight(). This overload automatically increments the line after the call.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="line">This automatically gets incremented after the line is drawn.</param>
+        /// <returns></returns>
+        public static Rect GetLine(this Rect position, ref int line)
+        {
+            return position.GetLine(line++);
+        }
+
+
+        /// <summary>
         /// Splits this rectangle into a column based on the column number (from 1 to totalColumns)
         /// and the total number of columns.
         /// </summary>
@@ -140,7 +154,8 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Returns a number of lines from the given lineIndex.
+        /// Similar to <see cref="GetLine(UnityEngine.Rect,int)"/> but returns
+        /// a number of lines starting from the given line.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="line"></param>
@@ -155,6 +170,25 @@ namespace UE.Common
 
             return rect;
         }
+
+        /// <summary>
+        /// Similar to <see cref="GetLine(UnityEngine.Rect,int, ref int)"/> but returns
+        /// a number of lines starting from the given line.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="line"></param>
+        /// <param name="num"></param>
+        /// <param name="progress"></param>
+        /// <returns></returns>
+        public static Rect GetLines(this Rect position, ref int line, int num)
+        {
+            var rect = position.GetLines(line, num);
+
+            line += num;
+            
+            return rect;
+        }
+
 
 //        public static float GetTotalHeight(int lines)
 //        {

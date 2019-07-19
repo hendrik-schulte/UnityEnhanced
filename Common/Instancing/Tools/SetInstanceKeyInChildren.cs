@@ -1,13 +1,9 @@
-﻿#if UNITY_EDITOR
-using UE.Common.SubjectNerd.Utilities;
-using UnityEditor;
-#endif
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UE.Instancing
 {
     /// <summary>
-    /// This component allows to change all instance keys of an object hierachy at once.
+    /// This component allows to change all instance keys of an object hierarchy at once.
     /// </summary>
     public class SetInstanceKeyInChildren : MonoBehaviour
     {

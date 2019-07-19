@@ -96,7 +96,18 @@ namespace UE.Common
         /// <returns></returns>
         public static T RandomElement<T>(this List<T> list)
         {
-            return list[Random.Range(0, list.Count)];
+            return list[Random.Range(0, list.Count - 1)];
+        }
+        
+        /// <summary>
+        /// Returns a random index within the range of this list.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static int RandomIndex<T>(this List<T> list)
+        {
+            return Random.Range(0, list.Count - 1);
         }
 
         /// <summary>
@@ -321,7 +332,7 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Turns this matrix into a readable formatable string.
+        /// Turns this matrix into a readable string wht the given format.
         /// </summary>
         /// <param name="m"></param>
         /// <param name="format"></param>
@@ -347,11 +358,29 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToStringElements<T>(this IList<T> list)
         {
-            var result = list.GetType().Name + ": { ";
+            var result = "{ ";
 
             result = list.Aggregate(result, (current, item) => current + (item + ", "));
 
             if (list.Count > 0)
+                result = result.TrimToSize(result.Length - 2) + " ";
+            
+            return result + "}";
+        }
+        
+        /// <summary>
+        /// Returns a string with the array and its elements.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static string ToStringElements<T>(this T[] array)
+        {
+            var result = "{ ";
+
+            result = array.Aggregate(result, (current, item) => current + (item + ", "));
+
+            if (array.Length > 0)
                 result = result.TrimToSize(result.Length - 2) + " ";
             
             return result + "}";

@@ -4,6 +4,7 @@ using System.Linq;
 using UE.Common;
 using UE.Instancing;
 using UnityEditor;
+using UnityEngine;
 
 namespace UE.StateMachine
 {
@@ -37,7 +38,7 @@ namespace UE.StateMachine
             base.DrawInspector();
         }
 
-        protected override IEnumerable<string> ExcludeProperties()
+        protected sealed override IEnumerable<string> ExcludeProperties()
         {
             if ((target as StateListener).DrawUnityEventInspector)
                 return base.ExcludeProperties();
