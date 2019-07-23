@@ -96,7 +96,7 @@ namespace UE.Common
         /// <returns></returns>
         public static T RandomElement<T>(this List<T> list)
         {
-            return list[Random.Range(0, list.Count - 1)];
+            return list[Random.Range(0, list.Count)];
         }
         
         /// <summary>
@@ -107,7 +107,7 @@ namespace UE.Common
         /// <returns></returns>
         public static int RandomIndex<T>(this List<T> list)
         {
-            return Random.Range(0, list.Count - 1);
+            return Random.Range(0, list.Count);
         }
 
         /// <summary>
@@ -358,15 +358,28 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToStringElements<T>(this IList<T> list)
         {
+            return list.ToStringElements(x => x.ToString());
+        }
+        
+        /// <summary>
+        /// Returns a string with the list and its elements using a custom string converter for each element.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="customStringConversion"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string ToStringElements<T>(this IList<T> list, Func<T, string> customStringConversion)
+        {
             var result = "{ ";
 
-            result = list.Aggregate(result, (current, item) => current + (item + ", "));
+            result = list.Aggregate(result, (current, item) => current + customStringConversion.Invoke(item) + ", ");
 
             if (list.Count > 0)
                 result = result.TrimToSize(result.Length - 2) + " ";
             
             return result + "}";
         }
+
         
         /// <summary>
         /// Returns a string with the array and its elements.
