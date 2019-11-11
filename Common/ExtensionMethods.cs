@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -198,6 +201,18 @@ namespace UE.Common
         #region Collections
 
         /// <summary>
+        /// Only adds the given element to the list if it is not contained in it yet.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void AddSingle<T>(this IList<T> list, T item)
+        {
+            if(!list.Contains(item))
+                list.Add(item);
+        }
+        
+        /// <summary>
         /// Returns the first element that meets the given condition.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -263,10 +278,10 @@ namespace UE.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static string ToStringElements<T>(this IList<T> list)
+        public static string ToStringElements<T>(this IEnumerable<T> list)
         {
-            return list.ToStringElements(x => x.ToString());
-        }
+            return list.ToStringElements(x => x != null ? x.ToString() : "null");
+        }    
 
         /// <summary>
         /// Returns a string with the list and its elements using a custom string converter for each element.
@@ -275,13 +290,15 @@ namespace UE.Common
         /// <param name="customStringConversion"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static string ToStringElements<T>(this IList<T> list, Func<T, string> customStringConversion)
+        public static string ToStringElements<T>(this IEnumerable<T> list, Func<T, string> customStringConversion)
         {
             var result = "{ ";
 
-            result = list.Aggregate(result, (current, item) => current + customStringConversion.Invoke(item) + ", ");
+            var enumerable = list.ToList();
+            
+            result = enumerable.Aggregate(result, (current, item) => current + customStringConversion.Invoke(item) + ", ");
 
-            if (list.Count > 0)
+            if (enumerable.Any())
                 result = result.TrimToSize(result.Length - 2) + " ";
 
             return result + "}";
@@ -304,6 +321,17 @@ namespace UE.Common
                 result = result.TrimToSize(result.Length - 2) + " ";
 
             return result + "}";
+        }
+
+        /// <summary>
+        /// Same as Where(x =&gt; x != null).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<TSource> WhereNotNull<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Where(x => x != null);
         }
 
         /// <summary>
@@ -347,8 +375,8 @@ namespace UE.Common
         /// <exception cref="ArgumentNullException"></exception>
         public static void AddRange<T>(this IList<T> iList, IEnumerable<T> items)
         {
-            if (iList == null) throw new ArgumentNullException("iList");
-            if (items == null) throw new ArgumentNullException("items");
+            if (iList == null) throw new ArgumentNullException(nameof(iList));
+            if (items == null) throw new ArgumentNullException(nameof(items));
 
             if (iList is List<T> list)
             {
@@ -372,8 +400,8 @@ namespace UE.Common
         /// <exception cref="ArgumentNullException"></exception>
         public static void AddRange<T>(this IList<T> iList, params T[] items)
         {
-            if (iList == null) throw new ArgumentNullException("iList");
-            if (items == null) throw new ArgumentNullException("items");
+            if (iList == null) throw new ArgumentNullException(nameof(iList));
+            if (items == null) throw new ArgumentNullException(nameof(items));
 
             if (iList is List<T> list)
             {
@@ -398,8 +426,8 @@ namespace UE.Common
         /// <exception cref="ArgumentNullException"></exception>
         public static void InsertRange<T>(this IList<T> iList, int insertPosition, IList<T> items)
         {
-            if (iList == null) throw new ArgumentNullException("iList");
-            if (items == null) throw new ArgumentNullException("items");
+            if (iList == null) throw new ArgumentNullException(nameof(iList));
+            if (items == null) throw new ArgumentNullException(nameof(items));
 
             if (iList is List<T> list)
             {
@@ -501,6 +529,54 @@ namespace UE.Common
             {
                 return _comparison((T) o1, (T) o2);
             }
+        }
+
+        /// <summary>
+        /// Iterates over the list providing an index starting at from (inclusive)
+        /// and ending at to (exclusive).
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <param name="to"></param>
+        /// <param name="action"></param>
+        /// <param name="from"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void IterateRange<T>(this IList<T> ie, int from, int to, Action<(T item, int index)> action)
+        {
+            if (from <= 0) throw new ArgumentException("from must be greater or equal to 0");
+            if (from >= to) throw new ArgumentException("from value must be smaller than to");
+
+            for (int i = from; i < to; i++)
+                action.Invoke((ie[i], i));
+        }
+
+        /// <summary>
+        /// Iterates over the list providing an index starting at from (inclusive)
+        /// and ending at to (exclusive).
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <param name="to"></param>
+        /// <param name="action"></param>
+        /// <param name="from"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void IterateRange<T>(this IReadOnlyList<T> ie, int from, int to, Action<(T item, int index)> action)
+        {
+            if (from <= 0) throw new ArgumentException("from must be greater or equal to 0");
+            if (from >= to) throw new ArgumentException("from value must be smaller than to");
+
+            for (int i = from; i < to; i++)
+                action.Invoke((ie[i], i));
+        }
+
+        /// <summary>
+        /// Iterates over the given enumeration providing an index (starting by 0).
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void ForEachIndex<T>(this IEnumerable<T> ie, Action<(T item, int index)> action)
+        {
+            var i = 0;
+            foreach (var e in ie) action((e, i++));
         }
 
         #endregion
@@ -667,7 +743,7 @@ namespace UE.Common
 
         public static string ConvertAssetToResourcesPath(this string assetPath)
         {
-            int position = assetPath.LastIndexOf("Resources/");
+            int position = assetPath.LastIndexOf("Resources/", StringComparison.Ordinal);
 
             var woPath = assetPath.Substring(position + 10);
 
@@ -754,5 +830,35 @@ namespace UE.Common
         {
             return toMin + (val - fromMin) * (toMax - toMin) / (fromMax - fromMin);
         }
+
+#if UNITY_EDITOR
+
+        #region Editor Only
+
+        /// <summary>
+        /// Returns a list of the SerializedProperties contained in this SerializedObject.
+        /// </summary>
+        /// <param name="serializedObject"></param>
+        /// <returns></returns>
+        public static List<SerializedProperty> ToList(this SerializedObject serializedObject)
+        {
+            var iterator = serializedObject.GetIterator();
+            iterator.Next(true);
+
+            var result = new List<SerializedProperty>();
+            
+            foreach (SerializedProperty obj in iterator)
+            {
+//                Logging.Log(typeof(ProjectSettingsEnforcer), $"found {obj.name}");
+                result.Add(obj);
+            }
+
+            return result;
+        }
+
+        #endregion
+        
+        
+#endif
     }
 }

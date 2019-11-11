@@ -12,7 +12,7 @@ namespace UE.Instancing
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="instanceKey"></param>
-        public static void ApplyToHierachy(GameObject gameObject, Object instanceKey)
+        public static void ApplyToHierarchy(GameObject gameObject, Object instanceKey)
         {
             var instanceObservers = gameObject.GetComponentsInChildren<InstanceObserver>(true);
 

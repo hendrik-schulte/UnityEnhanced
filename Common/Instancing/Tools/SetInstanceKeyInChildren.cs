@@ -12,7 +12,7 @@ namespace UE.Instancing
         [ContextMenu("Apply")]
         public void Apply()
         {
-            InstancingTools.ApplyToHierachy(gameObject, instanceKey);
+            InstancingTools.ApplyToHierarchy(gameObject, instanceKey);
         }
     }
 }
