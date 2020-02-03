@@ -69,6 +69,14 @@ namespace UE.Common
 
             return result;
         }
+        
+        /// <summary>
+        /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
+        /// </summary>
+        public static Rect Offset(this Rect rect, int thickness)
+        {
+            return rect.Offset(thickness, thickness, thickness, thickness);
+        }
 
         /// <summary>
         /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
@@ -82,6 +90,21 @@ namespace UE.Common
         public static Rect Offset(this Rect rect, float left, float right, float top, float bottom)
         {
             return rect.Offset((int) left, (int) right, (int) top, (int) bottom);
+        }
+        
+        public static Rect FromTopByHeight(this Rect rect, int height)
+        {
+            return new Rect(rect) {height = height};
+        }
+        
+        public static Rect FromBottomByHeight(this Rect rect, int height)
+        {
+            var result = new Rect(rect);
+
+            result.y = rect.yMax - height;
+            result.height = height;
+
+            return result;
         }
 
         /// <summary>
@@ -343,6 +366,21 @@ namespace UE.Common
         public static Color EditorBackgroundColor => EditorGUIUtility.isProSkin
             ? new Color32(56, 56, 56, 255)
             : new Color32(194, 194, 194, 255);
+
+        public static void BeginCenteredLayout()
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+        }
+        
+        public static void EndCenteredLayout()
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            
+        }
 
         /// <summary>
         /// Instantiates a prefab asset when alt-clicking it.

@@ -211,6 +211,18 @@ namespace UE.Common
             if(!list.Contains(item))
                 list.Add(item);
         }
+
+        /// <summary>
+        /// Only adds the given element to the set if it is not contained in it yet.
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void AddSingle<T>(this ISet<T> set, T item)
+        {
+            if(!set.Contains(item))
+                set.Add(item);
+        }
         
         /// <summary>
         /// Returns the first element that meets the given condition.
@@ -340,10 +352,11 @@ namespace UE.Common
         /// <param name="collection"></param>
         /// <param name="action"></param>
         /// <typeparam name="T"></typeparam>
-        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> collection, Action<T> action)
         {
             foreach (var item in collection)
                 action.Invoke(item);
+            return collection;
         }
 
         /// <summary>
@@ -578,6 +591,25 @@ namespace UE.Common
             var i = 0;
             foreach (var e in ie) action((e, i++));
         }
+        
+        /// <summary>
+        /// Iterates over the given enumeration returning the index of the given
+        /// element (or -1 of it is not contained in the collection).
+        /// </summary>
+        /// <param name="ie"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        public static int IndexOf<T>(this IEnumerable<T> ie, T item)
+        {
+            var i = 0;
+            foreach (var e in ie)
+            {
+                if (item.Equals(e)) return i;
+                i++;
+            }
+            
+            return -1;
+        }
 
         #endregion
 
@@ -588,12 +620,16 @@ namespace UE.Common
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="layer"></param>
-        public static void SetLayerRecursively(this GameObject obj, int layer)
+        public static void SetLayerRecursively(this GameObject obj, int layer, bool onlyChangeDefault = true)
         {
             if (!obj)
                 return;
 
-            obj.layer = layer;
+            if ( !onlyChangeDefault || (onlyChangeDefault && obj.layer == 0) )
+            {
+                obj.layer = layer;
+            }
+            
 
             foreach (Transform child in obj.transform)
             {
