@@ -30,8 +30,18 @@ namespace UE.Instancing
 
         protected override void DrawInspector()
         {
-            var listener = target as InstanceObserver;
             serializedObject.Update();
+            
+            DrawInstanceObserverInspector();
+
+            DrawPropertiesExcept(new[] {"m_Script"}.Concat(ExcludeProperties()).ToArray());
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        protected void DrawInstanceObserverInspector()
+        {
+            var listener = target as InstanceObserver;
 
             if (listener.Target != null)
             {
@@ -62,11 +72,12 @@ namespace UE.Instancing
                             "prefab to create an instance for every instance of the prefab."));
                 }
             }
-
-            DrawPropertiesExcept(new[] {"m_Script"}.Concat(ExcludeProperties()).ToArray());
-
-            serializedObject.ApplyModifiedProperties();
         }
+
+//        protected virtual void DrawProperties()
+//        {
+//            DrawPropertiesExcept(new[] {"m_Script"}.Concat(ExcludeProperties()).ToArray());
+//        }
 
         /// <summary>
         /// This can be overridden to exclude the given properties from being displayed in the inspector.

@@ -30,7 +30,7 @@ namespace UE.Instancing
         /// </summary>
         public void Refresh()
         {
-            InstancingTools.ApplyToHierachy(gameObject, instanceKey.Value);
+            InstancingTools.ApplyToHierarchy(gameObject, instanceKey.Value);
             onApplyRuntime.Invoke();
         }
     }

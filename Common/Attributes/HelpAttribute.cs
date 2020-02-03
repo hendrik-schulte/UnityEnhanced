@@ -32,7 +32,7 @@ namespace UE.Attributes
     /// </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-    [AttributeUsage(AttributeTargets.Field, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field)]
     public class HelpAttribute : PropertyAttribute
     {
         public readonly string text;

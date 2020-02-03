@@ -1,6 +1,7 @@
 using UE.Common;
 using UnityEngine;
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 #endif
 
@@ -29,22 +30,27 @@ namespace UE.Attributes
          }
 
          public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
-         {
+         {  
              EditorGUI.BeginProperty(position, label, prop);
 
+             
              if (prop.objectReferenceValue != null)
              {
-                 var propertyRect = position.Offset(0,- _textureSize - 2,0,0);
+                 var propertyRect = position.Offset(0,- (_textureSize + 3),0,0);
                  propertyRect.height = EditorGUIUtility.singleLineHeight;
-                 EditorGUI.PropertyField(propertyRect, prop);
+                 EditorGUI.PropertyField( propertyRect, prop);
                  
                  position.x = propertyRect.x + propertyRect.width + 2;
                  position.width = _textureSize;
                  position.height = _textureSize;
 
+                 var previousIndent = EditorGUI.indentLevel;
+                 EditorGUI.indentLevel = 0;
                  
                  prop.objectReferenceValue = 
-                     EditorGUI.ObjectField(position, prop.objectReferenceValue, typeof(Sprite));
+                     EditorGUI.ObjectField(position, prop.objectReferenceValue, typeof(Sprite), false);
+                 
+                 EditorGUI.indentLevel = previousIndent;
              }
              else
              {
