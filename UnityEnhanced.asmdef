@@ -1,10 +1,6 @@
 {
     "name": "UnityEnhanced",
-    "references": [
-        "PhotonRealtime",
-        "PhotonUnityNetworking",
-        "SharpConfig"
-    ],
+    "references": [],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
