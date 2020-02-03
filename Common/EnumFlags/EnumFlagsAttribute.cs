@@ -1,4 +1,4 @@
-﻿//This is taken from:
+﻿//This is adapted from:
 //http://answers.unity3d.com/questions/486694/default-editor-enum-as-flags-.html
 
 #if UNITY_EDITOR
@@ -8,8 +8,12 @@ using UnityEngine;
 
 namespace UE.UnityFlags
 {
+    /// <summary>
+    /// This attribute can be used to display an enum mask widget covering the options of this enum.
+    /// </summary>
     public class EnumFlagsAttribute : PropertyAttribute
     {
+        /// <inheritdoc cref="EnumFlagsAttribute"/>
         public EnumFlagsAttribute()
         {
         }
@@ -20,11 +24,6 @@ namespace UE.UnityFlags
     [CustomPropertyDrawer(typeof (EnumFlagsAttribute))]
     public class EnumFlagsAttributeDrawer : PropertyDrawer
     {
-        //        public override void OnGUI(Rect _position, UnityEditor.SerializedProperty _property, GUIContent _label)
-        //        {
-        //            _property.intValue = UnityEditor.EditorGUI.MaskField(_position, _label, _property.intValue,
-        //                _property.enumNames);
-        //        }
         public override void OnGUI(Rect _position, SerializedProperty _property, GUIContent _label)
         {
             // Change check is needed to prevent values being overwritten during multiple-selection
@@ -35,8 +34,6 @@ namespace UE.UnityFlags
                 _property.intValue = newValue;
             }
         }
-
     }
 #endif
-
 }

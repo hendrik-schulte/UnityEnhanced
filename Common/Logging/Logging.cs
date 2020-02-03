@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -69,6 +73,23 @@ namespace UE.Common
         {
             if (debugLog) Debug.LogError(Brackets(sender) + msg);
         }
+
+#if UNITY_EDITOR
+        public static void Log(EditorWindow sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.Log(TypeIdentifier(sender) + msg, sender);
+        }
+        
+        public static void Warning(EditorWindow sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + msg, sender);
+        }
+        
+        public static void Error(EditorWindow sender, string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogError(TypeIdentifier(sender) + msg, sender);
+        }
+#endif
         
         /// <summary>
         /// Formats and logs the given message to the console using the sender as an identifier.
@@ -202,6 +223,11 @@ namespace UE.Common
         private static string TypeIdentifier(object sender)
         {
             return Brackets(sender.GetType().Name);
+        }
+        
+        private static string TypeIdentifier(Object sender)
+        {
+            return Brackets(sender.name.Any() ? sender.name : sender.GetType().Name);
         }
         
         private static string Apostrophe(string value)

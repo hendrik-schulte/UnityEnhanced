@@ -7,7 +7,7 @@ namespace UE.StateMachine
     /// This component handles nice fade-in fade-out transitions for UI windows. Requires a
     /// canvas group component for blending.
     /// </summary>
-    [AddComponentMenu("Unity Enhanced/State Machine/Transition Alpha Blend", 3)]
+    [AddComponentMenu("Unity Enhanced/State Machine/Transition Alpha Blend", 4)]
     [RequireComponent(typeof(CanvasGroup))]
     public class TransitionAlphaBlend : TransitionGeneric
     {

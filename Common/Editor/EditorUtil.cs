@@ -69,6 +69,14 @@ namespace UE.Common
 
             return result;
         }
+        
+        /// <summary>
+        /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
+        /// </summary>
+        public static Rect Offset(this Rect rect, int thickness)
+        {
+            return rect.Offset(thickness, thickness, thickness, thickness);
+        }
 
         /// <summary>
         /// Returns an offset version of this Rect where positive values enlarge the rect and vice versa.
@@ -83,7 +91,69 @@ namespace UE.Common
         {
             return rect.Offset((int) left, (int) right, (int) top, (int) bottom);
         }
+        
+        public static Rect FromTopByHeight(this Rect rect, int height)
+        {
+            return new Rect(rect) {height = height};
+        }
+        
+        public static Rect FromBottomByHeight(this Rect rect, int height)
+        {
+            var result = new Rect(rect);
 
+            result.y = rect.yMax - height;
+            result.height = height;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a subset of this rectangle that is aligned to the left and has the given size. 
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public static Rect FromLeftByWidth(this Rect rect, int width)
+        {
+            var result = new Rect(rect);
+
+            result.xMax = result.xMin + width;
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Returns a subset of this rectangle that is aligned to the right and has the given size. 
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public static Rect FromRightByWidth(this Rect rect, int width)
+        {
+            var result = new Rect(rect);
+
+            result.xMin = result.xMax - width;
+
+            return result;
+        }
+        
+        public static Rect Move(this Rect rect, int x, int y)
+        {
+            var result = new Rect(rect);
+
+            result.position = new Vector2(result.position.x + x, result.position.y + y);
+
+            return result;
+        }
+        
+        public static Rect Move(this Rect rect, float x, float y)
+        {
+            var result = new Rect(rect);
+
+            result.position = new Vector2(result.position.x + x, result.position.y + y);
+
+            return result;
+        }
 
         /// <summary>
         /// This splits the position Rect of a Property Drawer to single lines given the row number
@@ -106,12 +176,27 @@ namespace UE.Common
         }
 
         /// <summary>
+        /// This splits the position Rect of a Property Drawer to single lines given the row number
+        /// (starting by 1). Works nicely when the Property height is calculated using
+        /// EditorUtil.PropertyHeight(). This overload automatically increments the line after the call.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="line">This automatically gets incremented after the line is drawn.</param>
+        /// <returns></returns>
+        public static Rect GetLine(this Rect position, ref int line)
+        {
+            return position.GetLine(line++);
+        }
+
+
+        /// <summary>
         /// Splits this rectangle into a column based on the column number (from 1 to totalColumns)
         /// and the total number of columns.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="column"></param>
         /// <param name="totalColumns"></param>
+        /// <param name="spacing"></param>
         /// <returns></returns>
         public static Rect Column(this Rect position, int column, int totalColumns, int spacing = 1)
         {
@@ -123,15 +208,33 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Returns columns inside this rectangle.
+        /// Splits this rectangle into a column based on the column number (from 1 to totalColumns)
+        /// and the total number of columns. This overload automatically increments the line after the call.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="column"></param>
+        /// <param name="totalColumns"></param>
+        /// <param name="spacing"></param>
+        /// <returns></returns>
+        public static Rect Column(this Rect position, ref int column, int totalColumns, int spacing = 1)
+        {
+            return position.Column(column++, totalColumns, spacing);
+        }
+
+        /// <summary>
+        /// Returns columns inside of this rectangle.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="column"></param>
         /// <param name="numColumns"></param>
         /// <param name="totalColumns"></param>
+        /// <param name="spacing"></param>
         /// <returns></returns>
         public static Rect Columns(this Rect position, int column, int numColumns, int totalColumns, int spacing = 1)
         {
+            if(totalColumns == 0)
+                throw new ArgumentException("Parameter TotalColumns may not be zero!");
+            
             var columnsWidth = position.width / totalColumns;
 
             return new Rect(position.x + ((column - 1) * columnsWidth),
@@ -140,7 +243,27 @@ namespace UE.Common
         }
 
         /// <summary>
-        /// Returns a number of lines from the given lineIndex.
+        /// Returns columns inside of this rectangle. This overload automatically increments <param name="column"></param>
+        /// by <param name="numColumns"></param> after the call.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="column"></param>
+        /// <param name="numColumns"></param>
+        /// <param name="totalColumns"></param>
+        /// <param name="spacing"></param>
+        /// <returns></returns>
+        public static Rect Columns(this Rect position, ref int column, int numColumns, int totalColumns, int spacing = 1)
+        {
+            var result = position.Columns(column, numColumns, totalColumns, spacing);
+
+            column += numColumns;
+            
+            return result;
+        }
+
+        /// <summary>
+        /// Similar to <see cref="GetLine(UnityEngine.Rect,int)"/> but returns
+        /// a number of lines starting from the given line.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="line"></param>
@@ -151,10 +274,29 @@ namespace UE.Common
             var rect = position.GetLine(line);
 
             if (num > 1)
-                rect.yMax += (num - 1) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+                rect.yMax += Mathf.Max(0, (num - 1)) * 
+                             (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
 
             return rect;
         }
+
+        /// <summary>
+        /// Similar to <see cref="GetLine(UnityEngine.Rect,ref int)"/> but returns
+        /// a number of lines starting from the given line.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="line"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static Rect GetLines(this Rect position, ref int line, int num)
+        {
+            var rect = position.GetLines(line, num);
+
+            line += num;
+            
+            return rect;
+        }
+
 
 //        public static float GetTotalHeight(int lines)
 //        {
@@ -169,7 +311,7 @@ namespace UE.Common
 //        }
 
         /// <summary>
-        /// Returns the first occourence of the given attribute
+        /// Returns the first occurence of the given attribute
         /// on this property or null if there is none.
         /// </summary>
         /// <param name="property"></param>
@@ -224,6 +366,21 @@ namespace UE.Common
         public static Color EditorBackgroundColor => EditorGUIUtility.isProSkin
             ? new Color32(56, 56, 56, 255)
             : new Color32(194, 194, 194, 255);
+
+        public static void BeginCenteredLayout()
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+        }
+        
+        public static void EndCenteredLayout()
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            
+        }
 
         /// <summary>
         /// Instantiates a prefab asset when alt-clicking it.
