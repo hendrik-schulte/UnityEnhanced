@@ -152,6 +152,11 @@ namespace UE.Common
         {
             return new Vector3(vec2.x, 0, vec2.y);
         }
+        
+        public static bool AlmostEquals(this Vector3 target, Vector3 second, float sqrMagnitudePrecision)
+        {
+            return (target - second).sqrMagnitude < sqrMagnitudePrecision;
+        }
 
         #endregion
 
@@ -893,8 +898,7 @@ namespace UE.Common
         }
 
         #endregion
-        
-        
+
 #endif
     }
 }
