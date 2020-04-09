@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 namespace UE.Common
 {
     /// <summary>
-    /// This utility class offers some extention methods for miscellaneous purposes.
+    /// This utility class offers some extension methods for miscellaneous purposes.
     /// </summary>
     public static class ExtensionMethods
     {
@@ -157,6 +157,11 @@ namespace UE.Common
         {
             return (target - second).sqrMagnitude < sqrMagnitudePrecision;
         }
+        
+        public static bool AlmostEquals(this Quaternion target, Quaternion second, float maxAngle)
+        {
+            return Quaternion.Angle(target, second) < maxAngle;
+        }
 
         #endregion
 
@@ -240,6 +245,18 @@ namespace UE.Common
         {
             return list.FirstOrDefault(comparator);
         }
+        
+        public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
+        {
+            for (int i = 0; i < source.Count; i++)
+            {
+                if (match(source[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
         /// <summary>
         /// Returns the first occurence of the given type in the array. Returns null if there is no such field.
@@ -297,7 +314,7 @@ namespace UE.Common
         /// <returns></returns>
         public static string ToStringElements<T>(this IEnumerable<T> list)
         {
-            return list.ToStringElements(x => x != null ? x.ToString() : "null");
+            return list == null ? "null" : list.ToStringElements(x => x != null ? x.ToString() : "null");
         }    
 
         /// <summary>
@@ -349,6 +366,17 @@ namespace UE.Common
         public static IEnumerable<TSource> WhereNotNull<TSource>(this IEnumerable<TSource> source)
         {
             return source.Where(x => x != null);
+        }
+
+        /// <summary>
+        /// Same as Where(x =&gt; x == null).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<TSource> WhereNull<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Where(x => x == null);
         }
 
         /// <summary>

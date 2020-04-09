@@ -14,6 +14,11 @@ namespace UE.Common
     /// </summary>
     public static class Logging
     {
+        public static void Log<T>(string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.Log(TypeIdentifier(typeof(T)) + msg);
+        }
+        
         public static void Log(Type sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.Log(TypeIdentifier(sender) + msg);
@@ -38,6 +43,11 @@ namespace UE.Common
         {
             if (debugLog) Debug.LogWarning(TypeIdentifier(sender) + msg);
         }
+        
+        public static void Warning<T>(string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogWarning(TypeIdentifier(typeof(T)) + msg);
+        }
 
         public static void Warning(object sender, string msg, bool debugLog = true)
         {
@@ -57,6 +67,11 @@ namespace UE.Common
         public static void Error(Type sender, string msg, bool debugLog = true)
         {
             if (debugLog) Debug.LogError(TypeIdentifier(sender) + msg);
+        }
+        
+        public static void Error<T>(string msg, bool debugLog = true)
+        {
+            if (debugLog) Debug.LogError(TypeIdentifier(typeof(T)) + msg);
         }
 
         public static void Error(object sender, string msg, bool debugLog = true)
