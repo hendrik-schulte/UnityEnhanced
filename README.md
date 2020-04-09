@@ -45,7 +45,7 @@ Open particular folders for detailed description.
 1. Edit \Packages\manifest.json in your project folder
 2. Add the following line to the list of *dependencies*:
 ```json
-"com.unityenhanced": "https://github.com/hendrik-schulte/UnityEnhanced",
+"com.unityenhanced": "https://github.com/hendrik-schulte/UnityEnhanced.git",
 ```
 3. UPM should now install UnityEnhanced
 4. *Optional:* Select the right version for Photon / SharpConfig integration 
