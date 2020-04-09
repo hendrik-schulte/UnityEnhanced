@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/String Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/String Variable")]
     public class StringVariable : Variable<string>
     {
     }

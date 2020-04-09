@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(Quaternion)")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Events/Event(Quaternion)")]
     public class QuaternionEvent : ParameterEvent<Quaternion, QuaternionEvent>
     {
         [SerializeField]

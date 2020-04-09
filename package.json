@@ -2,7 +2,7 @@
     "name": "com.unityenhanced",
     "author": "Hendrik Schulte",
     "displayName": "Unity Enhanced",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "unity": "2019.2",
     "description": "A set of useful tools aimed at easy and powerful architecture in Unity3D based on ScriptableObjects!",
     "url" : "https://github.com/hendrik-schulte/UnityEnhanced", 

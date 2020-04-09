@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(Vector2)")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Events/Event(Vector2)")]
     public class Vector2Event : ParameterEvent<Vector2, Vector2Event>
     {
         [SerializeField]

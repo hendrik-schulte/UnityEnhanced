@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(int)")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Events/Event(int)")]
     public class IntEvent : ParameterEvent<int, IntEvent>
     {
         [SerializeField]

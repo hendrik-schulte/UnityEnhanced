@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/Integer Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/Integer Variable")]
     public class IntVariable : Variable<int>
     {
     }

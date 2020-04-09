@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/Transform Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/Transform Variable")]
     public class TransformVariable : Variable<Transform>
     {
     }

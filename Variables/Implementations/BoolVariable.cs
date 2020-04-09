@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/Bool Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/Bool Variable")]
     public class BoolVariable : Variable<bool>
     {
     }

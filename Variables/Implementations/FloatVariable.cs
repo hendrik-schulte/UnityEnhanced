@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/Float Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/Float Variable")]
     public class FloatVariable : Variable<float>
     {
     }

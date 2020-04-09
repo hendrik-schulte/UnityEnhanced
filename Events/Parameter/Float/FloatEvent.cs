@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(float)")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Events/Event(float)")]
     public class FloatEvent : ParameterEvent<float, FloatEvent>
     {
         [SerializeField]

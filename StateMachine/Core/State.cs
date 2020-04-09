@@ -12,7 +12,7 @@ namespace UE.StateMachine
     /// <summary>
     /// A state asset used within the state machine.
     /// </summary>
-    [CreateAssetMenu(menuName = "State Machine/State")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/State Machine/State")]
     public class State : ScriptableObject
     {
         [Tooltip("This is the manager in which this state is managed.")]

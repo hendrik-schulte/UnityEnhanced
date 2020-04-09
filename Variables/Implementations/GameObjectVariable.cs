@@ -2,7 +2,7 @@
 
 namespace UE.Variables
 {
-    [CreateAssetMenu(menuName = "Variables/Game Object Variable")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Variables/Game Object Variable")]
     public class GameObjectVariable : Variable<GameObject>
     {
     }

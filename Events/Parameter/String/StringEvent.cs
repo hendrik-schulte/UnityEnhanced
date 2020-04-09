@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UE.Events
 {
-    [CreateAssetMenu(menuName = "Events/Event(string)")]
+    [CreateAssetMenu(menuName = "Unity Enhanced/Events/Event(string)")]
     public class StringEvent : ParameterEvent<string, StringEvent>
     {
         [SerializeField]
